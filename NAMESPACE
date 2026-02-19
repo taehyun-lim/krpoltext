@@ -7,6 +7,3 @@ export(get_docs)
 export(load_campaign_booklet)
 export(load_party_statements)
 export(metadata)
-
-importFrom(data.table, fread)
-importFrom(data.table, as.data.table)

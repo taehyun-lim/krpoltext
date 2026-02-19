@@ -27,8 +27,12 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, any::jsonlite, any::devtools, local::.
+          extra-packages: any::pkgdown, any::jsonlite, any::devtools, any::roxygen2, local::.
           needs: website
+
+      - name: Generate roxygen docs
+        run: roxygen2::roxygenise()
+        shell: Rscript {0}
 
       - name: Generate Static API JSONs
         run: Rscript tools/build_api.R
