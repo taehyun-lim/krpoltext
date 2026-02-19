@@ -10,6 +10,7 @@ authors:
     email: tlim@hamilton.edu
     affiliation: Hamilton College
     orcid: "https://orcid.org/0000-0002-0429-2683"
+doi: "10.5281/zenodo.18704319"
 version: 0.1.0
 date-released: "2025-03-20"
 url: "https://github.com/taehyun-lim/krpoltext"

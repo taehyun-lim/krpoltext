@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 [![License: MIT](https://img.shields.io/badge/code-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/data-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 [![DOI](https://img.shields.io/badge/DOI-10.1038%2Fs41597--025--05220--4-blue)](https://doi.org/10.1038/s41597-025-05220-4)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18704319.svg)](https://doi.org/10.5281/zenodo.18704319)
 <!-- badges: end -->
 
 **krpoltext** provides convenient R access to two large-scale Korean political
@@ -168,5 +169,6 @@ citation("krpoltext")
 
 - Data Descriptor: <https://doi.org/10.1038/s41597-025-05220-4>
 - OSF Repository: <https://osf.io/rct9y/>
+- Zenodo Archive: <https://doi.org/10.5281/zenodo.18704319>
 - GitHub: <https://github.com/taehyun-lim/krpoltext>
 - Issues: <https://github.com/taehyun-lim/krpoltext/issues>
