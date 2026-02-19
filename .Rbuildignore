@@ -1,0 +1,11 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^README\.Rmd$
+^LICENSE\.md$
+^\.github$
+^data_dictionary\.md$
+^schema$
+^CITATION\.cff$
+^_pkgdown\.yml$
+^docs$
+^vignettes/.*_cache$

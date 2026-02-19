@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "krpoltext Dataset Metadata Schema",
+  "description": "Schema for dataset metadata in the krpoltext package. Based on the Data Descriptor: Lim, T.H. (2025). Scientific Data, 12, 1030. https://doi.org/10.1038/s41597-025-05220-4",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Human-readable dataset name."
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the dataset contents and scope."
+    },
+    "time_coverage": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{4}$",
+      "description": "Temporal coverage in YYYY-YYYY format."
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Column name as it appears in the CSV."
+          },
+          "type": {
+            "type": "string",
+            "enum": ["character", "integer", "numeric", "logical", "date"],
+            "description": "R data type of the column."
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description of the column."
+          },
+          "missing_values": {
+            "type": "string",
+            "description": "How missing values are represented (e.g., NA, empty string)."
+          },
+          "identifier": {
+            "type": "boolean",
+            "description": "Whether this column serves as a unique identifier."
+          },
+          "paper_reference": {
+            "type": "string",
+            "description": "Reference to the Data Descriptor table or section."
+          }
+        },
+        "required": ["name", "type", "description"]
+      },
+      "description": "Array of column definitions."
+    },
+    "n_candidates_or_entries": {
+      "type": "integer",
+      "description": "Number of unique candidates or entries as reported in the Data Descriptor."
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "OSF repository URL."
+    },
+    "paper_doi": {
+      "type": "string",
+      "description": "DOI of the Data Descriptor paper."
+    },
+    "citation": {
+      "type": "string",
+      "description": "Suggested citation text."
+    },
+    "version": {
+      "type": "string",
+      "description": "Dataset version identifier."
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the last data update (YYYY-MM-DD)."
+    }
+  },
+  "required": ["name", "description", "time_coverage", "columns", "source_url", "paper_doi"]
+}

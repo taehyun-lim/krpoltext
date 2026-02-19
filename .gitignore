@@ -1,0 +1,21 @@
+# R package artifacts
+*.Rproj.user
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rcheck/
+*.tar.gz
+
+# Large data files (too large for Git; download via OSF)
+inst/extdata/sk_election_campaign_booklet_v2022.csv
+inst/extdata/sk_party_statements_v2022.csv
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+*.swp
+*.swo
