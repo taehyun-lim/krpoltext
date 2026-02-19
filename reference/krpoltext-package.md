@@ -25,6 +25,8 @@ Useful links:
 
 - [doi:10.1038/s41597-025-05220-4](https://doi.org/10.1038/s41597-025-05220-4)
 
+- [doi:10.5281/zenodo.18704319](https://doi.org/10.5281/zenodo.18704319)
+
 - Report bugs at <https://github.com/taehyun-lim/krpoltext/issues>
 
 ## Author

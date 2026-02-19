@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/taehyun-lim/krpoltext/blob/v0.1.0/inst/CITATION)
+[`inst/CITATION`](https://github.com/taehyun-lim/krpoltext/blob/main/inst/CITATION)
 
 Lim T (2025). “South Korean Election Campaign Booklet and Party
 Statements Corpora.” *Scientific Data*, **12**, 1030.
