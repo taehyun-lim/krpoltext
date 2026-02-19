@@ -1,0 +1,45 @@
+{
+  "api_version": "1.0",
+  "base_url": "https://taehyun-lim.github.io/krpoltext",
+  "generated_at": "2026-02-19T18:10:21Z",
+  "package": {
+    "name": "krpoltext",
+    "version": "0.1.0",
+    "github": "https://github.com/taehyun-lim/krpoltext",
+    "paper_doi": "10.1038/s41597-025-05220-4"
+  },
+  "resources": [
+    {
+      "name": "campaign_booklet",
+      "file": "sk_election_campaign_booklet_v2022.csv",
+      "version": "v2022",
+      "format": "csv",
+      "encoding": "UTF-8",
+      "size_bytes": 756245336,
+      "sha256": "6ce6f40f5358829b167109d9ca9195e5089d2c6d05a61ad1c1925e424f55021d",
+      "download_url": "https://osf.io/download/6ybj8/",
+      "n_rows": 49678,
+      "n_cols": 31,
+      "description": "Official campaign booklets (manifesto booklets) filed by 49,678 individual candidates in South Korean presidential, National Assembly, and local elections from 2000 to 2022. Text extracted via OCR and parsed using the khaiii Korean morphological analyzer.",
+      "time_coverage": "2000-2022",
+      "schema_url": "data/schema/campaign_booklet.json",
+      "license": "CC BY-NC-ND 4.0"
+    },
+    {
+      "name": "party_statements",
+      "file": "sk_party_statements_v2022.csv",
+      "version": "v2022",
+      "format": "csv",
+      "encoding": "UTF-8",
+      "size_bytes": 740785920,
+      "sha256": "60874e7c44d851c9cfc0892d70f6ef9ff9fb3993a5324963297ca4eabd4868e4",
+      "download_url": "https://osf.io/download/8u2ah/",
+      "n_rows": 82723,
+      "n_cols": 9,
+      "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003 to 2022. 82,723 total entries (35,115 conservative + 42,335 progressive). Parsed using the khaiii Korean morphological analyzer.",
+      "time_coverage": "2003-2022",
+      "schema_url": "data/schema/party_statements.json",
+      "license": "CC BY-NC-ND 4.0"
+    }
+  ]
+}

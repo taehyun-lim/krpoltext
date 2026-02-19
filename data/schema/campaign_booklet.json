@@ -1,0 +1,173 @@
+{
+  "dataset": "campaign_booklet",
+  "version": "v2022",
+  "file": "sk_election_campaign_booklet_v2022.csv",
+  "description": "Official election campaign booklets from 49,678 individual candidates across presidential, National Assembly, and local elections in South Korea (2000-2022).",
+  "columns": [
+    {
+      "name": "date",
+      "type": "character",
+      "description": "Election date (YYYY-MM-DD)"
+    },
+    {
+      "name": "name",
+      "type": "character",
+      "description": "Candidate name (Korean)"
+    },
+    {
+      "name": "region",
+      "type": "character",
+      "description": "Metropolitan region (province or metropolitan city)"
+    },
+    {
+      "name": "district",
+      "type": "character",
+      "description": "Electoral district"
+    },
+    {
+      "name": "office_id",
+      "type": "integer",
+      "description": "Office type identifier (1=president, 2=national_assembly, 3=edu_superintendent, 4=metro_head, 5=metro_assembly, 6=basic_head, 7=basic_assembly)"
+    },
+    {
+      "name": "office",
+      "type": "character",
+      "description": "Office type label (president, national_assembly, edu_superintendent, metro_head, metro_assembly, basic_head, basic_assembly)"
+    },
+    {
+      "name": "giho",
+      "type": "integer",
+      "description": "Candidate ballot number"
+    },
+    {
+      "name": "party",
+      "type": "character",
+      "description": "Political party name (Korean)"
+    },
+    {
+      "name": "party_eng",
+      "type": "character",
+      "description": "Political party name (English); transliteration if no official English name"
+    },
+    {
+      "name": "result",
+      "type": "character",
+      "description": "Election result (Korean): 당선 (elected) / 낙선 (defeated)"
+    },
+    {
+      "name": "sex",
+      "type": "character",
+      "description": "Sex: 남 (male) / 여 (female)"
+    },
+    {
+      "name": "birthday",
+      "type": "character",
+      "description": "Date of birth (YYYY-MM-DD)"
+    },
+    {
+      "name": "age",
+      "type": "integer",
+      "description": "Age at the time of the election"
+    },
+    {
+      "name": "job_id",
+      "type": "integer",
+      "description": "Original NEC job category identifier (varies across years)"
+    },
+    {
+      "name": "job",
+      "type": "character",
+      "description": "Standardized job category (Korean)"
+    },
+    {
+      "name": "job_name",
+      "type": "character",
+      "description": "Job title (Korean)"
+    },
+    {
+      "name": "job_name_eng",
+      "type": "character",
+      "description": "Job title (English)"
+    },
+    {
+      "name": "job_code",
+      "type": "integer",
+      "description": "Standardized job code (consistent across years; see paper Table 6)"
+    },
+    {
+      "name": "edu_id",
+      "type": "integer",
+      "description": "Original NEC education level identifier (varies across years)"
+    },
+    {
+      "name": "edu",
+      "type": "character",
+      "description": "Education description (Korean, free-text from NEC)"
+    },
+    {
+      "name": "edu_name",
+      "type": "character",
+      "description": "Standardized education level label (Korean)"
+    },
+    {
+      "name": "edu_name_eng",
+      "type": "character",
+      "description": "Standardized education level label (English)"
+    },
+    {
+      "name": "edu_code",
+      "type": "integer",
+      "description": "Standardized education code (consistent across years; see paper Table 7)"
+    },
+    {
+      "name": "career1",
+      "type": "character",
+      "description": "Career description 1"
+    },
+    {
+      "name": "career2",
+      "type": "character",
+      "description": "Career description 2"
+    },
+    {
+      "name": "pages",
+      "type": "integer",
+      "description": "Number of pages in the booklet"
+    },
+    {
+      "name": "code",
+      "type": "character",
+      "description": "Unique document identifier",
+      "identifier": true
+    },
+    {
+      "name": "sex_code",
+      "type": "integer",
+      "description": "Sex code: 1 = male, 0 = female"
+    },
+    {
+      "name": "result_code",
+      "type": "integer",
+      "description": "Result code: 1 = elected, 0 = not elected"
+    },
+    {
+      "name": "text",
+      "type": "character",
+      "description": "Full OCR-extracted text of the campaign booklet"
+    },
+    {
+      "name": "filtered",
+      "type": "character",
+      "description": "Parsed text after morphological analysis; Korean-only, numbers/foreign characters/symbols removed"
+    }
+  ],
+  "office_mapping": [
+    {"office_id": 1, "office": "president", "description": "Presidential election"},
+    {"office_id": 2, "office": "national_assembly", "description": "National Assembly election"},
+    {"office_id": 3, "office": "edu_superintendent", "description": "Education superintendent"},
+    {"office_id": 4, "office": "metro_head", "description": "Metropolitan city mayor / provincial governor"},
+    {"office_id": 5, "office": "metro_assembly", "description": "Metropolitan assembly member"},
+    {"office_id": 6, "office": "basic_head", "description": "Basic local government head (district head / mayor)"},
+    {"office_id": 7, "office": "basic_assembly", "description": "Basic assembly member"}
+  ]
+}
