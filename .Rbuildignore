@@ -9,4 +9,6 @@
 ^CITATION\.cff$
 ^_pkgdown\.yml$
 ^docs$
+^pkgdown$
+^tools$
 ^vignettes/.*_cache$

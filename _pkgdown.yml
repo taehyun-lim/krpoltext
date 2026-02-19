@@ -1,0 +1,45 @@
+url: https://taehyun-lim.github.io/krpoltext
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#0d6efd"
+
+navbar:
+  structure:
+    left: [intro, reference, articles, data-api]
+    right: [search, github]
+  components:
+    data-api:
+      text: Data API
+      href: data/index.json
+
+articles:
+  - title: Getting Started
+    navbar: Getting Started
+    contents:
+      - quick-start
+  - title: Advanced Usage
+    navbar: Advanced
+    contents:
+      - replication-pipeline
+
+reference:
+  - title: Load Data
+    desc: Download and load corpora from OSF
+    contents:
+      - load_campaign_booklet
+      - load_party_statements
+      - download_data
+  - title: Explore and Filter
+    desc: Inspect metadata and filter documents
+    contents:
+      - metadata
+      - get_docs
+  - title: Integration
+    desc: Convert to other formats
+    contents:
+      - as_quanteda_corpus
+  - title: Cache Management
+    contents:
+      - clear_cache

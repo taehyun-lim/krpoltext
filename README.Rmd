@@ -107,6 +107,40 @@ topfeatures(dfm_obj, 20)
 | `download_data()` | Download datasets from OSF |
 | `clear_cache()` | Remove cached data files |
 
+## Static Data API
+
+Dataset metadata and download links are available as a static JSON API via
+GitHub Pages — no server needed:
+
+| Endpoint | Description |
+|----------|-------------|
+| [`/data/index.json`](https://taehyun-lim.github.io/krpoltext/data/index.json) | Resource index (files, versions, SHA-256, download URLs) |
+| [`/data/metadata.json`](https://taehyun-lim.github.io/krpoltext/data/metadata.json) | Dataset descriptions and citation info |
+| [`/data/schema/campaign_booklet.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json) | Column schema for campaign booklets |
+| [`/data/schema/party_statements.json`](https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json) | Column schema for party statements |
+
+**R** (without installing the package):
+
+```{r static-api-r}
+api <- "https://taehyun-lim.github.io/krpoltext/data/index.json"
+idx <- jsonlite::fromJSON(api)
+url <- idx$resources$download_url[idx$resources$name == "party_statements"]
+tmp <- tempfile(fileext = ".csv")
+download.file(url, tmp, mode = "wb")
+dt <- data.table::fread(tmp, encoding = "UTF-8")
+```
+
+**Python**:
+
+```{python static-api-py, eval = FALSE}
+import requests, pandas as pd
+idx = requests.get("https://taehyun-lim.github.io/krpoltext/data/index.json").json()
+url = next(r["download_url"] for r in idx["resources"] if r["name"] == "party_statements")
+df = pd.read_csv(url)
+```
+
+Full documentation: <https://taehyun-lim.github.io/krpoltext/>
+
 ## Citation
 
 If you use this data in academic work, please cite the Data Descriptor paper:
