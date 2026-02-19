@@ -1,0 +1,42 @@
+{
+  "title": "krpoltext: Korean Political Text Corpora for R",
+  "description": "R package providing programmatic access to two large-scale Korean political text corpora: (1) South Korean Election Campaign Booklets covering 49,678 candidates across presidential, National Assembly, and local elections (2000-2022), and (2) South Korean Party Statements containing 82,723 official statements from the two major parties (2003-2022). Includes a static JSON API for language-agnostic dataset discovery. Data is hosted on OSF and automatically downloaded on first use.",
+  "creators": [
+    {
+      "name": "Lim, Tae Hyun",
+      "affiliation": "Hamilton College",
+      "orcid": "0000-0002-0429-2683"
+    }
+  ],
+  "keywords": [
+    "korean-politics",
+    "text-analysis",
+    "corpus",
+    "election",
+    "political-science",
+    "campaign-booklet",
+    "party-statements",
+    "south-korea",
+    "R"
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "identifier": "10.1038/s41597-025-05220-4",
+      "relation": "isSupplementTo",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.17605/OSF.IO/RCT9Y",
+      "relation": "isSupplementTo",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://taehyun-lim.github.io/krpoltext/",
+      "relation": "isDocumentedBy",
+      "scheme": "url"
+    }
+  ]
+}
