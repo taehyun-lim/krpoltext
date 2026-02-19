@@ -1,0 +1,51 @@
+cff-version: 1.2.0
+title: "krpoltext: Korean Political Text Corpora for R"
+message: >-
+  If you use this package, please cite both the data descriptor paper
+  and the OSF data repository.
+type: software
+authors:
+  - family-names: Lim
+    given-names: Tae Hyun
+    email: tlim@hamilton.edu
+    affiliation: Hamilton College
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+version: 0.1.0
+date-released: "2025-03-20"
+url: "https://github.com/taehyun-lim/krpoltext"
+repository-code: "https://github.com/taehyun-lim/krpoltext"
+license: MIT
+keywords:
+  - korean-politics
+  - text-analysis
+  - corpus
+  - election
+  - political-science
+  - campaign-booklet
+  - party-statements
+  - south-korea
+  - R
+preferred-citation:
+  type: article
+  title: >-
+    South Korean Election Campaign Booklet and Party Statements Corpora
+  authors:
+    - family-names: Lim
+      given-names: Tae Hyun
+  journal: Scientific Data
+  volume: 12
+  year: 2025
+  start: 1030
+  doi: "10.1038/s41597-025-05220-4"
+  url: "https://doi.org/10.1038/s41597-025-05220-4"
+references:
+  - type: data
+    title: >-
+      South Korean Election Campaign Booklet Corpus and Party Statements Corpus
+    authors:
+      - family-names: Lim
+        given-names: Tae Hyun
+    repository: Open Science Framework
+    url: "https://osf.io/rct9y/"
+    doi: "10.17605/OSF.IO/RCT9Y"
+    date-released: "2024-09-13"

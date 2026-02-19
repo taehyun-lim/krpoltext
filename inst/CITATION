@@ -1,0 +1,32 @@
+bibentry(
+  bibtype  = "Article",
+  title    = "South Korean Election Campaign Booklet and Party Statements Corpora",
+  author   = person("Tae Hyun", "Lim"),
+  journal  = "Scientific Data",
+  year     = "2025",
+  volume   = "12",
+  pages    = "1030",
+  doi      = "10.1038/s41597-025-05220-4",
+  header   = "To cite the data, please use:"
+)
+
+bibentry(
+  bibtype  = "Misc",
+  title    = "South Korean Election Campaign Booklet Corpus and Party Statements Corpus",
+  author   = person("Tae Hyun", "Lim"),
+  year     = "2024",
+  doi      = "10.17605/OSF.IO/RCT9Y",
+  url      = "https://osf.io/rct9y/",
+  note     = "Open Science Framework",
+  header   = "To cite the OSF data repository:"
+)
+
+bibentry(
+  bibtype  = "Manual",
+  title    = "krpoltext: Korean Political Text Corpora for R",
+  author   = person("Tae Hyun", "Lim"),
+  year     = "2025",
+  url      = "https://github.com/taehyun-lim/krpoltext",
+  note     = "R package version 0.1.0",
+  header   = "To cite the R package:"
+)
