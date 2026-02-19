@@ -3,22 +3,27 @@
 # Regenerate Static API JSON files from R package metadata.
 #
 # Usage (from repo root):
-#   Rscript tools/build_api.R
+#   Rscript tools/build_api.R [output_dir]
+#
+# Arguments:
+#   output_dir  Directory to write JSON files into (default: "docs/data").
+#               In CI, call after pkgdown build so docs/ already exists.
+#               Locally, pass "pkgdown/extra/data" to update the committed copies.
 #
 # Reads from:
 #   - R/download.R  (.data_registry)
 #   - R/metadata.R  (metadata)
 #   - DESCRIPTION   (package version)
 #
-# Writes to:
-#   - pkgdown/extra/data/index.json
-#   - pkgdown/extra/data/metadata.json
-#
 # Schema files (pkgdown/extra/data/schema/) are maintained manually
 # because column-level descriptions require human curation.
+# This script copies them into the output directory alongside the
+# generated files.
 
-out_dir <- "pkgdown/extra/data"
+args <- commandArgs(trailingOnly = TRUE)
+out_dir <- if (length(args) >= 1) args[1] else "docs/data"
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(file.path(out_dir, "schema"), recursive = TRUE, showWarnings = FALSE)
 
 devtools::load_all(".", quiet = TRUE)
 
@@ -134,4 +139,18 @@ jsonlite::write_json(
 )
 message("Wrote ", file.path(out_dir, "metadata.json"))
 
-message("Static API files generated successfully.")
+# ---------------------------------------------------------------------------
+# Copy schema files into output directory
+# ---------------------------------------------------------------------------
+
+schema_src <- "pkgdown/extra/data/schema"
+if (dir.exists(schema_src)) {
+  schema_files <- list.files(schema_src, full.names = TRUE)
+  for (f in schema_files) {
+    dest <- file.path(out_dir, "schema", basename(f))
+    file.copy(f, dest, overwrite = TRUE)
+    message("Copied ", f, " -> ", dest)
+  }
+}
+
+message("Static API files generated successfully in: ", out_dir)
