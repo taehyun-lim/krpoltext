@@ -1,0 +1,54 @@
+{
+  "dataset": "party_statements",
+  "version": "v2022",
+  "file": "sk_party_statements_v2022.csv",
+  "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major political parties (2003-2022): the center-left Progressive Party and the center-right Conservative Party.",
+  "columns": [
+    {
+      "name": "no",
+      "type": "integer",
+      "description": "Sequential entry number within each party"
+    },
+    {
+      "name": "year",
+      "type": "integer",
+      "description": "Year the statement was posted"
+    },
+    {
+      "name": "ymd",
+      "type": "character",
+      "description": "Full date (YYYY-MM-DD)"
+    },
+    {
+      "name": "title",
+      "type": "character",
+      "description": "Title of the statement"
+    },
+    {
+      "name": "text",
+      "type": "character",
+      "description": "Full text of the statement"
+    },
+    {
+      "name": "filtered",
+      "type": "character",
+      "description": "Parsed text after morphological analysis; Korean-only"
+    },
+    {
+      "name": "partisan",
+      "type": "character",
+      "description": "Party affiliation: Progressive / Conservative"
+    },
+    {
+      "name": "conservative",
+      "type": "integer",
+      "description": "Binary indicator: 1 = Conservative Party, 0 = Progressive Party"
+    },
+    {
+      "name": "id",
+      "type": "character",
+      "description": "Unique document identifier (party prefix + entry number)",
+      "identifier": true
+    }
+  ]
+}

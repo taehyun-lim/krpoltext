@@ -14,7 +14,8 @@ Description: Provides easy access to two large-scale Korean political text
     loading, querying, caching, and converting data for text analysis
     workflows with 'quanteda' and 'tidytext'.
 License: MIT + file LICENSE
-URL: https://github.com/taehyun-lim/krpoltext,
+URL: https://taehyun-lim.github.io/krpoltext/,
+    https://github.com/taehyun-lim/krpoltext,
     https://doi.org/10.1038/s41597-025-05220-4
 BugReports: https://github.com/taehyun-lim/krpoltext/issues
 Depends:
