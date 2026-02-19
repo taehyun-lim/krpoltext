@@ -3,7 +3,7 @@ Title: Korean Political Text Corpora for Reproducible Research
 Version: 0.1.0
 Authors@R: c(
     person("Tae Hyun", "Lim", , "tlim@hamilton.edu", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0000-0000-0000"))
+           comment = c(ORCID = "0000-0002-0429-2683"))
     )
 Description: Provides easy access to two large-scale Korean political text
     corpora described in Lim (2025) <doi:10.1038/s41597-025-05220-4>:

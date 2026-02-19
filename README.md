@@ -117,12 +117,10 @@ citation("krpoltext")
 
 ## License
 
-- **Package code**: [MIT
-  License](https://opensource.org/licenses/MIT)
-- **Data**: [CC BY-NC-ND
-  4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) — see the
-  [OSF project](https://osf.io/rct9y/) and the [Data
-  Descriptor](https://doi.org/10.1038/s41597-025-05220-4) for details.
+- **Package code**: [MIT License](LICENSE.md)
+- **Data**: [CC BY-NC-ND 4.0](LICENSE-DATA.md) — see the
+  [OSF project](https://osf.io/rct9y/) and the
+  [Data Descriptor](https://doi.org/10.1038/s41597-025-05220-4) for full terms.
 
 ## Links
 

@@ -1,6 +1,4 @@
-# Licenses
-
-## Package Code — MIT License
+MIT License
 
 Copyright (c) 2025 Tae Hyun Lim
 
@@ -21,18 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-## Data — CC BY-NC-ND 4.0
-
-The underlying datasets (South Korean Election Campaign Booklet Corpus and
-Party Statements Corpus) are licensed under the
-[Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
-License](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-When using the data, please cite:
-
-> Lim, T.H. (2025). South Korean Election Campaign Booklet and Party
-> Statements Corpora. *Scientific Data*, 12, 1030.
-> https://doi.org/10.1038/s41597-025-05220-4
-
-See the [OSF repository](https://osf.io/rct9y/) for full data terms.
