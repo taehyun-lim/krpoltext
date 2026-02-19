@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   quick-start: quick-start.html
   replication-pipeline: replication-pipeline.html
-last_built: 2026-02-19T18:10Z
+last_built: 2026-02-19T18:38Z
 urls:
   reference: https://taehyun-lim.github.io/krpoltext/reference
   article: https://taehyun-lim.github.io/krpoltext/articles
