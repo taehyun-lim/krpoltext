@@ -1,0 +1,100 @@
+# Replication-Ready Text Analysis Pipeline
+
+This vignette demonstrates a reproducible text analysis pipeline using
+**krpoltext** with **quanteda**. For background on the data, see the
+Data Descriptor:
+
+> Lim, T.H. (2025). South Korean Election Campaign Booklet and Party
+> Statements Corpora. *Scientific Data*, 12, 1030.
+> <https://doi.org/10.1038/s41597-025-05220-4>
+
+## Step 1: Load and Filter
+
+``` r
+library(krpoltext)
+
+ps <- load_party_statements()
+ps_sub <- get_docs("party_statements", year = 2010:2022, .data = ps)
+
+cat("Documents:", nrow(ps_sub), "\n")
+cat("Years:", paste(range(ps_sub$year), collapse = "-"), "\n")
+```
+
+## Step 2: Convert to quanteda Corpus
+
+``` r
+library(quanteda)
+
+corp <- as_quanteda_corpus(ps_sub, docid_field = "id")
+docvars(corp) |> head()
+```
+
+## Step 3: Tokenize and Build DFM
+
+The `filtered` column already contains morphologically parsed Korean
+text (via khaiii). You can use it directly or tokenize the raw `text`
+column:
+
+``` r
+toks <- tokens(corp, remove_punct = TRUE, remove_numbers = TRUE)
+dfm_ps <- dfm(toks)
+dfm_ps
+```
+
+## Step 4: Exploratory Analysis
+
+``` r
+topfeatures(dfm_ps, 20)
+
+# By partisan group
+dfm_group <- dfm_group(dfm_ps, groups = partisan)
+topfeatures(dfm_group, 10, groups = TRUE)
+```
+
+## Step 5: Keyword Analysis (Keyness)
+
+``` r
+library(quanteda.textstats)
+
+dfm_binary <- dfm_group(dfm_ps, groups = conservative)
+keyness <- textstat_keyness(dfm_binary, target = "1")
+head(keyness, 20)
+```
+
+## Step 6: Campaign Booklet Analysis
+
+``` r
+cb <- load_campaign_booklet()
+cb_assembly <- get_docs(
+  "campaign_booklet",
+  office = "national_assembly",
+  .data = cb
+)
+
+corp_cb <- as_quanteda_corpus(cb_assembly, docid_field = "code")
+dfm_cb <- corp_cb |>
+  tokens(remove_punct = TRUE) |>
+  dfm()
+
+# Compare by election result
+dfm_result <- dfm_group(dfm_cb, groups = result)
+topfeatures(dfm_result, 10, groups = TRUE)
+```
+
+## Saving Results
+
+``` r
+saveRDS(dfm_ps, "dfm_party_statements_2010_2022.rds")
+```
+
+## Citation
+
+``` r
+citation("krpoltext")
+```
+
+## Session Info
+
+``` r
+sessionInfo()
+```

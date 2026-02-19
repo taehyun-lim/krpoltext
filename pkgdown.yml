@@ -1,0 +1,10 @@
+pandoc: 3.1.3
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  quick-start: quick-start.html
+  replication-pipeline: replication-pipeline.html
+last_built: 2026-02-19T16:36Z
+urls:
+  reference: https://taehyun-lim.github.io/krpoltext/reference
+  article: https://taehyun-lim.github.io/krpoltext/articles
