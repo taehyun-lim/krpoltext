@@ -1,4 +1,4 @@
-url: https://taehyun-lim.github.io/krpoltext
+﻿url: https://taehyun-lim.github.io/krpoltext
 
 template:
   bootstrap: 5
@@ -7,9 +7,29 @@ template:
 
 navbar:
   structure:
-    left: [intro, reference, articles, data-api]
+    left: [intro, reference, articles, roadmap, release, data-api]
     right: [search, github]
   components:
+    roadmap:
+      text: Roadmap
+      menu:
+        - text: English
+          href: https://github.com/taehyun-lim/krpoltext/blob/main/docs/v0.2.0/ROADMAP.md
+        - text: Korean
+          href: https://github.com/taehyun-lim/krpoltext/blob/main/docs/v0.2.0/ROADMAP_KR.md
+    release:
+      text: Release
+      menu:
+        - text: NEWS
+          href: https://github.com/taehyun-lim/krpoltext/blob/main/NEWS.md
+        - text: Checklist (EN)
+          href: https://github.com/taehyun-lim/krpoltext/blob/main/docs/v0.2.0/RELEASE_CHECKLIST.md
+        - text: Checklist (KR)
+          href: https://github.com/taehyun-lim/krpoltext/blob/main/docs/v0.2.0/RELEASE_CHECKLIST_KR.md
+        - text: Parquet (EN)
+          href: https://github.com/taehyun-lim/krpoltext/blob/main/docs/v0.2.0/PARQUET_CHECKLIST.md
+        - text: Parquet (KR)
+          href: https://github.com/taehyun-lim/krpoltext/blob/main/docs/v0.2.0/PARQUET_CHECKLIST_KR.md
     data-api:
       text: Data API
       href: data/index.json
@@ -43,3 +63,4 @@ reference:
   - title: Cache Management
     contents:
       - clear_cache
+

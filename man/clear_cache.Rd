@@ -19,7 +19,7 @@ Removes cached RDS files created by \code{\link[=load_campaign_booklet]{load_cam
 \code{\link[=load_party_statements]{load_party_statements()}}.
 }
 \examples{
-\dontrun{
-clear_cache("all")
+if (interactive()) {
+  clear_cache("all")
 }
 }

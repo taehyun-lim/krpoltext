@@ -4,17 +4,30 @@
 \alias{load_party_statements}
 \title{Load the South Korean Party Statements corpus}
 \usage{
-load_party_statements(path = NULL, cache = TRUE, refresh = FALSE)
+load_party_statements(
+  path = NULL,
+  format = c("parquet", "csv"),
+  cache = TRUE,
+  refresh = FALSE,
+  data_version = NULL
+)
 }
 \arguments{
-\item{path}{Character; path to a local CSV file. If \code{NULL} (default), the
-bundled dataset is used.}
+\item{path}{Character; path to a local CSV or Parquet file. If \code{NULL}
+(default), a managed artifact is used. If a managed download would be
+required, it is only attempted in an interactive session.}
+
+\item{format}{Character; requested storage format. Defaults to preferring
+\code{"parquet"} and falling back to \code{"csv"} when necessary.}
 
 \item{cache}{Logical; if \code{TRUE} (default), the data is cached as an RDS file
 in the user's cache directory for faster subsequent loads.}
 
 \item{refresh}{Logical; if \code{TRUE}, any existing cache is ignored and the
-source CSV is re-read. Defaults to \code{FALSE}.}
+source file is re-read. Defaults to \code{FALSE}.}
+
+\item{data_version}{Character or \code{NULL}; the data artifact version to load.
+Defaults to the latest available version.}
 }
 \value{
 A \link[data.table:data.table]{data.table::data.table} with the following columns:\tabular{ll}{
@@ -36,7 +49,7 @@ the Data Descriptor (Table 9) for yearly entry counts by party.
 }
 \description{
 Loads the party statements dataset (2003--2022) as a \code{data.table}. The
-dataset contains 82,723 official statements from party spokespersons and
+dataset contains 83,201 official statements from party spokespersons and
 leadership meeting minutes from South Korea's two major political parties.
 }
 \details{
@@ -45,11 +58,16 @@ Lim, T.H. (2025). \emph{Scientific Data}, 12, 1030.
 \doi{10.1038/s41597-025-05220-4}
 }
 \examples{
-\dontrun{
-# Load with default caching
-ps <- load_party_statements()
+path <- tempfile(fileext = ".csv")
+data.table::fwrite(
+  data.table::data.table(
+    year = 2020L,
+    id = "ps-1",
+    text = "statement text"
+  ),
+  path
+)
 
-# Force refresh
-ps <- load_party_statements(refresh = TRUE)
-}
+ps <- load_party_statements(path = path, cache = FALSE)
+ps
 }

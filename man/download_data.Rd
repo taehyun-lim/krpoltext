@@ -22,7 +22,8 @@ Invisibly, a character vector of paths to the cached RDS files.
 \description{
 Downloads the CSV data files from the OSF repository and caches them locally
 as RDS files for fast subsequent loading. On first use the function asks for
-interactive consent before starting the download.
+interactive consent before starting the download. In non-interactive
+sessions, uncached downloads are refused with an informative error.
 }
 \details{
 Downloaded CSV files are read with \code{\link[data.table:fread]{data.table::fread()}}, then saved as
@@ -34,7 +35,7 @@ File integrity is verified via SHA-256 checksums published with the OSF
 release.
 }
 \examples{
-\dontrun{
+if (interactive()) {
 # Download everything (asks for consent interactively)
 download_data()
 

@@ -87,8 +87,8 @@ morphological analyzer.
 Official statements from party spokespersons and minutes from daily
 leadership meetings of South Korea's **two major political parties**
 (2003–2022): the center-left Progressive Party (현 더불어민주당) and the
-center-right Conservative Party (현 국민의힘). Total: **82,723 statements**
-(35,115 conservative + 42,335 progressive; see paper Table 9 for yearly
+center-right Conservative Party (현 국민의힘). Total: **83,201 statements**
+(35,115 conservative + 48,086 progressive; see paper Table 9 for yearly
 breakdown).
 
 | Column | Type | Description |

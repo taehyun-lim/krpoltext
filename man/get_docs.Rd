@@ -7,57 +7,47 @@
 get_docs(
   dataset = c("campaign_booklet", "party_statements"),
   ...,
-  .data = NULL
+  .data = NULL,
+  .select = NULL,
+  .strict = FALSE
 )
 }
 \arguments{
 \item{dataset}{Character; one of \code{"campaign_booklet"} or
 \code{"party_statements"}.}
 
-\item{...}{Named filtering arguments. Each name must correspond to a column
-in the dataset. Values can be:
-\itemize{
-\item A single value: exact match (e.g., \code{year = 2020})
-\item A vector: match any (e.g., \code{year = 2018:2022})
-\item For date/year ranges, supply a numeric or character vector.
-}}
+\item{...}{Named filtering arguments. Values can be scalars or vectors.}
 
-\item{.data}{Optional; a pre-loaded \code{data.table} to filter instead of
-loading from disk. Useful to avoid repeated I/O.}
+\item{.data}{Optional pre-loaded data. If \code{NULL}, the requested dataset is
+loaded with the package defaults.}
+
+\item{.select}{Optional character vector of columns to keep.}
+
+\item{.strict}{Logical; if \code{TRUE}, invalid filter or selection columns
+raise an error. If \code{FALSE} (default), invalid names are ignored with a
+message.}
 }
 \value{
 A \code{data.table} subset of the requested corpus.
 }
 \description{
-Filters rows from either the campaign booklet or party statements corpus
-based on column values. Only filters on columns that actually exist in the
-chosen dataset; unknown column names are silently ignored with a message.
-}
-\details{
-The function dynamically checks which columns exist in the data and applies
-filters only for matching column names. If a filter name does not match any
-column, it is ignored and a message is printed.
-
-For the \strong{campaign_booklet} dataset, useful filter columns include:
-\code{party}, \code{party_eng}, \code{office}, \code{region}, \code{district}, \code{date}, \code{sex},
-\code{result}, \code{name}.
-
-For the \strong{party_statements} dataset, useful filter columns include:
-\code{year}, \code{partisan}, \code{conservative}.
+Loads a dataset if needed, applies named filters, and optionally selects a
+subset of columns.
 }
 \examples{
-\dontrun{
-# Get all party statements from 2020
-docs_2020 <- get_docs("party_statements", year = 2020)
+dt <- data.table::data.table(
+  year = c(2020L, 2021L),
+  title = c("A", "B"),
+  text = c("first", "second"),
+  conservative = c(1L, 0L),
+  id = c("ps-1", "ps-2")
+)
 
-# Get campaign booklets for a specific party
-saenuri <- get_docs("campaign_booklet", party_eng = "Saenuri Party")
-
-# Combine multiple filters
-subset <- get_docs("party_statements", year = 2018:2022, conservative = 1)
-
-# Filter a pre-loaded dataset
-ps <- load_party_statements()
-docs <- get_docs("party_statements", year = 2020, .data = ps)
-}
+get_docs("party_statements", year = 2020, .data = dt)
+get_docs(
+  "party_statements",
+  conservative = 1,
+  .select = c("year", "title"),
+  .data = dt
+)
 }

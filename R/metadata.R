@@ -1,81 +1,90 @@
 #' Retrieve dataset metadata
 #'
-#' Returns a list of metadata about the specified corpus, including its name,
-#' description, time coverage, column names, observation count, and citation
-#' information.
+#' Returns package-facing metadata for one of the bundled corpora, including
+#' column names, versions, identifier fields, and available storage formats.
 #'
 #' @param dataset Character; which dataset to describe. One of
 #'   `"campaign_booklet"` or `"party_statements"`.
 #'
-#' @return A named list with elements:
-#' \describe{
-#'   \item{name}{Human-readable dataset name.}
-#'   \item{description}{Brief description.}
-#'   \item{time_coverage}{Temporal coverage (YYYY-YYYY).}
-#'   \item{columns}{Character vector of column names.}
-#'   \item{n_candidates_or_entries}{Number of unique candidates or entries
-#'     as reported in the Data Descriptor.}
-#'   \item{source_url}{OSF repository URL.}
-#'   \item{paper_doi}{DOI of the Data Descriptor in \emph{Scientific Data}.}
-#'   \item{citation}{Suggested citation string.}
-#' }
-#'
+#' @return A named list with dataset metadata.
 #' @export
+#'
 #' @examples
 #' metadata("campaign_booklet")
 #' metadata("party_statements")
 metadata <- function(dataset = c("campaign_booklet", "party_statements")) {
   dataset <- match.arg(dataset)
+  spec <- .dataset_spec(dataset)
 
-  paper_citation <- paste(
-    "Lim, T.H. (2025). South Korean Election Campaign Booklet and",
-    "Party Statements Corpora. Scientific Data, 12, 1030.",
-    "https://doi.org/10.1038/s41597-025-05220-4"
+  list(
+    name = spec$name,
+    description = spec$description,
+    time_coverage = spec$time_coverage,
+    columns = .dataset_columns(dataset),
+    n_candidates_or_entries = spec$n_candidates_or_entries,
+    data_version = spec$data_version,
+    package_version = .package_version_string(),
+    identifier_columns = spec$identifier_columns,
+    text_columns = spec$text_columns,
+    supported_formats = .supported_formats(dataset, data_version = spec$data_version),
+    managed_formats = .managed_formats(dataset, data_version = spec$data_version),
+    source_url = spec$source_url,
+    paper_doi = spec$paper_doi,
+    license = spec$license,
+    citation = spec$citation,
+    osf_citation = spec$osf_citation,
+    notes = spec$notes
   )
+}
 
-  meta <- list(
-    campaign_booklet = list(
-      name = "South Korean Election Campaign Booklets",
-      description = paste(
-        "Official campaign booklets (manifesto booklets) filed by 49,678",
-        "individual candidates in South Korean presidential, National Assembly,",
-        "and local elections from 2000 to 2022. Text extracted via OCR and",
-        "parsed using the khaiii Korean morphological analyzer."
-      ),
-      time_coverage = "2000-2022",
-      columns = c(
-        "date", "name", "region", "district", "office_id", "office",
-        "giho", "party", "party_eng", "result", "sex", "birthday", "age",
-        "job_id", "job", "job_name", "job_name_eng", "job_code",
-        "edu_id", "edu", "edu_name", "edu_name_eng", "edu_code",
-        "career1", "career2", "pages", "code", "sex_code",
-        "result_code", "text", "filtered"
-      ),
-      n_candidates_or_entries = 49678L,
-      source_url = "https://osf.io/rct9y/",
-      paper_doi = "10.1038/s41597-025-05220-4",
-      citation = paper_citation
-    ),
-    party_statements = list(
-      name = "South Korean Party Statements",
-      description = paste(
-        "Official statements from party spokespersons and minutes from",
-        "daily leadership meetings of South Korea's two major parties",
-        "(Conservative and Progressive), covering 2003 to 2022.",
-        "82,723 total entries (35,115 conservative + 42,335 progressive).",
-        "Parsed using the khaiii Korean morphological analyzer."
-      ),
-      time_coverage = "2003-2022",
-      columns = c(
-        "no", "year", "ymd", "title", "text", "filtered",
-        "partisan", "conservative", "id"
-      ),
-      n_candidates_or_entries = 82723L,
-      source_url = "https://osf.io/rct9y/",
-      paper_doi = "10.1038/s41597-025-05220-4",
-      citation = paper_citation
+#' Retrieve dataset schema
+#'
+#' Returns the column-level schema definition used by `krpoltext` for a given
+#' dataset, including column types, descriptions, artifact metadata, and
+#' dataset-specific extras such as office mappings.
+#'
+#' @param dataset Character; which dataset to describe. One of
+#'   `"campaign_booklet"` or `"party_statements"`.
+#'
+#' @return A named list describing the dataset schema.
+#' @export
+#'
+#' @examples
+#' schema("campaign_booklet")
+#' schema("party_statements")
+schema <- function(dataset = c("campaign_booklet", "party_statements")) {
+  dataset <- match.arg(dataset)
+  spec <- .dataset_spec(dataset)
+  data_version <- spec$data_version
+  artifacts <- .artifact_registry()[[dataset]]$artifacts[[data_version]]
+
+  artifact_specs <- lapply(names(artifacts), function(format_name) {
+    artifact <- artifacts[[format_name]]
+    list(
+      format = format_name,
+      file = artifact$file,
+      download_url = artifact$url,
+      sha256 = artifact$sha256,
+      size_bytes = artifact$size_bytes,
+      managed = !is.null(artifact$url) && nzchar(artifact$url)
     )
-  )
+  })
+  names(artifact_specs) <- names(artifacts)
 
-  meta[[dataset]]
+  list(
+    dataset = dataset,
+    name = spec$name,
+    description = spec$description,
+    time_coverage = spec$time_coverage,
+    data_version = data_version,
+    package_version = .package_version_string(),
+    identifier_columns = spec$identifier_columns,
+    text_columns = spec$text_columns,
+    supported_formats = .supported_formats(dataset, data_version = data_version),
+    managed_formats = .managed_formats(dataset, data_version = data_version),
+    artifacts = artifact_specs,
+    columns = spec$columns,
+    notes = spec$notes,
+    extras = spec$extras
+  )
 }

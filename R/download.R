@@ -2,7 +2,8 @@
 #'
 #' Downloads the CSV data files from the OSF repository and caches them locally
 #' as RDS files for fast subsequent loading. On first use the function asks for
-#' interactive consent before starting the download.
+#' interactive consent before starting the download. In non-interactive
+#' sessions, uncached downloads are refused with an informative error.
 #'
 #' @param dataset Character vector of datasets to download. Valid values are
 #'   `"campaign_booklet"`, `"party_statements"`, or `"all"` (default).
@@ -24,18 +25,18 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
-#' # Download everything (asks for consent interactively)
-#' download_data()
+#' if (interactive()) {
+#'   # Download everything (asks for consent interactively)
+#'   download_data()
 #'
-#' # Download only party statements
-#' download_data("party_statements")
+#'   # Download only party statements
+#'   download_data("party_statements")
 #'
-#' # Force re-download
-#' download_data("all", force = TRUE)
+#'   # Force re-download
+#'   download_data("all", force = TRUE)
 #' }
 download_data <- function(dataset = "all", force = FALSE, quiet = FALSE) {
-  valid <- c("campaign_booklet", "party_statements")
+  valid <- names(.artifact_registry())
   if (identical(dataset, "all")) dataset <- valid
 
   bad <- setdiff(dataset, valid)
@@ -47,12 +48,16 @@ download_data <- function(dataset = "all", force = FALSE, quiet = FALSE) {
     )
   }
 
-  registry <- .data_registry()
   results <- character()
 
   for (ds in dataset) {
-    info <- registry[[ds]]
-    rds_path <- cache_path(info$rds_name)
+    spec <- .artifact_spec(ds, format = "csv")
+    rds_path <- cache_path(
+      ds,
+      format = "csv",
+      data_version = spec$data_version,
+      create_dir = FALSE
+    )
 
     if (!force && file.exists(rds_path)) {
       if (!quiet) message("'", ds, "' already cached at: ", rds_path)
@@ -60,87 +65,45 @@ download_data <- function(dataset = "all", force = FALSE, quiet = FALSE) {
       next
     }
 
-    if (interactive()) {
-      size_mb <- round(info$size_bytes / 1e6)
-      answer <- readline(paste0(
-        "Download '", ds, "' (", size_mb, " MB) from OSF? [y/N] "
-      ))
-      if (!tolower(trimws(answer)) %in% c("y", "yes")) {
-        if (!quiet) message("Skipping '", ds, "'.")
-        next
-      }
+    if (!interactive()) {
+      stop(
+        "Managed downloads are disabled in non-interactive sessions.\n",
+        "Dataset: '", ds, "'.\n",
+        "To proceed, either:\n",
+        "  1. run download_data() interactively,\n",
+        "  2. provide a local file via path= to load_*(), or\n",
+        "  3. populate the cache in advance.\n",
+        "See https://osf.io/rct9y/ for manual downloads.",
+        call. = FALSE
+      )
     }
 
-    rds_path <- .download_one(ds, info, quiet = quiet)
+    size_mb <- round(spec$size_bytes / 1e6)
+    answer <- readline(paste0(
+      "Download '", ds, "' (", size_mb, " MB) from OSF? [y/N] "
+    ))
+    if (!tolower(trimws(answer)) %in% c("y", "yes")) {
+      if (!quiet) message("Skipping '", ds, "'.")
+      next
+    }
+
+    rds_path <- .download_one(ds, spec, quiet = quiet)
     results <- c(results, rds_path)
   }
 
   invisible(results)
 }
 
-#' Registry of available datasets with URLs and checksums
-#' @noRd
-.data_registry <- function() {
-  list(
-    campaign_booklet = list(
-      url       = "https://osf.io/download/6ybj8/",
-      csv_name  = "sk_election_campaign_booklet_v2022.csv",
-      rds_name  = "sk_election_campaign_booklet_v2022",
-      sha256    = "6ce6f40f5358829b167109d9ca9195e5089d2c6d05a61ad1c1925e424f55021d",
-      size_bytes = 756245336
-    ),
-    party_statements = list(
-      url       = "https://osf.io/download/8u2ah/",
-      csv_name  = "sk_party_statements_v2022.csv",
-      rds_name  = "sk_party_statements_v2022",
-      sha256    = "60874e7c44d851c9cfc0892d70f6ef9ff9fb3993a5324963297ca4eabd4868e4",
-      size_bytes = 740785920
-    )
-  )
-}
-
 #' Download a single dataset, verify checksum, cache as RDS
 #' @noRd
-.download_one <- function(dataset_name, info, quiet = FALSE) {
-  tmp_csv <- tempfile(fileext = ".csv")
+.download_one <- function(dataset_name, spec, quiet = FALSE) {
+  if (!quiet) message("Downloading '", dataset_name, "' from OSF...")
+  tmp_csv <- .download_artifact(spec, quiet = quiet)
   on.exit(unlink(tmp_csv), add = TRUE)
 
-  if (!quiet) message("Downloading '", dataset_name, "' from OSF...")
-
-  tryCatch(
-    utils::download.file(
-      url      = info$url,
-      destfile = tmp_csv,
-      mode     = "wb",
-      quiet    = quiet
-    ),
-    error = function(e) {
-      stop(
-        "Download failed for '", dataset_name, "'.\n",
-        "URL: ", info$url, "\n",
-        "Error: ", conditionMessage(e), "\n",
-        "Download manually: https://osf.io/rct9y/\n",
-        "Data Descriptor: https://doi.org/10.1038/s41597-025-05220-4",
-        call. = FALSE
-      )
-    }
-  )
-
-  if (!quiet) message("Verifying checksum...")
-  actual_sha <- .sha256sum(tmp_csv)
-  if (!is.null(actual_sha) && !identical(actual_sha, info$sha256)) {
-    warning(
-      "SHA-256 mismatch for '", dataset_name, "'!\n",
-      "Expected: ", info$sha256, "\n",
-      "Got:      ", actual_sha, "\n",
-      "The file may be corrupted or updated. Proceeding anyway.",
-      call. = FALSE
-    )
-  }
-
   if (!quiet) message("Reading CSV and caching as RDS...")
-  dt <- data.table::fread(tmp_csv, encoding = "UTF-8", showProgress = !quiet)
-  rds_path <- save_cache(dt, info$rds_name)
+  dt <- .read_source_file(tmp_csv, format = "csv")
+  rds_path <- save_cache(dt, dataset_name, format = "csv", data_version = spec$data_version)
 
   if (!quiet) {
     message(
@@ -153,14 +116,8 @@ download_data <- function(dataset = "all", force = FALSE, quiet = FALSE) {
   rds_path
 }
 
-#' Compute SHA-256 of a file (returns NULL if digest not available)
+#' Compute SHA-256 of a file
 #' @noRd
 .sha256sum <- function(path) {
-  if (requireNamespace("digest", quietly = TRUE)) {
-    return(digest::digest(file = path, algo = "sha256"))
-  }
-  tryCatch({
-    output <- system2("shasum", args = c("-a", "256", path), stdout = TRUE)
-    sub("\\s.*$", "", output[1])
-  }, error = function(e) NULL)
+  digest::digest(file = path, algo = "sha256")
 }

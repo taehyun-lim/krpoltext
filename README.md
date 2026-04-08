@@ -1,4 +1,4 @@
-
+﻿
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # krpoltext
@@ -8,7 +8,10 @@
 [![License: MIT](https://img.shields.io/badge/code-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/data-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 [![DOI](https://img.shields.io/badge/DOI-10.1038%2Fs41597--025--05220--4-blue)](https://doi.org/10.1038/s41597-025-05220-4)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18704319.svg)](https://doi.org/10.5281/zenodo.18704319)
 <!-- badges: end -->
+
+English | [한국어](README_kr.md)
 
 **krpoltext** provides convenient R access to two large-scale Korean
 political text corpora described in:
@@ -20,12 +23,22 @@ political text corpora described in:
 | Corpus | Period | Candidates / Entries | Description |
 |--------|--------|---------------------|-------------|
 | **Election Campaign Booklets** | 2000–2022 | 49,678 candidates | Manifesto booklets from candidates in presidential, National Assembly, and local elections |
-| **Party Statements** | 2003–2022 | 82,723 statements | Official statements and leadership meeting minutes from the two major parties |
+| **Party Statements** | 2003–2022 | 83,201 statements | Official statements and leadership meeting minutes from the two major parties |
 
 Data is hosted on the [Open Science
 Framework](https://osf.io/rct9y/) (DOI:
-[10.17605/OSF.IO/RCT9Y](https://doi.org/10.17605/OSF.IO/RCT9Y)) and
-**automatically downloaded** on first use.
+[10.17605/OSF.IO/RCT9Y](https://doi.org/10.17605/OSF.IO/RCT9Y)). If a
+managed artifact is needed, it is downloaded automatically on first use
+in interactive sessions; non-interactive sessions should use a local file
+path or a pre-populated cache.
+
+## Roadmap
+
+The revised project roadmap is available in both languages:
+
+- Planning docs index: [docs/v0.2.0/README.md](docs/v0.2.0/README.md)
+- English: [docs/v0.2.0/ROADMAP.md](docs/v0.2.0/ROADMAP.md)
+- Korean: [docs/v0.2.0/ROADMAP_KR.md](docs/v0.2.0/ROADMAP_KR.md)
 
 ## Installation
 
@@ -39,16 +52,23 @@ remotes::install_github("taehyun-lim/krpoltext")
 ``` r
 library(krpoltext)
 
-# Load a dataset (auto-downloads from OSF on first use, then cached)
+# Load a dataset (downloads interactively on first use if needed, then cached)
 ps <- load_party_statements()
 cb <- load_campaign_booklet()
 
 # Explore metadata
 metadata("party_statements")
+schema("party_statements")
 
 # Filter documents
 docs_2020 <- get_docs("party_statements", year = 2020)
 conservative <- get_docs("party_statements", year = 2018:2022, conservative = 1)
+strict_subset <- get_docs(
+  "party_statements",
+  year = 2020,
+  .select = c("year", "title", "text"),
+  .strict = TRUE
+)
 
 # Campaign booklets: filter by office and party
 assembly <- get_docs("campaign_booklet", office = "national_assembly", .data = cb)
@@ -56,17 +76,24 @@ assembly <- get_docs("campaign_booklet", office = "national_assembly", .data = c
 
 ## Data Download
 
-The CSV files (\~1.5 GB total) are downloaded from OSF on first load:
+Managed artifacts are available from OSF in both CSV and Parquet formats.
+The `load_*()` helpers can use managed Parquet artifacts, while
+`download_data()` remains a CSV-prefetch helper. You can also point the
+loaders at local CSV or Parquet files:
 
 ``` r
-# Auto-download: asks for consent interactively
+# Auto-download managed Parquet on first use when available
+ps <- load_party_statements(format = "parquet")
+
+# Or use CSV explicitly
 ps <- load_party_statements()
 
-# Or download all datasets at once
+# Prefetch CSV caches for both datasets
 download_data()
 
 # Provide a local file path instead
 ps <- load_party_statements(path = "~/Downloads/sk_party_statements_v2022.csv")
+ps <- load_party_statements(path = "~/Downloads/sk_party_statements_v2022.parquet")
 ```
 
 Data is cached as compressed RDS in
@@ -90,11 +117,48 @@ topfeatures(dfm_obj, 20)
 |----------|-------------|
 | `load_campaign_booklet()` | Load the campaign booklet corpus |
 | `load_party_statements()` | Load the party statements corpus |
-| `metadata()` | Dataset metadata (columns, counts, citation) |
-| `get_docs()` | Filter documents by any column |
+| `metadata()` | Dataset metadata (columns, versions, citation) |
+| `schema()` | Column-level schema and artifact metadata |
+| `get_docs()` | Filter documents and optionally select columns |
+| `filter_docs()` | Apply strict filters to an in-memory table |
+| `select_vars()` | Select columns from an in-memory table |
 | `as_quanteda_corpus()` | Convert to a quanteda corpus object |
 | `download_data()` | Download datasets from OSF |
 | `clear_cache()` | Remove cached data files |
+
+## Static Data API
+
+Dataset metadata and download links are available as a static JSON API via
+GitHub Pages, with no server required:
+
+| Endpoint | Description |
+|----------|-------------|
+| [`/data/index.json`](https://taehyun-lim.github.io/krpoltext/data/index.json) | Resource index (files, versions, SHA-256, download URLs) |
+| [`/data/metadata.json`](https://taehyun-lim.github.io/krpoltext/data/metadata.json) | Dataset descriptions and citation info |
+| [`/data/schema/campaign_booklet.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json) | Column schema for campaign booklets |
+| [`/data/schema/party_statements.json`](https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json) | Column schema for party statements |
+
+**R** (without installing the package):
+
+``` r
+api <- "https://taehyun-lim.github.io/krpoltext/data/metadata.json"
+meta <- jsonlite::fromJSON(api)
+url <- meta$party_statements$download_urls$csv
+tmp <- tempfile(fileext = ".csv")
+download.file(url, tmp, mode = "wb")
+dt <- data.table::fread(tmp, encoding = "UTF-8")
+```
+
+**Python**:
+
+``` python
+import requests, pandas as pd
+meta = requests.get("https://taehyun-lim.github.io/krpoltext/data/metadata.json").json()
+url = meta["party_statements"]["download_urls"]["csv"]
+df = pd.read_csv(url)
+```
+
+Full documentation: <https://taehyun-lim.github.io/krpoltext/>
 
 ## Citation
 
@@ -126,5 +190,9 @@ citation("krpoltext")
 
 - Data Descriptor: <https://doi.org/10.1038/s41597-025-05220-4>
 - OSF Repository: <https://osf.io/rct9y/>
+- Zenodo Archive: <https://doi.org/10.5281/zenodo.18704319>
+- Roadmap (EN): <https://github.com/taehyun-lim/krpoltext/blob/main/docs/v0.2.0/ROADMAP.md>
+- Roadmap (KR): <https://github.com/taehyun-lim/krpoltext/blob/main/docs/v0.2.0/ROADMAP_KR.md>
 - GitHub: <https://github.com/taehyun-lim/krpoltext>
 - Issues: <https://github.com/taehyun-lim/krpoltext/issues>
+

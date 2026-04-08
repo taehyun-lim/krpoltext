@@ -4,17 +4,30 @@
 \alias{load_campaign_booklet}
 \title{Load the South Korean Election Campaign Booklet corpus}
 \usage{
-load_campaign_booklet(path = NULL, cache = TRUE, refresh = FALSE)
+load_campaign_booklet(
+  path = NULL,
+  format = c("parquet", "csv"),
+  cache = TRUE,
+  refresh = FALSE,
+  data_version = NULL
+)
 }
 \arguments{
-\item{path}{Character; path to a local CSV file. If \code{NULL} (default), the
-bundled dataset is used.}
+\item{path}{Character; path to a local CSV or Parquet file. If \code{NULL}
+(default), a managed artifact is used. If a managed download would be
+required, it is only attempted in an interactive session.}
+
+\item{format}{Character; requested storage format. Defaults to preferring
+\code{"parquet"} and falling back to \code{"csv"} when necessary.}
 
 \item{cache}{Logical; if \code{TRUE} (default), the data is cached as an RDS file
 in the user's cache directory for faster subsequent loads.}
 
 \item{refresh}{Logical; if \code{TRUE}, any existing cache is ignored and the
-source CSV is re-read. Defaults to \code{FALSE}.}
+source file is re-read. Defaults to \code{FALSE}.}
+
+\item{data_version}{Character or \code{NULL}; the data artifact version to load.
+Defaults to the latest available version.}
 }
 \value{
 A \link[data.table:data.table]{data.table::data.table} with the following columns:\tabular{ll}{
@@ -49,14 +62,16 @@ Lim, T.H. (2025). \emph{Scientific Data}, 12, 1030.
 \doi{10.1038/s41597-025-05220-4}
 }
 \examples{
-\dontrun{
-# Load with default caching
-cb <- load_campaign_booklet()
+path <- tempfile(fileext = ".csv")
+data.table::fwrite(
+  data.table::data.table(
+    date = "2020-04-15",
+    party = "Example Party",
+    text = "campaign text"
+  ),
+  path
+)
 
-# Load from a specific file
-cb <- load_campaign_booklet(path = "path/to/my_data.csv")
-
-# Force refresh the cache
-cb <- load_campaign_booklet(refresh = TRUE)
-}
+cb <- load_campaign_booklet(path = path, cache = FALSE)
+cb
 }

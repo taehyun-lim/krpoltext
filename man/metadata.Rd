@@ -11,23 +11,11 @@ metadata(dataset = c("campaign_booklet", "party_statements"))
 \code{"campaign_booklet"} or \code{"party_statements"}.}
 }
 \value{
-A named list with elements:
-\describe{
-\item{name}{Human-readable dataset name.}
-\item{description}{Brief description.}
-\item{time_coverage}{Temporal coverage (YYYY-YYYY).}
-\item{columns}{Character vector of column names.}
-\item{n_candidates_or_entries}{Number of unique candidates or entries
-as reported in the Data Descriptor.}
-\item{source_url}{OSF repository URL.}
-\item{paper_doi}{DOI of the Data Descriptor in \emph{Scientific Data}.}
-\item{citation}{Suggested citation string.}
-}
+A named list with dataset metadata.
 }
 \description{
-Returns a list of metadata about the specified corpus, including its name,
-description, time coverage, column names, observation count, and citation
-information.
+Returns package-facing metadata for one of the bundled corpora, including
+column names, versions, identifier fields, and available storage formats.
 }
 \examples{
 metadata("campaign_booklet")

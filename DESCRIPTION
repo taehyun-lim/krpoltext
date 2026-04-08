@@ -1,6 +1,6 @@
 Package: krpoltext
 Title: Korean Political Text Corpora for Reproducible Research
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
     person("Tae Hyun", "Lim", , "tlim@hamilton.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0429-2683"))
@@ -9,7 +9,7 @@ Description: Provides easy access to two large-scale Korean political text
     corpora described in Lim (2025) <doi:10.1038/s41597-025-05220-4>:
     (1) South Korean Election Campaign Booklets covering 49,678 candidates
     across presidential, National Assembly, and local elections (2000-2022),
-    and (2) South Korean Party Statements containing 82,723 official
+    and (2) South Korean Party Statements containing 83,201 official
     statements from the two major parties (2003-2022). Functions support
     loading, querying, caching, and converting data for text analysis
     workflows with 'quanteda' and 'tidytext'.
@@ -22,16 +22,17 @@ BugReports: https://github.com/taehyun-lim/krpoltext/issues
 Depends:
     R (>= 4.1.0)
 Imports:
-    data.table (>= 1.14.0)
+    data.table (>= 1.14.0),
+    digest
 Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
+    arrow,
     quanteda,
     tidytext,
     dplyr,
-    ggplot2,
-    digest
+    ggplot2
 VignetteBuilder: knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

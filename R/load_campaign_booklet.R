@@ -8,12 +8,17 @@
 #' Lim, T.H. (2025). *Scientific Data*, 12, 1030.
 #' \doi{10.1038/s41597-025-05220-4}
 #'
-#' @param path Character; path to a local CSV file. If `NULL` (default), the
-#'   bundled dataset is used.
+#' @param path Character; path to a local CSV or Parquet file. If `NULL`
+#'   (default), a managed artifact is used. If a managed download would be
+#'   required, it is only attempted in an interactive session.
+#' @param format Character; requested storage format. Defaults to preferring
+#'   `"parquet"` and falling back to `"csv"` when necessary.
 #' @param cache Logical; if `TRUE` (default), the data is cached as an RDS file
 #'   in the user's cache directory for faster subsequent loads.
 #' @param refresh Logical; if `TRUE`, any existing cache is ignored and the
 #'   source CSV is re-read. Defaults to `FALSE`.
+#' @param data_version Character or `NULL`; the data artifact version to load.
+#'   Defaults to the latest available version.
 #'
 #' @return A [data.table::data.table] with the following columns:
 #'
@@ -38,27 +43,29 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
-#' # Load with default caching
-#' cb <- load_campaign_booklet()
+#' path <- tempfile(fileext = ".csv")
+#' data.table::fwrite(
+#'   data.table::data.table(
+#'     date = "2020-04-15",
+#'     party = "Example Party",
+#'     text = "campaign text"
+#'   ),
+#'   path
+#' )
 #'
-#' # Load from a specific file
-#' cb <- load_campaign_booklet(path = "path/to/my_data.csv")
-#'
-#' # Force refresh the cache
-#' cb <- load_campaign_booklet(refresh = TRUE)
-#' }
-load_campaign_booklet <- function(path = NULL, cache = TRUE, refresh = FALSE) {
-  stopifnot(is.logical(cache), length(cache) == 1L)
-  stopifnot(is.logical(refresh), length(refresh) == 1L)
-  if (!is.null(path) && !is.character(path)) {
-    stop("`path` must be NULL or a character string.", call. = FALSE)
-  }
-
+#' cb <- load_campaign_booklet(path = path, cache = FALSE)
+#' cb
+load_campaign_booklet <- function(path = NULL,
+                                  format = c("parquet", "csv"),
+                                  cache = TRUE,
+                                  refresh = FALSE,
+                                  data_version = NULL) {
   read_with_cache(
-    csv_filename = "sk_election_campaign_booklet_v2022.csv",
+    dataset = "campaign_booklet",
     path = path,
     cache = cache,
-    refresh = refresh
+    refresh = refresh,
+    format = format,
+    data_version = data_version
   )
 }
