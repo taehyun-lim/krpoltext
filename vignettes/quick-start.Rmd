@@ -39,7 +39,8 @@ pre-populated cache.
 ```{r load}
 library(krpoltext)
 
-# Load the party statements corpus (~741 MB download on first use)
+# Load the party statements corpus
+# Managed Parquet is preferred when available.
 ps <- load_party_statements()
 ps
 ```

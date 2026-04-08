@@ -9,6 +9,7 @@
 library(krpoltext)
 
 # --- 1. Load data ---
+# Managed Parquet is preferred when available.
 ps <- load_party_statements()
 cb <- load_campaign_booklet()
 

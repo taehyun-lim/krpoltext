@@ -27,13 +27,12 @@
 다운로드됩니다. 비대화형 세션에서는 로컬 파일 경로나 미리 채워둔 cache를
 사용해야 합니다.
 
-## 로드맵
+## 릴리스 노트
 
-수정된 프로젝트 로드맵은 아래 두 언어 버전으로 확인할 수 있습니다.
+최근 패키지 변경 사항은 아래에서 확인할 수 있습니다.
 
-- 문서 인덱스: [docs/v0.2.0/README_KR.md](docs/v0.2.0/README_KR.md)
-- English: [docs/v0.2.0/ROADMAP.md](docs/v0.2.0/ROADMAP.md)
-- 한국어: [docs/v0.2.0/ROADMAP_KR.md](docs/v0.2.0/ROADMAP_KR.md)
+- [NEWS.md](NEWS.md)
+- GitHub Releases: <https://github.com/taehyun-lim/krpoltext/releases>
 
 ## 설치
 
@@ -182,8 +181,8 @@ citation("krpoltext")
 - Data Descriptor: <https://doi.org/10.1038/s41597-025-05220-4>
 - OSF 저장소: <https://osf.io/rct9y/>
 - Zenodo 아카이브: <https://doi.org/10.5281/zenodo.18704319>
-- 로드맵(EN): <https://github.com/taehyun-lim/krpoltext/blob/main/docs/v0.2.0/ROADMAP.md>
-- 로드맵(KR): <https://github.com/taehyun-lim/krpoltext/blob/main/docs/v0.2.0/ROADMAP_KR.md>
+- 릴리스 노트: <https://github.com/taehyun-lim/krpoltext/blob/main/NEWS.md>
+- GitHub Releases: <https://github.com/taehyun-lim/krpoltext/releases>
 - GitHub: <https://github.com/taehyun-lim/krpoltext>
 - Issues: <https://github.com/taehyun-lim/krpoltext/issues>
 

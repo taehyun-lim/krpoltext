@@ -32,13 +32,12 @@ managed artifact is needed, it is downloaded automatically on first use
 in interactive sessions; non-interactive sessions should use a local file
 path or a pre-populated cache.
 
-## Roadmap
+## Release Notes
 
-The revised project roadmap is available in both languages:
+Recent package changes are summarized in:
 
-- Planning docs index: [docs/v0.2.0/README.md](docs/v0.2.0/README.md)
-- English: [docs/v0.2.0/ROADMAP.md](docs/v0.2.0/ROADMAP.md)
-- Korean: [docs/v0.2.0/ROADMAP_KR.md](docs/v0.2.0/ROADMAP_KR.md)
+- [NEWS.md](NEWS.md)
+- GitHub Releases: <https://github.com/taehyun-lim/krpoltext/releases>
 
 ## Installation
 
@@ -191,8 +190,8 @@ citation("krpoltext")
 - Data Descriptor: <https://doi.org/10.1038/s41597-025-05220-4>
 - OSF Repository: <https://osf.io/rct9y/>
 - Zenodo Archive: <https://doi.org/10.5281/zenodo.18704319>
-- Roadmap (EN): <https://github.com/taehyun-lim/krpoltext/blob/main/docs/v0.2.0/ROADMAP.md>
-- Roadmap (KR): <https://github.com/taehyun-lim/krpoltext/blob/main/docs/v0.2.0/ROADMAP_KR.md>
+- Release Notes: <https://github.com/taehyun-lim/krpoltext/blob/main/NEWS.md>
+- GitHub Releases: <https://github.com/taehyun-lim/krpoltext/releases>
 - GitHub: <https://github.com/taehyun-lim/krpoltext>
 - Issues: <https://github.com/taehyun-lim/krpoltext/issues>
 
