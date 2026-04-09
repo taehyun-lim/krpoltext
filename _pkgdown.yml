@@ -33,13 +33,13 @@ articles:
 
 reference:
   - title: Load Data
-    desc: Download and load corpora from OSF
+    desc: Download and load corpora from OSF in CSV or Parquet formats
     contents:
       - load_campaign_booklet
       - load_party_statements
       - download_data
   - title: Explore and Filter
-    desc: Inspect metadata and filter documents
+    desc: Inspect metadata, schemas, and document filters
     contents:
       - metadata
       - schema
