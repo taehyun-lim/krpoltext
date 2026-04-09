@@ -13,10 +13,13 @@ jobs:
     concurrency:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     permissions:
-      contents: write
+      contents: read
+      pages: write
+      id-token: write
 
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - uses: actions/checkout@v4
@@ -47,10 +50,17 @@ jobs:
       - name: Generate Static API files into docs/data/
         run: Rscript tools/build_api.R docs/data
 
-      - name: Deploy to GitHub Pages
+      - name: Setup Pages
         if: github.event_name != 'pull_request'
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
         with:
-          branch: gh-pages
-          folder: docs
-          clean: false
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        if: github.event_name != 'pull_request'
+        uses: actions/deploy-pages@v4
