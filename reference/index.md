@@ -2,7 +2,7 @@
 
 ## Load Data
 
-Download and load corpora from OSF
+Download and load corpora from OSF in CSV or Parquet formats
 
 - [`load_campaign_booklet()`](https://taehyun-lim.github.io/krpoltext/reference/load_campaign_booklet.md)
   : Load the South Korean Election Campaign Booklet corpus
@@ -13,7 +13,7 @@ Download and load corpora from OSF
 
 ## Explore and Filter
 
-Inspect metadata and filter documents
+Inspect metadata, schemas, and document filters
 
 - [`metadata()`](https://taehyun-lim.github.io/krpoltext/reference/metadata.md)
   : Retrieve dataset metadata
