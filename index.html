@@ -50,7 +50,7 @@
     <li><a class="external-link dropdown-item" href="https://github.com/taehyun-lim/krpoltext/releases">GitHub Releases</a></li>
   </ul>
 </li>
-<li class="nav-item"><a class="nav-link" href="data/index.json">Data API</a></li>
+<li class="nav-item"><a class="nav-link" href="data-api.html">Data API</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -65,8 +65,7 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="krpoltext">krpoltext<a class="anchor" aria-label="anchor" href="#krpoltext"></a>
-</h1></div>
+
 <!-- badges: start -->
 
 <p>English | <a href="README_kr.html">한국어</a></p>
@@ -263,6 +262,8 @@
 </tr>
 </tbody>
 </table>
+<p>API overview and fallback URLs: <a href="https://taehyun-lim.github.io/krpoltext/data-api.html" class="uri">https://taehyun-lim.github.io/krpoltext/data-api.html</a></p>
+<p>If GitHub Pages temporarily returns <code>404</code>, the same resource index is also available here: <a href="https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/index.json" class="external-link uri">https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/index.json</a></p>
 <p><strong>R</strong> (without installing the package):</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">api</span> <span class="op">&lt;-</span> <span class="st">"https://taehyun-lim.github.io/krpoltext/data/metadata.json"</span></span>
@@ -276,7 +277,8 @@
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>meta <span class="op">=</span> requests.get(<span class="st">"https://taehyun-lim.github.io/krpoltext/data/metadata.json"</span>).json()</span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>url <span class="op">=</span> meta[<span class="st">"party_statements"</span>][<span class="st">"download_urls"</span>][<span class="st">"csv"</span>]</span>
 <span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url)</span></code></pre></div>
-<p>Full documentation: <a href="https://taehyun-lim.github.io/krpoltext/" class="uri">https://taehyun-lim.github.io/krpoltext/</a></p>
+<p>Function reference: <a href="https://taehyun-lim.github.io/krpoltext/reference/index.html" class="uri">https://taehyun-lim.github.io/krpoltext/reference/index.html</a></p>
+<p>Guides and examples: <a href="https://taehyun-lim.github.io/krpoltext/articles/index.html" class="uri">https://taehyun-lim.github.io/krpoltext/articles/index.html</a></p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
@@ -289,6 +291,11 @@
 <blockquote>
 <p>Lim, T.H. (2024). South Korean Election Campaign Booklet Corpus and Party Statements Corpus. OSF. <a href="https://doi.org/10.17605/OSF.IO/RCT9Y" class="external-link uri">https://doi.org/10.17605/OSF.IO/RCT9Y</a></p>
 </blockquote>
+<p>For the R package itself, cite:</p>
+<blockquote>
+<p>Lim, T.H. (2026). <em>krpoltext: Korean Political Text Corpora for R</em>. R package version 0.2.0, <a href="https://github.com/taehyun-lim/krpoltext" class="external-link uri">https://github.com/taehyun-lim/krpoltext</a></p>
+</blockquote>
+<p>You can also retrieve the current package citation in R:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"krpoltext"</span><span class="op">)</span></span></code></pre></div>
 </div>
