@@ -1,0 +1,84 @@
+{
+  "dataset": "party_statements",
+  "name": "South Korean Party Statements",
+  "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003 to 2022. 83,201 total entries (35,115 conservative + 48,086 progressive). Parsed using the khaiii Korean morphological analyzer.",
+  "time_coverage": "2003-2022",
+  "data_version": "v2022",
+  "package_version": "0.2.0",
+  "identifier_columns": "id",
+  "text_columns": ["text", "filtered"],
+  "supported_formats": ["csv", "parquet"],
+  "managed_formats": ["csv", "parquet"],
+  "artifacts": {
+    "csv": {
+      "format": "csv",
+      "file": "sk_party_statements_v2022.csv",
+      "download_url": "https://osf.io/download/8u2ah/",
+      "sha256": "60874e7c44d851c9cfc0892d70f6ef9ff9fb3993a5324963297ca4eabd4868e4",
+      "size_bytes": 740785920,
+      "managed": true
+    },
+    "parquet": {
+      "format": "parquet",
+      "file": "sk_party_statements_v2022.parquet",
+      "download_url": "https://osf.io/download/8cjxu/",
+      "sha256": "cee8a49adbe90f96ee4e2b45b6d84c433e5eb9ebb4849cfc979f6a19c57378ea",
+      "size_bytes": 393216464,
+      "managed": true
+    }
+  },
+  "columns": [
+    {
+      "name": "no",
+      "type": "integer",
+      "description": "Sequential entry number within each party"
+    },
+    {
+      "name": "year",
+      "type": "integer",
+      "description": "Year the statement was posted"
+    },
+    {
+      "name": "ymd",
+      "type": "character",
+      "description": "Full date (YYYY-MM-DD)"
+    },
+    {
+      "name": "title",
+      "type": "character",
+      "description": "Title of the statement"
+    },
+    {
+      "name": "text",
+      "type": "character",
+      "description": "Full text of the statement"
+    },
+    {
+      "name": "filtered",
+      "type": "character",
+      "description": "Parsed text after morphological analysis; Korean-only"
+    },
+    {
+      "name": "partisan",
+      "type": "character",
+      "description": "Party affiliation: Progressive / Conservative"
+    },
+    {
+      "name": "conservative",
+      "type": "integer",
+      "description": "Binary indicator: 1 = Conservative Party, 0 = Progressive Party"
+    },
+    {
+      "name": "id",
+      "type": "character",
+      "description": "Unique document identifier (party prefix + entry number)",
+      "identifier": true
+    }
+  ],
+  "notes": {
+    "missing_values": "Some fields may contain NA or empty strings.",
+    "party_names": "Both parties have undergone frequent name changes. The 'partisan' column uses stable ideological labels rather than party names.",
+    "text_processing": "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version."
+  },
+  "extras": []
+}
