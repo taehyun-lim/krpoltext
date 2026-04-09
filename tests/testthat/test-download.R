@@ -15,3 +15,11 @@ test_that("download_data refuses uncached downloads in non-interactive sessions"
   )
   expect_false(dir.exists(test_cache))
 })
+
+test_that("download prompt names the CSV artifact format", {
+  spec <- krpoltext:::.artifact_spec("party_statements", format = "csv")
+  prompt <- krpoltext:::.download_prompt("party_statements", spec)
+
+  expect_match(prompt, "CSV artifact", fixed = TRUE)
+  expect_match(prompt, "(741 MB)", fixed = TRUE)
+})

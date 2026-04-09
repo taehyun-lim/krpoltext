@@ -15,13 +15,13 @@ Defaults to \code{"text"}.}
 \item{docid_field}{Character or \code{NULL}; name of the column to use as
 document IDs. If \code{NULL}, row numbers are used.}
 
-\item{...}{Additional arguments passed to \code{\link[quanteda:corpus]{quanteda::corpus()}}.}
+\item{...}{Additional arguments passed to \code{quanteda::corpus()}.}
 }
 \value{
 A \code{quanteda} corpus object.
 }
 \description{
-Creates a \code{\link[quanteda:corpus]{quanteda::corpus()}} object from a \code{data.table} loaded by
+Creates a \code{quanteda::corpus()} object from a \code{data.table} loaded by
 \code{\link[=load_campaign_booklet]{load_campaign_booklet()}} or \code{\link[=load_party_statements]{load_party_statements()}}. The \code{text} column
 is used as the document text; all other columns become document-level
 variables (docvars).

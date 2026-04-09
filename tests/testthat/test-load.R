@@ -168,6 +168,13 @@ test_that("managed downloads are blocked in non-interactive load paths", {
   expect_false(dir.exists(test_cache))
 })
 
+test_that("managed download messages include the artifact format", {
+  msg <- krpoltext:::.managed_download_message("party_statements", "parquet")
+
+  expect_match(msg, "managed Parquet artifact", fixed = TRUE)
+  expect_match(msg, "prefetch the CSV cache explicitly", fixed = TRUE)
+})
+
 test_that("load functions reject invalid arguments", {
   missing_path <- tempfile(fileext = ".csv")
 

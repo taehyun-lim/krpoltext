@@ -46,9 +46,9 @@ remotes::install_github("taehyun-lim/krpoltext")
 ```r
 library(krpoltext)
 
-# 데이터셋 로드 (필요하면 대화형 세션에서 처음 다운로드 후 캐시)
-ps <- load_party_statements()
-cb <- load_campaign_booklet()
+# 관리형 Parquet 아티팩트를 명시적으로 사용
+ps <- load_party_statements(format = "parquet")
+cb <- load_campaign_booklet(format = "parquet")
 
 # 메타데이터 확인
 metadata("party_statements")
@@ -76,11 +76,13 @@ assembly <- get_docs("campaign_booklet", office = "national_assembly", .data = c
 파일 경로를 직접 넘길 수도 있습니다.
 
 ```r
-# 가능하면 관리형 Parquet를 우선 사용
+# 관리형 Parquet를 명시적으로 사용
 ps <- load_party_statements(format = "parquet")
+cb <- load_campaign_booklet(format = "parquet")
 
 # 또는 CSV를 명시적으로 사용
-ps <- load_party_statements()
+ps <- load_party_statements(format = "csv")
+cb <- load_campaign_booklet(format = "csv")
 
 # 두 데이터셋의 CSV cache를 미리 받아두기
 download_data()

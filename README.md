@@ -51,9 +51,9 @@ remotes::install_github("taehyun-lim/krpoltext")
 ``` r
 library(krpoltext)
 
-# Load a dataset (downloads interactively on first use if needed, then cached)
-ps <- load_party_statements()
-cb <- load_campaign_booklet()
+# Load datasets from managed Parquet artifacts when available
+ps <- load_party_statements(format = "parquet")
+cb <- load_campaign_booklet(format = "parquet")
 
 # Explore metadata
 metadata("party_statements")
@@ -81,11 +81,13 @@ The `load_*()` helpers can use managed Parquet artifacts, while
 loaders at local CSV or Parquet files:
 
 ``` r
-# Auto-download managed Parquet on first use when available
+# Use managed Parquet explicitly (also the default preference)
 ps <- load_party_statements(format = "parquet")
+cb <- load_campaign_booklet(format = "parquet")
 
 # Or use CSV explicitly
-ps <- load_party_statements()
+ps <- load_party_statements(format = "csv")
+cb <- load_campaign_booklet(format = "csv")
 
 # Prefetch CSV caches for both datasets
 download_data()

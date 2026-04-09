@@ -4,6 +4,8 @@
 .Rhistory
 .RData
 .Ruserdata
+.Rlib/
+.cache/
 *.Rcheck/
 *.tar.gz
 
@@ -22,3 +24,4 @@ Thumbs.db
 
 # Local private notes
 .codex-notes/
+.codex-history-rewrite/

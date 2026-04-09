@@ -17,8 +17,7 @@ cat("Paper DOI:", meta_ps$paper_doi, "\n")
 cat("Columns:", paste(meta_ps$columns, collapse = ", "), "\n\n")
 
 # --- 2. Load the party statements corpus ---
-# Managed Parquet is preferred when available.
-ps <- load_party_statements()
+ps <- load_party_statements(format = "parquet")
 cat("Loaded", nrow(ps), "documents\n\n")
 
 # --- 3. Filter: 2020 statements only ---

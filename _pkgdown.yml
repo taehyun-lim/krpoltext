@@ -42,7 +42,10 @@ reference:
     desc: Inspect metadata and filter documents
     contents:
       - metadata
+      - schema
       - get_docs
+      - filter_docs
+      - select_vars
   - title: Integration
     desc: Convert to other formats
     contents:

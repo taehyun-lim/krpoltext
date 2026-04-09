@@ -36,13 +36,13 @@ release.
 }
 \examples{
 if (interactive()) {
-# Download everything (asks for consent interactively)
-download_data()
+  # Download everything (asks for consent interactively)
+  download_data()
 
-# Download only party statements
-download_data("party_statements")
+  # Download only party statements
+  download_data("party_statements")
 
-# Force re-download
-download_data("all", force = TRUE)
+  # Force re-download
+  download_data("all", force = TRUE)
 }
 }

@@ -1,6 +1,6 @@
 #' Convert a krpoltext data.table to a quanteda corpus
 #'
-#' Creates a [quanteda::corpus()] object from a `data.table` loaded by
+#' Creates a `quanteda::corpus()` object from a `data.table` loaded by
 #' [load_campaign_booklet()] or [load_party_statements()]. The `text` column
 #' is used as the document text; all other columns become document-level
 #' variables (docvars).
@@ -10,7 +10,7 @@
 #'   Defaults to `"text"`.
 #' @param docid_field Character or `NULL`; name of the column to use as
 #'   document IDs. If `NULL`, row numbers are used.
-#' @param ... Additional arguments passed to [quanteda::corpus()].
+#' @param ... Additional arguments passed to `quanteda::corpus()`.
 #'
 #' @return A `quanteda` corpus object.
 #'

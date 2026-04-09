@@ -34,14 +34,14 @@ remotes::install_github("taehyun-lim/krpoltext")
 If a managed artifact is needed, it is downloaded from
 [OSF](https://osf.io/rct9y/) on first use in an interactive session and then
 cached locally as RDS. In non-interactive sessions, use a local file path or a
-pre-populated cache.
+pre-populated cache. The `load_*()` helpers prefer managed Parquet artifacts by
+default; the examples below make that explicit.
 
 ```{r load}
 library(krpoltext)
 
-# Load the party statements corpus
-# Managed Parquet is preferred when available.
-ps <- load_party_statements()
+# Load the party statements corpus from managed Parquet
+ps <- load_party_statements(format = "parquet")
 ps
 ```
 
@@ -84,7 +84,7 @@ table(ps$partisan)
 ## Campaign Booklets
 
 ```{r booklet}
-cb <- load_campaign_booklet()
+cb <- load_campaign_booklet(format = "parquet")
 
 # National Assembly candidates only
 assembly <- get_docs("campaign_booklet", office = "national_assembly", .data = cb)

@@ -11,8 +11,8 @@ authors:
     affiliation: Hamilton College
     orcid: "https://orcid.org/0000-0002-0429-2683"
 doi: "10.5281/zenodo.18704319"
-version: 0.1.0
-date-released: "2025-03-20"
+version: 0.2.0
+date-released: "2026-04-08"
 url: "https://github.com/taehyun-lim/krpoltext"
 repository-code: "https://github.com/taehyun-lim/krpoltext"
 license: MIT

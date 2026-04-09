@@ -78,10 +78,7 @@ download_data <- function(dataset = "all", force = FALSE, quiet = FALSE) {
       )
     }
 
-    size_mb <- round(spec$size_bytes / 1e6)
-    answer <- readline(paste0(
-      "Download '", ds, "' (", size_mb, " MB) from OSF? [y/N] "
-    ))
+    answer <- readline(.download_prompt(ds, spec))
     if (!tolower(trimws(answer)) %in% c("y", "yes")) {
       if (!quiet) message("Skipping '", ds, "'.")
       next
@@ -94,16 +91,42 @@ download_data <- function(dataset = "all", force = FALSE, quiet = FALSE) {
   invisible(results)
 }
 
+#' Build the interactive prompt used by download_data()
+#' @noRd
+.download_prompt <- function(dataset, spec) {
+  size_mb <- round(spec$size_bytes / 1e6)
+
+  paste0(
+    "Download '", dataset, "' ", .format_label(spec$format),
+    " artifact (", size_mb, " MB) from OSF? [y/N] "
+  )
+}
+
 #' Download a single dataset, verify checksum, cache as RDS
 #' @noRd
 .download_one <- function(dataset_name, spec, quiet = FALSE) {
-  if (!quiet) message("Downloading '", dataset_name, "' from OSF...")
-  tmp_csv <- .download_artifact(spec, quiet = quiet)
-  on.exit(unlink(tmp_csv), add = TRUE)
+  if (!quiet) {
+    message(
+      "Downloading '", dataset_name, "' ",
+      .format_label(spec$format), " artifact from OSF..."
+    )
+  }
+  tmp_path <- .download_artifact(spec, quiet = quiet)
+  on.exit(unlink(tmp_path), add = TRUE)
 
-  if (!quiet) message("Reading CSV and caching as RDS...")
-  dt <- .read_source_file(tmp_csv, format = "csv")
-  rds_path <- save_cache(dt, dataset_name, format = "csv", data_version = spec$data_version)
+  if (!quiet) {
+    message(
+      "Reading ", .format_label(spec$format),
+      " and caching as RDS..."
+    )
+  }
+  dt <- .read_source_file(tmp_path, format = spec$format)
+  rds_path <- save_cache(
+    dt,
+    dataset_name,
+    format = spec$format,
+    data_version = spec$data_version
+  )
 
   if (!quiet) {
     message(

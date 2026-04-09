@@ -18,7 +18,7 @@ an error. If \code{FALSE}, they are ignored with a message.}
 A \code{data.table} containing only the requested columns.
 }
 \description{
-Select a subset of columns from an in-memory table.
+Select columns from an in-memory table
 }
 \examples{
 dt <- data.table::data.table(year = 2020:2022, text = letters[1:3])

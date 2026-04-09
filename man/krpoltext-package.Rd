@@ -29,6 +29,7 @@ Useful links:
   \item \url{https://taehyun-lim.github.io/krpoltext/}
   \item \url{https://github.com/taehyun-lim/krpoltext}
   \item \doi{10.1038/s41597-025-05220-4}
+  \item \doi{10.5281/zenodo.18704319}
   \item Report bugs at \url{https://github.com/taehyun-lim/krpoltext/issues}
 }
 

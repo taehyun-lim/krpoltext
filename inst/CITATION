@@ -25,8 +25,8 @@ bibentry(
   bibtype  = "Manual",
   title    = "krpoltext: Korean Political Text Corpora for R",
   author   = person("Tae Hyun", "Lim"),
-  year     = "2025",
+  year     = "2026",
   url      = "https://github.com/taehyun-lim/krpoltext",
-  note     = "R package version 0.1.0",
+  note     = "R package version 0.2.0",
   header   = "To cite the R package:"
 )

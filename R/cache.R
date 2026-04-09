@@ -60,6 +60,18 @@ cache_path <- function(dataset,
   }
 }
 
+#' Display label for an artifact format
+#' @noRd
+.format_label <- function(format = c("parquet", "csv")) {
+  format <- match.arg(format)
+
+  switch(
+    format,
+    parquet = "Parquet",
+    csv = "CSV"
+  )
+}
+
 #' Infer source format from a local path when possible
 #' @noRd
 .path_format <- function(path, format = c("parquet", "csv")) {
@@ -112,6 +124,17 @@ cache_path <- function(dataset,
   )
 }
 
+#' Build the managed-download message shown by load_* helpers
+#' @noRd
+.managed_download_message <- function(dataset, format) {
+  paste0(
+    "Data not found locally. Attempting to download managed ",
+    .format_label(format),
+    " artifact from OSF...\n",
+    "Run download_data(\"", dataset, "\") to prefetch the CSV cache explicitly."
+  )
+}
+
 #' Download a single artifact to a temporary file
 #' @noRd
 .download_artifact <- function(spec, quiet = FALSE) {
@@ -156,8 +179,8 @@ cache_path <- function(dataset,
 #' @noRd
 .abort_noninteractive_download <- function(dataset, format) {
   stop(
-    "Managed downloads are disabled in non-interactive sessions.\n",
-    "Dataset: '", dataset, "' (", format, ").\n",
+    "Managed ", .format_label(format), " downloads are disabled in non-interactive sessions.\n",
+    "Dataset: '", dataset, "'.\n",
     "To proceed, either:\n",
     "  1. run the loader or download_data() interactively,\n",
     "  2. provide a local CSV or Parquet file via path=, or\n",
@@ -247,7 +270,7 @@ read_with_cache <- function(dataset,
           notes <- c(
             notes,
             paste0(
-              "Managed ", candidate,
+              "Managed ", .format_label(candidate),
               " download is disabled in non-interactive sessions; trying the next available format."
             )
           )
@@ -258,10 +281,7 @@ read_with_cache <- function(dataset,
       }
 
       if (!refresh) {
-        message(
-          "Data not found locally. Attempting to download from OSF...\n",
-          "Run download_data(\"", dataset, "\") to manage downloads explicitly."
-        )
+        message(.managed_download_message(dataset, candidate))
       }
 
       artifact_path <- .download_artifact(spec, quiet = FALSE)

@@ -18,7 +18,7 @@ error. If \code{FALSE}, they are ignored with a message.}
 A filtered \code{data.table}.
 }
 \description{
-Apply named filters to an in-memory table.
+Filter an in-memory table using named column filters
 }
 \examples{
 dt <- data.table::data.table(year = 2020:2022, text = letters[1:3])

@@ -24,7 +24,7 @@ required, it is only attempted in an interactive session.}
 in the user's cache directory for faster subsequent loads.}
 
 \item{refresh}{Logical; if \code{TRUE}, any existing cache is ignored and the
-source file is re-read. Defaults to \code{FALSE}.}
+source CSV is re-read. Defaults to \code{FALSE}.}
 
 \item{data_version}{Character or \code{NULL}; the data artifact version to load.
 Defaults to the latest available version.}
