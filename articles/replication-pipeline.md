@@ -13,7 +13,7 @@ Data Descriptor:
 ``` r
 library(krpoltext)
 
-ps <- load_party_statements()
+ps <- load_party_statements(format = "parquet")
 ps_sub <- get_docs("party_statements", year = 2010:2022, .data = ps)
 
 cat("Documents:", nrow(ps_sub), "\n")
@@ -64,7 +64,7 @@ head(keyness, 20)
 ## Step 6: Campaign Booklet Analysis
 
 ``` r
-cb <- load_campaign_booklet()
+cb <- load_campaign_booklet(format = "parquet")
 cb_assembly <- get_docs(
   "campaign_booklet",
   office = "national_assembly",

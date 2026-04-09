@@ -6,27 +6,49 @@
     "n_entries": 49678,
     "n_columns": 31,
     "version": "v2022",
-    "last_updated": "2025-03-20",
+    "package_version": "0.2.0",
+    "supported_formats": ["csv", "parquet"],
+    "managed_formats": ["csv", "parquet"],
     "source_url": "https://osf.io/rct9y/",
     "download_url": "https://osf.io/download/6ybj8/",
+    "download_urls": {
+      "csv": "https://osf.io/download/6ybj8/",
+      "parquet": "https://osf.io/download/pxg2k/"
+    },
     "paper_doi": "10.1038/s41597-025-05220-4",
     "license": "CC BY-NC-ND 4.0",
     "citation": "Lim, T.H. (2025). South Korean Election Campaign Booklet and Party Statements Corpora. Scientific Data, 12, 1030. https://doi.org/10.1038/s41597-025-05220-4",
-    "osf_citation": "Lim, T.H. (2024). South Korean Election Campaign Booklet Corpus and Party Statements Corpus. OSF. https://doi.org/10.17605/OSF.IO/RCT9Y"
+    "osf_citation": "Lim, T.H. (2024). South Korean Election Campaign Booklet Corpus and Party Statements Corpus. OSF. https://doi.org/10.17605/OSF.IO/RCT9Y",
+    "notes": {
+      "missing_values": "2,283 candidates lack a booklet; 151 are missing biographical information. 23 booklets were unprocessable.",
+      "identifiers": "'code' uniquely identifies each document. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis.",
+      "text_processing": "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version."
+    }
   },
   "party_statements": {
     "name": "South Korean Party Statements",
-    "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003 to 2022. 82,723 total entries (35,115 conservative + 42,335 progressive). Parsed using the khaiii Korean morphological analyzer.",
+    "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003 to 2022. 83,201 total entries (35,115 conservative + 48,086 progressive). Parsed using the khaiii Korean morphological analyzer.",
     "time_coverage": "2003-2022",
-    "n_entries": 82723,
+    "n_entries": 83201,
     "n_columns": 9,
     "version": "v2022",
-    "last_updated": "2025-03-20",
+    "package_version": "0.2.0",
+    "supported_formats": ["csv", "parquet"],
+    "managed_formats": ["csv", "parquet"],
     "source_url": "https://osf.io/rct9y/",
     "download_url": "https://osf.io/download/8u2ah/",
+    "download_urls": {
+      "csv": "https://osf.io/download/8u2ah/",
+      "parquet": "https://osf.io/download/8cjxu/"
+    },
     "paper_doi": "10.1038/s41597-025-05220-4",
     "license": "CC BY-NC-ND 4.0",
     "citation": "Lim, T.H. (2025). South Korean Election Campaign Booklet and Party Statements Corpora. Scientific Data, 12, 1030. https://doi.org/10.1038/s41597-025-05220-4",
-    "osf_citation": "Lim, T.H. (2024). South Korean Election Campaign Booklet Corpus and Party Statements Corpus. OSF. https://doi.org/10.17605/OSF.IO/RCT9Y"
+    "osf_citation": "Lim, T.H. (2024). South Korean Election Campaign Booklet Corpus and Party Statements Corpus. OSF. https://doi.org/10.17605/OSF.IO/RCT9Y",
+    "notes": {
+      "missing_values": "Some fields may contain NA or empty strings.",
+      "party_names": "Both parties have undergone frequent name changes. The 'partisan' column uses stable ideological labels rather than party names.",
+      "text_processing": "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version."
+    }
   }
 }

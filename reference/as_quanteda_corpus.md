@@ -43,12 +43,21 @@ A `quanteda` corpus object.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-ps <- load_party_statements()
-corp <- as_quanteda_corpus(ps)
+if (requireNamespace("quanteda", quietly = TRUE)) {
+  dt <- data.table::data.table(
+    id = c("doc-1", "doc-2"),
+    text = c("first text", "second text"),
+    year = c(2020L, 2021L)
+  )
 
-# Use a subset
-ps_2020 <- get_docs("party_statements", year = 2020)
-corp_2020 <- as_quanteda_corpus(ps_2020, docid_field = "id")
-} # }
+  corp <- as_quanteda_corpus(dt, docid_field = "id")
+  corp
+}
+#> Corpus consisting of 2 documents and 1 docvar.
+#> doc-1 :
+#> "first text"
+#> 
+#> doc-2 :
+#> "second text"
+#> 
 ```

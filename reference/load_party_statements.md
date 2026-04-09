@@ -1,22 +1,34 @@
 # Load the South Korean Party Statements corpus
 
 Loads the party statements dataset (2003–2022) as a `data.table`. The
-dataset contains 82,723 official statements from party spokespersons and
+dataset contains 83,201 official statements from party spokespersons and
 leadership meeting minutes from South Korea's two major political
 parties.
 
 ## Usage
 
 ``` r
-load_party_statements(path = NULL, cache = TRUE, refresh = FALSE)
+load_party_statements(
+  path = NULL,
+  format = c("parquet", "csv"),
+  cache = TRUE,
+  refresh = FALSE,
+  data_version = NULL
+)
 ```
 
 ## Arguments
 
 - path:
 
-  Character; path to a local CSV file. If `NULL` (default), the bundled
-  dataset is used.
+  Character; path to a local CSV or Parquet file. If `NULL` (default), a
+  managed artifact is used. If a managed download would be required, it
+  is only attempted in an interactive session.
+
+- format:
+
+  Character; requested storage format. Defaults to preferring
+  `"parquet"` and falling back to `"csv"` when necessary.
 
 - cache:
 
@@ -27,6 +39,11 @@ load_party_statements(path = NULL, cache = TRUE, refresh = FALSE)
 
   Logical; if `TRUE`, any existing cache is ignored and the source CSV
   is re-read. Defaults to `FALSE`.
+
+- data_version:
+
+  Character or `NULL`; the data artifact version to load. Defaults to
+  the latest available version.
 
 ## Value
 
@@ -59,11 +76,20 @@ Lim, T.H. (2025). *Scientific Data*, 12, 1030.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-# Load with default caching
-ps <- load_party_statements()
+path <- tempfile(fileext = ".csv")
+data.table::fwrite(
+  data.table::data.table(
+    year = 2020L,
+    id = "ps-1",
+    text = "statement text"
+  ),
+  path
+)
 
-# Force refresh
-ps <- load_party_statements(refresh = TRUE)
-} # }
+ps <- load_party_statements(path = path, cache = FALSE)
+#> Local file extension suggests format 'csv'; using that instead of requested 'parquet'.
+ps
+#>     year     id           text
+#>    <int> <char>         <char>
+#> 1:  2020   ps-1 statement text
 ```

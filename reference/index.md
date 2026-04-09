@@ -17,8 +17,14 @@ Inspect metadata and filter documents
 
 - [`metadata()`](https://taehyun-lim.github.io/krpoltext/reference/metadata.md)
   : Retrieve dataset metadata
+- [`schema()`](https://taehyun-lim.github.io/krpoltext/reference/schema.md)
+  : Retrieve dataset schema
 - [`get_docs()`](https://taehyun-lim.github.io/krpoltext/reference/get_docs.md)
   : Query documents from a krpoltext corpus
+- [`filter_docs()`](https://taehyun-lim.github.io/krpoltext/reference/filter_docs.md)
+  : Filter an in-memory table using named column filters
+- [`select_vars()`](https://taehyun-lim.github.io/krpoltext/reference/select_vars.md)
+  : Select columns from an in-memory table
 
 ## Integration
 

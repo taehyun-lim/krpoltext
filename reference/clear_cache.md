@@ -25,7 +25,7 @@ Invisibly, a character vector of removed file paths.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-clear_cache("all")
-} # }
+if (interactive()) {
+  clear_cache("all")
+}
 ```

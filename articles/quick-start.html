@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">krpoltext</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,13 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
     <li><a class="dropdown-item" href="../articles/replication-pipeline.html">Replication-Ready Text Analysis Pipeline</a></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-release" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Release</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-release">
+<li><a class="external-link dropdown-item" href="https://github.com/taehyun-lim/krpoltext/blob/main/NEWS.md">NEWS</a></li>
+    <li><a class="external-link dropdown-item" href="https://github.com/taehyun-lim/krpoltext/releases">GitHub Releases</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../data/index.json">Data API</a></li>
@@ -86,13 +93,16 @@ Statements Corpora. <em>Scientific Data</em>, 12, 1030. <a href="https://doi.org
 <div class="section level2">
 <h2 id="load-a-dataset">Load a Dataset<a class="anchor" aria-label="anchor" href="#load-a-dataset"></a>
 </h2>
-<p>Data is automatically downloaded from <a href="https://osf.io/rct9y/" class="external-link">OSF</a> on first use and cached locally as
-RDS.</p>
+<p>If a managed artifact is needed, it is downloaded from <a href="https://osf.io/rct9y/" class="external-link">OSF</a> on first use in an interactive
+session and then cached locally as RDS. In non-interactive sessions, use
+a local file path or a pre-populated cache. The <code>load_*()</code>
+helpers prefer managed Parquet artifacts by default; the examples below
+make that explicit.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://taehyun-lim.github.io/krpoltext/">krpoltext</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Load the party statements corpus (~741 MB download on first use)</span></span>
-<span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_party_statements.html">load_party_statements</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Load the party statements corpus from managed Parquet</span></span>
+<span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_party_statements.html">load_party_statements</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span>
 <span><span class="va">ps</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -135,7 +145,7 @@ in the dataset.</p>
 <h2 id="campaign-booklets">Campaign Booklets<a class="anchor" aria-label="anchor" href="#campaign-booklets"></a>
 </h2>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># National Assembly candidates only</span></span>
 <span><span class="va">assembly</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_docs.html">get_docs</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span>, office <span class="op">=</span> <span class="st">"national_assembly"</span>, .data <span class="op">=</span> <span class="va">cb</span><span class="op">)</span></span>

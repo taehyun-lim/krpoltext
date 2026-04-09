@@ -1,8 +1,32 @@
 {
   "dataset": "campaign_booklet",
-  "version": "v2022",
-  "file": "sk_election_campaign_booklet_v2022.csv",
-  "description": "Official election campaign booklets from 49,678 individual candidates across presidential, National Assembly, and local elections in South Korea (2000-2022).",
+  "name": "South Korean Election Campaign Booklets",
+  "description": "Official campaign booklets (manifesto booklets) filed by 49,678 individual candidates in South Korean presidential, National Assembly, and local elections from 2000 to 2022. Text extracted via OCR and parsed using the khaiii Korean morphological analyzer.",
+  "time_coverage": "2000-2022",
+  "data_version": "v2022",
+  "package_version": "0.2.0",
+  "identifier_columns": "code",
+  "text_columns": ["text", "filtered"],
+  "supported_formats": ["csv", "parquet"],
+  "managed_formats": ["csv", "parquet"],
+  "artifacts": {
+    "csv": {
+      "format": "csv",
+      "file": "sk_election_campaign_booklet_v2022.csv",
+      "download_url": "https://osf.io/download/6ybj8/",
+      "sha256": "6ce6f40f5358829b167109d9ca9195e5089d2c6d05a61ad1c1925e424f55021d",
+      "size_bytes": 756245336,
+      "managed": true
+    },
+    "parquet": {
+      "format": "parquet",
+      "file": "sk_election_campaign_booklet_v2022.parquet",
+      "download_url": "https://osf.io/download/pxg2k/",
+      "sha256": "a291a887d157963cffcffbe2c1ad60333222dd479bf4b01e90cec3a28d5c19a6",
+      "size_bytes": 406524268,
+      "managed": true
+    }
+  },
   "columns": [
     {
       "name": "date",
@@ -52,12 +76,12 @@
     {
       "name": "result",
       "type": "character",
-      "description": "Election result (Korean): 당선 (elected) / 낙선 (defeated)"
+      "description": "Election result in Korean"
     },
     {
       "name": "sex",
       "type": "character",
-      "description": "Sex: 남 (male) / 여 (female)"
+      "description": "Sex in Korean"
     },
     {
       "name": "birthday",
@@ -92,7 +116,7 @@
     {
       "name": "job_code",
       "type": "integer",
-      "description": "Standardized job code (consistent across years; see paper Table 6)"
+      "description": "Standardized job code consistent across years"
     },
     {
       "name": "edu_id",
@@ -117,7 +141,7 @@
     {
       "name": "edu_code",
       "type": "integer",
-      "description": "Standardized education code (consistent across years; see paper Table 7)"
+      "description": "Standardized education code consistent across years"
     },
     {
       "name": "career1",
@@ -158,16 +182,51 @@
     {
       "name": "filtered",
       "type": "character",
-      "description": "Parsed text after morphological analysis; Korean-only, numbers/foreign characters/symbols removed"
+      "description": "Parsed text after morphological analysis; Korean-only, numbers, foreign characters, and symbols removed"
     }
   ],
-  "office_mapping": [
-    {"office_id": 1, "office": "president", "description": "Presidential election"},
-    {"office_id": 2, "office": "national_assembly", "description": "National Assembly election"},
-    {"office_id": 3, "office": "edu_superintendent", "description": "Education superintendent"},
-    {"office_id": 4, "office": "metro_head", "description": "Metropolitan city mayor / provincial governor"},
-    {"office_id": 5, "office": "metro_assembly", "description": "Metropolitan assembly member"},
-    {"office_id": 6, "office": "basic_head", "description": "Basic local government head (district head / mayor)"},
-    {"office_id": 7, "office": "basic_assembly", "description": "Basic assembly member"}
-  ]
+  "notes": {
+    "missing_values": "2,283 candidates lack a booklet; 151 are missing biographical information. 23 booklets were unprocessable.",
+    "identifiers": "'code' uniquely identifies each document. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis.",
+    "text_processing": "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version."
+  },
+  "extras": {
+    "office_mapping": [
+      {
+        "office_id": 1,
+        "office": "president",
+        "description": "Presidential election"
+      },
+      {
+        "office_id": 2,
+        "office": "national_assembly",
+        "description": "National Assembly election"
+      },
+      {
+        "office_id": 3,
+        "office": "edu_superintendent",
+        "description": "Education superintendent"
+      },
+      {
+        "office_id": 4,
+        "office": "metro_head",
+        "description": "Metropolitan city mayor / provincial governor"
+      },
+      {
+        "office_id": 5,
+        "office": "metro_assembly",
+        "description": "Metropolitan assembly member"
+      },
+      {
+        "office_id": 6,
+        "office": "basic_head",
+        "description": "Basic local government head"
+      },
+      {
+        "office_id": 7,
+        "office": "basic_assembly",
+        "description": "Basic assembly member"
+      }
+    ]
+  }
 }

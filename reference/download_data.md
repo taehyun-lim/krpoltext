@@ -2,7 +2,9 @@
 
 Downloads the CSV data files from the OSF repository and caches them
 locally as RDS files for fast subsequent loading. On first use the
-function asks for interactive consent before starting the download.
+function asks for interactive consent before starting the download. In
+non-interactive sessions, uncached downloads are refused with an
+informative error.
 
 ## Usage
 
@@ -44,14 +46,14 @@ release.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-# Download everything (asks for consent interactively)
-download_data()
+if (interactive()) {
+  # Download everything (asks for consent interactively)
+  download_data()
 
-# Download only party statements
-download_data("party_statements")
+  # Download only party statements
+  download_data("party_statements")
 
-# Force re-download
-download_data("all", force = TRUE)
-} # }
+  # Force re-download
+  download_data("all", force = TRUE)
+}
 ```

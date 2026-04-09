@@ -8,15 +8,27 @@ elections.
 ## Usage
 
 ``` r
-load_campaign_booklet(path = NULL, cache = TRUE, refresh = FALSE)
+load_campaign_booklet(
+  path = NULL,
+  format = c("parquet", "csv"),
+  cache = TRUE,
+  refresh = FALSE,
+  data_version = NULL
+)
 ```
 
 ## Arguments
 
 - path:
 
-  Character; path to a local CSV file. If `NULL` (default), the bundled
-  dataset is used.
+  Character; path to a local CSV or Parquet file. If `NULL` (default), a
+  managed artifact is used. If a managed download would be required, it
+  is only attempted in an interactive session.
+
+- format:
+
+  Character; requested storage format. Defaults to preferring
+  `"parquet"` and falling back to `"csv"` when necessary.
 
 - cache:
 
@@ -27,6 +39,11 @@ load_campaign_booklet(path = NULL, cache = TRUE, refresh = FALSE)
 
   Logical; if `TRUE`, any existing cache is ignored and the source CSV
   is re-read. Defaults to `FALSE`.
+
+- data_version:
+
+  Character or `NULL`; the data artifact version to load. Defaults to
+  the latest available version.
 
 ## Value
 
@@ -63,14 +80,20 @@ Lim, T.H. (2025). *Scientific Data*, 12, 1030.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-# Load with default caching
-cb <- load_campaign_booklet()
+path <- tempfile(fileext = ".csv")
+data.table::fwrite(
+  data.table::data.table(
+    date = "2020-04-15",
+    party = "Example Party",
+    text = "campaign text"
+  ),
+  path
+)
 
-# Load from a specific file
-cb <- load_campaign_booklet(path = "path/to/my_data.csv")
-
-# Force refresh the cache
-cb <- load_campaign_booklet(refresh = TRUE)
-} # }
+cb <- load_campaign_booklet(path = path, cache = FALSE)
+#> Local file extension suggests format 'csv'; using that instead of requested 'parquet'.
+cb
+#>          date         party          text
+#>        <IDat>        <char>        <char>
+#> 1: 2020-04-15 Example Party campaign text
 ```

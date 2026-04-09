@@ -3,6 +3,7 @@
 <url><loc>https://taehyun-lim.github.io/krpoltext/LICENSE-DATA.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/LICENSE-text.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/LICENSE.html</loc></url>
+<url><loc>https://taehyun-lim.github.io/krpoltext/README_kr.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/articles/index.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/articles/quick-start.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/articles/replication-pipeline.html</loc></url>
@@ -13,11 +14,14 @@
 <url><loc>https://taehyun-lim.github.io/krpoltext/reference/as_quanteda_corpus.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/reference/clear_cache.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/reference/download_data.html</loc></url>
+<url><loc>https://taehyun-lim.github.io/krpoltext/reference/filter_docs.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/reference/get_docs.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/reference/index.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/reference/krpoltext-package.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/reference/load_campaign_booklet.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/reference/load_party_statements.html</loc></url>
 <url><loc>https://taehyun-lim.github.io/krpoltext/reference/metadata.html</loc></url>
+<url><loc>https://taehyun-lim.github.io/krpoltext/reference/schema.html</loc></url>
+<url><loc>https://taehyun-lim.github.io/krpoltext/reference/select_vars.html</loc></url>
 </urlset>
 

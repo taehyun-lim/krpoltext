@@ -38,13 +38,13 @@ Science Framework, <https://osf.io/rct9y/>.
       note = {Open Science Framework},
     }
 
-Lim T (2025). *krpoltext: Korean Political Text Corpora for R*. R
-package version 0.1.0, <https://github.com/taehyun-lim/krpoltext>.
+Lim T (2026). *krpoltext: Korean Political Text Corpora for R*. R
+package version 0.2.0, <https://github.com/taehyun-lim/krpoltext>.
 
     @Manual{,
       title = {krpoltext: Korean Political Text Corpora for R},
       author = {Tae Hyun Lim},
-      year = {2025},
+      year = {2026},
       url = {https://github.com/taehyun-lim/krpoltext},
-      note = {R package version 0.1.0},
+      note = {R package version 0.2.0},
     }
