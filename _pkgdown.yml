@@ -1,5 +1,8 @@
 ﻿url: https://taehyun-lim.github.io/krpoltext
 
+home:
+  strip_header: true
+
 template:
   bootstrap: 5
   bslib:
@@ -19,7 +22,7 @@ navbar:
           href: https://github.com/taehyun-lim/krpoltext/releases
     data-api:
       text: Data API
-      href: data/index.json
+      href: data-api.html
 
 articles:
   - title: Getting Started

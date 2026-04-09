@@ -55,3 +55,32 @@ jobs:
           branch: gh-pages
           folder: docs
           clean: true
+
+      - name: Verify public JSON endpoints
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          urls=(
+            "https://taehyun-lim.github.io/krpoltext/data/index.json"
+            "https://taehyun-lim.github.io/krpoltext/data/metadata.json"
+          )
+
+          for url in "${urls[@]}"; do
+            ok=0
+            for attempt in {1..24}; do
+              code="$(curl -L -s -o /dev/null -w "%{http_code}" "$url")"
+              if [ "$code" = "200" ]; then
+                ok=1
+                echo "Verified $url"
+                break
+              fi
+              echo "Attempt $attempt for $url returned $code; retrying..."
+              sleep 10
+            done
+
+            if [ "$ok" -ne 1 ]; then
+              echo "Endpoint did not become available: $url"
+              exit 1
+            fi
+          done

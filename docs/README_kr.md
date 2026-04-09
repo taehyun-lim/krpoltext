@@ -137,6 +137,13 @@ API로도 제공됩니다. 별도의 서버가 필요하지 않습니다.
 | [`/data/schema/campaign_booklet.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json) | 선거공보 컬럼 스키마                                   |
 | [`/data/schema/party_statements.json`](https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json) | 정당 성명 컬럼 스키마                                  |
 
+API 안내와 대체 URL:
+<https://taehyun-lim.github.io/krpoltext/data-api.html>
+
+GitHub Pages에서 일시적으로 `404`가 뜰 경우, 같은 리소스 인덱스를 아래 raw
+URL에서도 받을 수 있습니다.
+<https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/index.json>
+
 **R** 패키지 설치 없이 사용:
 
 ``` r
@@ -157,7 +164,9 @@ url = meta["party_statements"]["download_urls"]["csv"]
 df = pd.read_csv(url)
 ```
 
-전체 문서 사이트: <https://taehyun-lim.github.io/krpoltext/>
+함수 문서: <https://taehyun-lim.github.io/krpoltext/reference/index.html>
+
+가이드와 예제: <https://taehyun-lim.github.io/krpoltext/articles/index.html>
 
 ## 인용
 
@@ -172,6 +181,13 @@ df = pd.read_csv(url)
 
 > Lim, T.H. (2024). South Korean Election Campaign Booklet Corpus and
 > Party Statements Corpus. OSF. <https://doi.org/10.17605/OSF.IO/RCT9Y>
+
+R 패키지 자체를 인용할 때는 다음 형식을 사용할 수 있습니다.
+
+> Lim, T.H. (2026). *krpoltext: Korean Political Text Corpora for R*. R
+> package version 0.2.0, <https://github.com/taehyun-lim/krpoltext>
+
+현재 패키지 citation은 R에서 아래처럼 확인할 수도 있습니다.
 
 ``` r
 citation("krpoltext")
