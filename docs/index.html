@@ -10,7 +10,8 @@
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Korean Political Text Corpora for Reproducible Research">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
+<meta property="og:title" content="Korean Political Text Corpora for Reproducible Research">
 <meta name="description" content="Provides easy access to two large-scale Korean political text corpora described in Lim (2025) &lt;doi:10.1038/s41597-025-05220-4&gt;: (1) South Korean Election Campaign Booklets covering 49,678 candidates across presidential, National Assembly, and local elections (2000-2022), and (2) South Korean Party Statements containing 83,201 official statements from the two major parties (2003-2022). Functions support loading, querying, caching, and converting data for text analysis workflows with quanteda and tidytext.">
 <meta property="og:description" content="Provides easy access to two large-scale Korean political text corpora described in Lim (2025) &lt;doi:10.1038/s41597-025-05220-4&gt;: (1) South Korean Election Campaign Booklets covering 49,678 candidates across presidential, National Assembly, and local elections (2000-2022), and (2) South Korean Party Statements containing 83,201 official statements from the two major parties (2003-2022). Functions support loading, querying, caching, and converting data for text analysis workflows with quanteda and tidytext.">
 </head>
@@ -64,11 +65,12 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-12"><div class="section level1">
+  <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="krpoltext">krpoltext<a class="anchor" aria-label="anchor" href="#krpoltext"></a>
 </h1></div>
 <!-- badges: start -->
-<p><a href="https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://opensource.org/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/code-MIT-blue.svg" alt="License: MIT"></a> <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="external-link"><img src="https://img.shields.io/badge/data-CC%20BY--NC--ND%204.0-lightgrey.svg" alt="License: CC BY-NC-ND 4.0"></a> <a href="https://doi.org/10.1038/s41597-025-05220-4" class="external-link"><img src="https://img.shields.io/badge/DOI-10.1038%2Fs41597--025--05220--4-blue" alt="DOI"></a> <a href="https://doi.org/10.5281/zenodo.18704318" class="external-link"><img src="https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.18704318-1682D4?logo=zenodo&amp;logoColor=white" alt="Zenodo DOI"></a> <!-- badges: end --></p>
+
+<p><a href="https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://opensource.org/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/code-MIT-blue.svg" alt="License: MIT"></a> <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="external-link"><img src="https://img.shields.io/badge/data-CC%20BY--NC--ND%204.0-lightgrey.svg" alt="License: CC BY-NC-ND 4.0"></a> <a href="https://doi.org/10.1038/s41597-025-05220-4" class="external-link"><img src="https://img.shields.io/badge/DOI-10.1038%2Fs41597--025--05220--4-blue" alt="DOI"></a> <a href="https://doi.org/10.5281/zenodo.18704318" class="external-link"><img src="https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.18704318-1682D4?logo=zenodo&amp;logoColor=white" alt="Zenodo DOI"></a></p>
 <p>English | <a href="https://taehyun-lim.github.io/krpoltext/README_kr.html">한국어</a></p>
 <p><strong>krpoltext</strong> provides convenient R access to two large-scale Korean political text corpora described in:</p>
 <blockquote>
@@ -332,7 +334,58 @@
 </ul>
 </div>
 </div>
-  </main>
+  </main><aside class="col-md-3">
+
+
+
+
+
+
+
+
+
+<div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/taehyun-lim/krpoltext/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/taehyun-lim/krpoltext/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+<div class="license">
+<h2 data-toc-skip>License</h2>
+<ul class="list-unstyled">
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+</ul>
+</div>
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing krpoltext</a></li>
+</ul>
+</div>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Tae Hyun Lim <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0429-2683" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+</ul>
+</div>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://opensource.org/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/code-MIT-blue.svg" alt="License: MIT"></a></li>
+<li><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="external-link"><img src="https://img.shields.io/badge/data-CC%20BY--NC--ND%204.0-lightgrey.svg" alt="License: CC BY-NC-ND 4.0"></a></li>
+<li><a href="https://doi.org/10.1038/s41597-025-05220-4" class="external-link"><img src="https://img.shields.io/badge/DOI-10.1038%2Fs41597--025--05220--4-blue" alt="DOI"></a></li>
+<li><a href="https://doi.org/10.5281/zenodo.18704318" class="external-link"><img src="https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.18704318-1682D4?logo=zenodo&amp;logoColor=white" alt="Zenodo DOI"></a></li>
+</ul>
+</div>
+<div class="table-of-contents">
+<h2 data-toc-skip>Table of Contents</h2>
+<ul class="list-unstyled">
+<li><nav id="toc"></nav></li>
+</ul>
+</div></aside>
 </div>
 
 
