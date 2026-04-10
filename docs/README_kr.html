@@ -62,7 +62,7 @@
   </div>
 </nav><div class="container template-title-body">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="page-header">
+  <main id="main" class="col-md-12"><div class="page-header">
 
       <h1>krpoltext</h1>
       
@@ -121,7 +121,7 @@
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"taehyun-lim/krpoltext"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"taehyun-lim/krpoltext"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="빠른-시작">빠른 시작<a class="anchor" aria-label="anchor" href="#%EB%B9%A0%EB%A5%B8-%EC%8B%9C%EC%9E%91"></a>
@@ -178,9 +178,9 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io" class="external-link">quanteda</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">corp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/as_quanteda_corpus.html">as_quanteda_corpus</a></span><span class="op">(</span><span class="va">ps</span>, docid_field <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
-<span><span class="va">toks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html" class="external-link">tokens</a></span><span class="op">(</span><span class="va">corp</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">dfm_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html" class="external-link">dfm</a></span><span class="op">(</span><span class="va">toks</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://quanteda.io/reference/topfeatures.html" class="external-link">topfeatures</a></span><span class="op">(</span><span class="va">dfm_obj</span>, <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">toks</span> <span class="op">&lt;-</span> <span class="fu">tokens</span><span class="op">(</span><span class="va">corp</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">dfm_obj</span> <span class="op">&lt;-</span> <span class="fu">dfm</span><span class="op">(</span><span class="va">toks</span><span class="op">)</span></span>
+<span><span class="fu">topfeatures</span><span class="op">(</span><span class="va">dfm_obj</span>, <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="주요-함수">주요 함수<a class="anchor" aria-label="anchor" href="#%EC%A3%BC%EC%9A%94-%ED%95%A8%EC%88%98"></a>
@@ -337,44 +337,7 @@
 </div>
 </div>
 
-  </main><aside class="col-md-3"><div class="links">
-<h2 data-toc-skip>Links</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/taehyun-lim/krpoltext/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/taehyun-lim/krpoltext/issues" class="external-link">Report a bug</a></li>
-</ul>
-</div>
-<div class="license">
-<h2 data-toc-skip>License</h2>
-<ul class="list-unstyled">
-<li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
-</ul>
-</div>
-<div class="citation">
-<h2 data-toc-skip>Citation</h2>
-<ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing krpoltext</a></li>
-</ul>
-</div>
-<div class="developers">
-<h2 data-toc-skip>Developers</h2>
-<ul class="list-unstyled">
-<li>Tae Hyun Lim <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0429-2683" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-</ul>
-</div>
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://opensource.org/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/code-MIT-blue.svg" alt="License: MIT"></a></li>
-<li><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="external-link"><img src="https://img.shields.io/badge/data-CC%20BY--NC--ND%204.0-lightgrey.svg" alt="License: CC BY-NC-ND 4.0"></a></li>
-<li><a href="https://doi.org/10.1038/s41597-025-05220-4" class="external-link"><img src="https://img.shields.io/badge/DOI-10.1038%2Fs41597--025--05220--4-blue" alt="DOI"></a></li>
-<li><a href="https://doi.org/10.5281/zenodo.18704318" class="external-link"><img src="https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.18704318-1682D4?logo=zenodo&amp;logoColor=white" alt="Zenodo DOI"></a></li>
-</ul>
-</div>
-<nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
-    </nav></aside>
+  </main>
 </div>
 
 

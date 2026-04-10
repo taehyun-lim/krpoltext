@@ -1,5 +1,14 @@
 # krpoltext
 
+[![R-CMD-check](https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml)
+[![License:
+MIT](https://img.shields.io/badge/code-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![License: CC BY-NC-ND
+4.0](https://img.shields.io/badge/data-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+[![DOI](https://img.shields.io/badge/DOI-10.1038%2Fs41597--025--05220--4-blue)](https://doi.org/10.1038/s41597-025-05220-4)
+[![Zenodo
+DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.18704318-1682D4?logo=zenodo&logoColor=white)](https://doi.org/10.5281/zenodo.18704318)
+
 English \|
 [한국어](https://taehyun-lim.github.io/krpoltext/README_kr.html)
 
