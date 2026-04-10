@@ -1,7 +1,7 @@
 ﻿url: https://taehyun-lim.github.io/krpoltext
 
 home:
-  strip_header: true
+  strip_header: false
 
 template:
   bootstrap: 5
