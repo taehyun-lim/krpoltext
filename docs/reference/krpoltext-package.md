@@ -15,6 +15,10 @@ Statements Corpora. *Scientific Data*, 12, 1030.
 
 <https://osf.io/rct9y/> (DOI: 10.17605/OSF.IO/RCT9Y)
 
+## Software Archive
+
+[doi:10.5281/zenodo.18704318](https://doi.org/10.5281/zenodo.18704318)
+
 ## See also
 
 Useful links:
@@ -25,7 +29,7 @@ Useful links:
 
 - [doi:10.1038/s41597-025-05220-4](https://doi.org/10.1038/s41597-025-05220-4)
 
-- [doi:10.5281/zenodo.18704319](https://doi.org/10.5281/zenodo.18704319)
+- [doi:10.5281/zenodo.18704318](https://doi.org/10.5281/zenodo.18704318)
 
 - Report bugs at <https://github.com/taehyun-lim/krpoltext/issues>
 

@@ -3,13 +3,15 @@
 
 # krpoltext
 
+<!-- badges: start -->
 [![R-CMD-check](https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml)
 [![License: MIT](https://img.shields.io/badge/code-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/data-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 [![DOI](https://img.shields.io/badge/DOI-10.1038%2Fs41597--025--05220--4-blue)](https://doi.org/10.1038/s41597-025-05220-4)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18704319.svg)](https://doi.org/10.5281/zenodo.18704319)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18704318.svg)](https://doi.org/10.5281/zenodo.18704318)
+<!-- badges: end -->
 
-English | [한국어](README_kr.md)
+English | [한국어](https://taehyun-lim.github.io/krpoltext/README_kr.html)
 
 **krpoltext** provides convenient R access to two large-scale Korean
 political text corpora described in:
@@ -186,7 +188,7 @@ And the data repository:
 For the R package itself, cite:
 
 > Lim, T.H. (2026). *krpoltext: Korean Political Text Corpora for R*. R
-> package version 0.2.0, <https://github.com/taehyun-lim/krpoltext>
+> package version 0.2.0. Zenodo. <https://doi.org/10.5281/zenodo.18704318>
 
 You can also retrieve the current package citation in R:
 
@@ -205,7 +207,7 @@ citation("krpoltext")
 
 - Data Descriptor: <https://doi.org/10.1038/s41597-025-05220-4>
 - OSF Repository: <https://osf.io/rct9y/>
-- Zenodo Archive: <https://doi.org/10.5281/zenodo.18704319>
+- Zenodo Concept DOI: <https://doi.org/10.5281/zenodo.18704318>
 - Release Notes: <https://github.com/taehyun-lim/krpoltext/blob/main/NEWS.md>
 - GitHub Releases: <https://github.com/taehyun-lim/krpoltext/releases>
 - GitHub: <https://github.com/taehyun-lim/krpoltext>

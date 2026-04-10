@@ -1,17 +1,13 @@
-﻿<style>
-.col-md-3.toc-sticky { display: none; }
-.col-md-9 { flex: 0 0 100%; max-width: 100%; }
-</style>
-
 # krpoltext
+<!-- badges: start -->
 [![R-CMD-check](https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml)
 [![License: MIT](https://img.shields.io/badge/code-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/data-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 [![DOI](https://img.shields.io/badge/DOI-10.1038%2Fs41597--025--05220--4-blue)](https://doi.org/10.1038/s41597-025-05220-4)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18704319.svg)](https://doi.org/10.5281/zenodo.18704319)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18704318.svg)](https://doi.org/10.5281/zenodo.18704318)
 <!-- badges: end -->
 
-[English](README.md) | 한국어
+[English](https://taehyun-lim.github.io/krpoltext/) | 한국어
 
 **krpoltext**는 다음 논문에서 소개된 두 개의 대규모 한국 정치 텍스트 코퍼스에 R에서 손쉽게 접근할 수 있도록 돕는 패키지입니다.
 
@@ -184,7 +180,7 @@ df = pd.read_csv(url)
 R 패키지 자체를 인용할 때는 다음 형식을 사용할 수 있습니다.
 
 > Lim, T.H. (2026). *krpoltext: Korean Political Text Corpora for R*. R
-> package version 0.2.0, <https://github.com/taehyun-lim/krpoltext>
+> package version 0.2.0. Zenodo. <https://doi.org/10.5281/zenodo.18704318>
 
 현재 패키지 citation은 R에서 아래처럼 확인할 수도 있습니다.
 
@@ -201,9 +197,8 @@ citation("krpoltext")
 
 - Data Descriptor: <https://doi.org/10.1038/s41597-025-05220-4>
 - OSF 저장소: <https://osf.io/rct9y/>
-- Zenodo 아카이브: <https://doi.org/10.5281/zenodo.18704319>
+- Zenodo Concept DOI: <https://doi.org/10.5281/zenodo.18704318>
 - 릴리스 노트: <https://github.com/taehyun-lim/krpoltext/blob/main/NEWS.md>
 - GitHub Releases: <https://github.com/taehyun-lim/krpoltext/releases>
 - GitHub: <https://github.com/taehyun-lim/krpoltext>
 - Issues: <https://github.com/taehyun-lim/krpoltext/issues>
-
