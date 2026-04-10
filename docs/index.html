@@ -50,7 +50,7 @@
     <li><a class="external-link dropdown-item" href="https://github.com/taehyun-lim/krpoltext/releases">GitHub Releases</a></li>
   </ul>
 </li>
-<li class="nav-item"><a class="nav-link" href="data/index.json">Data API</a></li>
+<li class="nav-item"><a class="nav-link" href="data-api.html">Data API</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -69,7 +69,12 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>English | <a href="README_kr.html">한국어</a></p>
+<p class="pkgdown-badges"><a href="https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a>
+<a href="https://opensource.org/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/code-MIT-blue.svg" alt="License: MIT"></a>
+<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="external-link"><img src="https://img.shields.io/badge/data-CC%20BY--NC--ND%204.0-lightgrey.svg" alt="License: CC BY-NC-ND 4.0"></a>
+<a href="https://doi.org/10.1038/s41597-025-05220-4" class="external-link"><img src="https://img.shields.io/badge/DOI-10.1038%2Fs41597--025--05220--4-blue" alt="DOI"></a>
+<a href="https://doi.org/10.5281/zenodo.18704318" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.18704318.svg" alt="DOI"></a></p>
+<p>English | <a href="https://taehyun-lim.github.io/krpoltext/README_kr.html">한국어</a></p>
 <p><strong>krpoltext</strong> provides convenient R access to two large-scale Korean political text corpora described in:</p>
 <blockquote>
 <p>Lim, T.H. (2025). South Korean Election Campaign Booklet and Party Statements Corpora. <em>Scientific Data</em>, 12, 1030. <a href="https://doi.org/10.1038/s41597-025-05220-4" class="external-link uri">https://doi.org/10.1038/s41597-025-05220-4</a></p>
@@ -118,7 +123,7 @@
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"taehyun-lim/krpoltext"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"taehyun-lim/krpoltext"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
@@ -175,9 +180,9 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io" class="external-link">quanteda</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">corp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/as_quanteda_corpus.html">as_quanteda_corpus</a></span><span class="op">(</span><span class="va">ps</span>, docid_field <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
-<span><span class="va">toks</span> <span class="op">&lt;-</span> <span class="fu">tokens</span><span class="op">(</span><span class="va">corp</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">dfm_obj</span> <span class="op">&lt;-</span> <span class="fu">dfm</span><span class="op">(</span><span class="va">toks</span><span class="op">)</span></span>
-<span><span class="fu">topfeatures</span><span class="op">(</span><span class="va">dfm_obj</span>, <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">toks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html" class="external-link">tokens</a></span><span class="op">(</span><span class="va">corp</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">dfm_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html" class="external-link">dfm</a></span><span class="op">(</span><span class="va">toks</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://quanteda.io/reference/topfeatures.html" class="external-link">topfeatures</a></span><span class="op">(</span><span class="va">dfm_obj</span>, <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a>
@@ -263,6 +268,8 @@
 </tr>
 </tbody>
 </table>
+<p>API overview and fallback URLs: <a href="https://taehyun-lim.github.io/krpoltext/data-api.html" class="uri">https://taehyun-lim.github.io/krpoltext/data-api.html</a></p>
+<p>If GitHub Pages temporarily returns <code>404</code>, the same resource index is also available here: <a href="https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/index.json" class="external-link uri">https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/index.json</a></p>
 <p><strong>R</strong> (without installing the package):</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">api</span> <span class="op">&lt;-</span> <span class="st">"https://taehyun-lim.github.io/krpoltext/data/metadata.json"</span></span>
@@ -276,7 +283,8 @@
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>meta <span class="op">=</span> requests.get(<span class="st">"https://taehyun-lim.github.io/krpoltext/data/metadata.json"</span>).json()</span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>url <span class="op">=</span> meta[<span class="st">"party_statements"</span>][<span class="st">"download_urls"</span>][<span class="st">"csv"</span>]</span>
 <span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url)</span></code></pre></div>
-<p>Full documentation: <a href="https://taehyun-lim.github.io/krpoltext/" class="uri">https://taehyun-lim.github.io/krpoltext/</a></p>
+<p>Function reference: <a href="https://taehyun-lim.github.io/krpoltext/reference/index.html" class="uri">https://taehyun-lim.github.io/krpoltext/reference/index.html</a></p>
+<p>Guides and examples: <a href="https://taehyun-lim.github.io/krpoltext/articles/index.html" class="uri">https://taehyun-lim.github.io/krpoltext/articles/index.html</a></p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
@@ -289,6 +297,11 @@
 <blockquote>
 <p>Lim, T.H. (2024). South Korean Election Campaign Booklet Corpus and Party Statements Corpus. OSF. <a href="https://doi.org/10.17605/OSF.IO/RCT9Y" class="external-link uri">https://doi.org/10.17605/OSF.IO/RCT9Y</a></p>
 </blockquote>
+<p>For the R package itself, cite:</p>
+<blockquote>
+<p>Lim, T.H. (2026). <em>krpoltext: Korean Political Text Corpora for R</em>. R package version 0.2.0. Zenodo. <a href="https://doi.org/10.5281/zenodo.18704318" class="external-link uri">https://doi.org/10.5281/zenodo.18704318</a></p>
+</blockquote>
+<p>You can also retrieve the current package citation in R:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"krpoltext"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -311,7 +324,7 @@
 </li>
 <li>OSF Repository: <a href="https://osf.io/rct9y/" class="external-link uri">https://osf.io/rct9y/</a>
 </li>
-<li>Zenodo Archive: <a href="https://doi.org/10.5281/zenodo.18704319" class="external-link uri">https://doi.org/10.5281/zenodo.18704319</a>
+<li>Zenodo Concept DOI: <a href="https://doi.org/10.5281/zenodo.18704318" class="external-link uri">https://doi.org/10.5281/zenodo.18704318</a>
 </li>
 <li>Release Notes: <a href="https://github.com/taehyun-lim/krpoltext/blob/main/NEWS.md" class="external-link uri">https://github.com/taehyun-lim/krpoltext/blob/main/NEWS.md</a>
 </li>
@@ -324,7 +337,14 @@
 </ul>
 </div>
 </div>
-  </main><aside class="col-md-3"><div class="links">
+  </main><aside class="col-md-3"><div class="table-of-contents">
+<h2 data-toc-skip>Table of contents</h2>
+<ul class="list-unstyled">
+<li><nav id="toc"></nav></li>
+</ul>
+</div>
+
+<div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/taehyun-lim/krpoltext/" class="external-link">Browse source code</a></li>
@@ -339,7 +359,6 @@
 <li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
-
 
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
@@ -362,7 +381,7 @@
 <li><a href="https://opensource.org/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/code-MIT-blue.svg" alt="License: MIT"></a></li>
 <li><a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="external-link"><img src="https://img.shields.io/badge/data-CC%20BY--NC--ND%204.0-lightgrey.svg" alt="License: CC BY-NC-ND 4.0"></a></li>
 <li><a href="https://doi.org/10.1038/s41597-025-05220-4" class="external-link"><img src="https://img.shields.io/badge/DOI-10.1038%2Fs41597--025--05220--4-blue" alt="DOI"></a></li>
-<li><a href="https://doi.org/10.5281/zenodo.18704319" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.18704319.svg" alt="DOI"></a></li>
+<li><a href="https://doi.org/10.5281/zenodo.18704318" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.18704318.svg" alt="DOI"></a></li>
 </ul>
 </div>
 

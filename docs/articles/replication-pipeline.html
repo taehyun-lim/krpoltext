@@ -48,7 +48,7 @@
     <li><a class="external-link dropdown-item" href="https://github.com/taehyun-lim/krpoltext/releases">GitHub Releases</a></li>
   </ul>
 </li>
-<li class="nav-item"><a class="nav-link" href="../data/index.json">Data API</a></li>
+<li class="nav-item"><a class="nav-link" href="../data-api.html">Data API</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -103,7 +103,7 @@ Statements Corpora. <em>Scientific Data</em>, 12, 1030. <a href="https://doi.org
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io" class="external-link">quanteda</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">corp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_quanteda_corpus.html">as_quanteda_corpus</a></span><span class="op">(</span><span class="va">ps_sub</span>, docid_field <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
-<span><span class="fu">docvars</span><span class="op">(</span><span class="va">corp</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://quanteda.io/reference/docvars.html" class="external-link">docvars</a></span><span class="op">(</span><span class="va">corp</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="step-3-tokenize-and-build-dfm">Step 3: Tokenize and Build DFM<a class="anchor" aria-label="anchor" href="#step-3-tokenize-and-build-dfm"></a>
@@ -112,19 +112,19 @@ Statements Corpora. <em>Scientific Data</em>, 12, 1030. <a href="https://doi.org
 parsed Korean text (via khaiii). You can use it directly or tokenize the
 raw <code>text</code> column:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">toks</span> <span class="op">&lt;-</span> <span class="fu">tokens</span><span class="op">(</span><span class="va">corp</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span>, remove_numbers <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">dfm_ps</span> <span class="op">&lt;-</span> <span class="fu">dfm</span><span class="op">(</span><span class="va">toks</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">toks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/tokens.html" class="external-link">tokens</a></span><span class="op">(</span><span class="va">corp</span>, remove_punct <span class="op">=</span> <span class="cn">TRUE</span>, remove_numbers <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">dfm_ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm.html" class="external-link">dfm</a></span><span class="op">(</span><span class="va">toks</span><span class="op">)</span></span>
 <span><span class="va">dfm_ps</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="step-4-exploratory-analysis">Step 4: Exploratory Analysis<a class="anchor" aria-label="anchor" href="#step-4-exploratory-analysis"></a>
 </h2>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">topfeatures</span><span class="op">(</span><span class="va">dfm_ps</span>, <span class="fl">20</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://quanteda.io/reference/topfeatures.html" class="external-link">topfeatures</a></span><span class="op">(</span><span class="va">dfm_ps</span>, <span class="fl">20</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># By partisan group</span></span>
-<span><span class="va">dfm_group</span> <span class="op">&lt;-</span> <span class="fu">dfm_group</span><span class="op">(</span><span class="va">dfm_ps</span>, groups <span class="op">=</span> <span class="va">partisan</span><span class="op">)</span></span>
-<span><span class="fu">topfeatures</span><span class="op">(</span><span class="va">dfm_group</span>, <span class="fl">10</span>, groups <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">dfm_group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_group.html" class="external-link">dfm_group</a></span><span class="op">(</span><span class="va">dfm_ps</span>, groups <span class="op">=</span> <span class="va">partisan</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://quanteda.io/reference/topfeatures.html" class="external-link">topfeatures</a></span><span class="op">(</span><span class="va">dfm_group</span>, <span class="fl">10</span>, groups <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="step-5-keyword-analysis-keyness">Step 5: Keyword Analysis (Keyness)<a class="anchor" aria-label="anchor" href="#step-5-keyword-analysis-keyness"></a>
@@ -132,7 +132,7 @@ raw <code>text</code> column:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://quanteda.io" class="external-link">quanteda.textstats</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">dfm_binary</span> <span class="op">&lt;-</span> <span class="fu">dfm_group</span><span class="op">(</span><span class="va">dfm_ps</span>, groups <span class="op">=</span> <span class="va">conservative</span><span class="op">)</span></span>
+<span><span class="va">dfm_binary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_group.html" class="external-link">dfm_group</a></span><span class="op">(</span><span class="va">dfm_ps</span>, groups <span class="op">=</span> <span class="va">conservative</span><span class="op">)</span></span>
 <span><span class="va">keyness</span> <span class="op">&lt;-</span> <span class="fu">textstat_keyness</span><span class="op">(</span><span class="va">dfm_binary</span>, target <span class="op">=</span> <span class="st">"1"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">keyness</span>, <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -149,12 +149,12 @@ raw <code>text</code> column:</p>
 <span></span>
 <span><span class="va">corp_cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_quanteda_corpus.html">as_quanteda_corpus</a></span><span class="op">(</span><span class="va">cb_assembly</span>, docid_field <span class="op">=</span> <span class="st">"code"</span><span class="op">)</span></span>
 <span><span class="va">dfm_cb</span> <span class="op">&lt;-</span> <span class="va">corp_cb</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">tokens</span><span class="op">(</span>remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dfm</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://quanteda.io/reference/tokens.html" class="external-link">tokens</a></span><span class="op">(</span>remove_punct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://quanteda.io/reference/dfm.html" class="external-link">dfm</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Compare by election result</span></span>
-<span><span class="va">dfm_result</span> <span class="op">&lt;-</span> <span class="fu">dfm_group</span><span class="op">(</span><span class="va">dfm_cb</span>, groups <span class="op">=</span> <span class="va">result</span><span class="op">)</span></span>
-<span><span class="fu">topfeatures</span><span class="op">(</span><span class="va">dfm_result</span>, <span class="fl">10</span>, groups <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">dfm_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://quanteda.io/reference/dfm_group.html" class="external-link">dfm_group</a></span><span class="op">(</span><span class="va">dfm_cb</span>, groups <span class="op">=</span> <span class="va">result</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://quanteda.io/reference/topfeatures.html" class="external-link">topfeatures</a></span><span class="op">(</span><span class="va">dfm_result</span>, <span class="fl">10</span>, groups <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="saving-results">Saving Results<a class="anchor" aria-label="anchor" href="#saving-results"></a>

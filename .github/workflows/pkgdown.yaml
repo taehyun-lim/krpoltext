@@ -48,6 +48,26 @@ jobs:
       - name: Generate Static API files into docs/data/
         run: Rscript tools/build_api.R docs/data
 
+      - name: Normalize bilingual landing pages
+        run: Rscript tools/postprocess_pkgdown_site.R docs
+
+      - name: Validate generated Static API files
+        shell: Rscript {0}
+        run: |
+          paths <- c(
+            "docs/data/index.json",
+            "docs/data/metadata.json",
+            "docs/data/schema/campaign_booklet.json",
+            "docs/data/schema/party_statements.json"
+          )
+
+          missing <- paths[!file.exists(paths)]
+          if (length(missing) > 0) {
+            stop("Missing generated API files: ", paste(missing, collapse = ", "))
+          }
+
+          invisible(lapply(paths, jsonlite::read_json, simplifyVector = FALSE))
+
       - name: Deploy to GitHub Pages
         if: github.event_name != 'pull_request'
         uses: JamesIves/github-pages-deploy-action@v4
@@ -55,32 +75,3 @@ jobs:
           branch: gh-pages
           folder: docs
           clean: true
-
-      - name: Verify public JSON endpoints
-        if: github.event_name != 'pull_request'
-        shell: bash
-        run: |
-          set -euo pipefail
-          urls=(
-            "https://taehyun-lim.github.io/krpoltext/data/index.json"
-            "https://taehyun-lim.github.io/krpoltext/data/metadata.json"
-          )
-
-          for url in "${urls[@]}"; do
-            ok=0
-            for attempt in {1..24}; do
-              code="$(curl -L -s -o /dev/null -w "%{http_code}" "$url")"
-              if [ "$code" = "200" ]; then
-                ok=1
-                echo "Verified $url"
-                break
-              fi
-              echo "Attempt $attempt for $url returned $code; retrying..."
-              sleep 10
-            done
-
-            if [ "$ok" -ne 1 ]; then
-              echo "Endpoint did not become available: $url"
-              exit 1
-            fi
-          done

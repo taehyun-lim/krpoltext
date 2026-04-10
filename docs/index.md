@@ -1,7 +1,7 @@
 # krpoltext
 
 English \|
-[한국어](https://taehyun-lim.github.io/krpoltext/README_kr.md)
+[한국어](https://taehyun-lim.github.io/krpoltext/README_kr.html)
 
 **krpoltext** provides convenient R access to two large-scale Korean
 political text corpora described in:
@@ -132,8 +132,8 @@ via GitHub Pages, with no server required:
 API overview and fallback URLs:
 <https://taehyun-lim.github.io/krpoltext/data-api.html>
 
-If GitHub Pages temporarily returns `404`, the same resource index is also
-available here:
+If GitHub Pages temporarily returns `404`, the same resource index is
+also available here:
 <https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/index.json>
 
 **R** (without installing the package):
@@ -156,9 +156,11 @@ url = meta["party_statements"]["download_urls"]["csv"]
 df = pd.read_csv(url)
 ```
 
-Function reference: <https://taehyun-lim.github.io/krpoltext/reference/index.html>
+Function reference:
+<https://taehyun-lim.github.io/krpoltext/reference/index.html>
 
-Guides and examples: <https://taehyun-lim.github.io/krpoltext/articles/index.html>
+Guides and examples:
+<https://taehyun-lim.github.io/krpoltext/articles/index.html>
 
 ## Citation
 
@@ -177,7 +179,8 @@ And the data repository:
 For the R package itself, cite:
 
 > Lim, T.H. (2026). *krpoltext: Korean Political Text Corpora for R*. R
-> package version 0.2.0, <https://github.com/taehyun-lim/krpoltext>
+> package version 0.2.0. Zenodo.
+> <https://doi.org/10.5281/zenodo.18704318>
 
 You can also retrieve the current package citation in R:
 
@@ -199,7 +202,7 @@ citation("krpoltext")
 
 - Data Descriptor: <https://doi.org/10.1038/s41597-025-05220-4>
 - OSF Repository: <https://osf.io/rct9y/>
-- Zenodo Archive: <https://doi.org/10.5281/zenodo.18704319>
+- Zenodo Concept DOI: <https://doi.org/10.5281/zenodo.18704318>
 - Release Notes:
   <https://github.com/taehyun-lim/krpoltext/blob/main/NEWS.md>
 - GitHub Releases: <https://github.com/taehyun-lim/krpoltext/releases>

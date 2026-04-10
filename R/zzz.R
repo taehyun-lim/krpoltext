@@ -13,6 +13,9 @@
 #' @section Data Repository:
 #' \url{https://osf.io/rct9y/} (DOI: 10.17605/OSF.IO/RCT9Y)
 #'
+#' @section Software Archive:
+#' \doi{10.5281/zenodo.18704318}
+#'
 #' @docType package
 #' @name krpoltext-package
 #' @keywords internal

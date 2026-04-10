@@ -23,13 +23,18 @@ Statements Corpora. \emph{Scientific Data}, 12, 1030.
 \url{https://osf.io/rct9y/} (DOI: 10.17605/OSF.IO/RCT9Y)
 }
 
+\section{Software Archive}{
+
+\doi{10.5281/zenodo.18704318}
+}
+
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://taehyun-lim.github.io/krpoltext/}
   \item \url{https://github.com/taehyun-lim/krpoltext}
   \item \doi{10.1038/s41597-025-05220-4}
-  \item \doi{10.5281/zenodo.18704319}
+  \item \doi{10.5281/zenodo.18704318}
   \item Report bugs at \url{https://github.com/taehyun-lim/krpoltext/issues}
 }
 
