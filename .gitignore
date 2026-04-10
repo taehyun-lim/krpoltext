@@ -25,6 +25,3 @@ Thumbs.db
 # Local private notes
 .codex-notes/
 .codex-history-rewrite/
-
-# Claude Code
-.claude/
