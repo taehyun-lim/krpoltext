@@ -1,8 +1,6 @@
 # Convert a krpoltext data.table to a quanteda corpus
 
-Creates a
-[`quanteda::corpus()`](https://quanteda.io/reference/corpus.html) object
-from a `data.table` loaded by
+Creates a `quanteda::corpus()` object from a `data.table` loaded by
 [`load_campaign_booklet()`](https://taehyun-lim.github.io/krpoltext/reference/load_campaign_booklet.md)
 or
 [`load_party_statements()`](https://taehyun-lim.github.io/krpoltext/reference/load_party_statements.md).
@@ -33,8 +31,7 @@ as_quanteda_corpus(x, text_field = "text", docid_field = NULL, ...)
 
 - ...:
 
-  Additional arguments passed to
-  [`quanteda::corpus()`](https://quanteda.io/reference/corpus.html).
+  Additional arguments passed to `quanteda::corpus()`.
 
 ## Value
 
@@ -53,11 +50,4 @@ if (requireNamespace("quanteda", quietly = TRUE)) {
   corp <- as_quanteda_corpus(dt, docid_field = "id")
   corp
 }
-#> Corpus consisting of 2 documents and 1 docvar.
-#> doc-1 :
-#> "first text"
-#> 
-#> doc-2 :
-#> "second text"
-#> 
 ```
