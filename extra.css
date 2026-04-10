@@ -1,0 +1,33 @@
+@media (min-width: 576px) {
+  .template-home .page-header,
+  .template-title-body .page-header {
+    min-height: auto;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.template-home #main > .section.level1,
+.template-title-body #main > .section.level1 {
+  margin-top: 0;
+}
+
+.template-home .page-header h1,
+.template-title-body .page-header h1 {
+  margin-bottom: 0;
+}
+
+.template-home #main > .section.level1 > p:first-of-type,
+.template-title-body #main > .section.level1 > p:first-of-type {
+  margin-top: 0;
+}
+
+@media (min-width: 768px) {
+  .template-home aside,
+  .template-title-body aside {
+    position: sticky;
+    top: 5rem;
+    align-self: flex-start;
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
+  }
+}
