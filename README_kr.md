@@ -1,6 +1,9 @@
-﻿# krpoltext
+﻿<style>
+.col-md-3.toc-sticky { display: none; }
+.col-md-9 { flex: 0 0 100%; max-width: 100%; }
+</style>
 
-<!-- badges: start -->
+# krpoltext
 [![R-CMD-check](https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/taehyun-lim/krpoltext/actions/workflows/R-CMD-check.yaml)
 [![License: MIT](https://img.shields.io/badge/code-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/data-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)

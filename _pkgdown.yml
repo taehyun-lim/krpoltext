@@ -2,6 +2,11 @@
 
 home:
   strip_header: false
+  sidebar: false
+
+redirects:
+  - from: README.html
+    to: index.html
 
 template:
   bootstrap: 5
