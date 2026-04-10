@@ -7,7 +7,7 @@ on:
     branches: [main, master]
 
 jobs:
-  R-CMD-check:
+  rcmdcheck:
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.os }} (R ${{ matrix.config.r }})
 
@@ -41,3 +41,37 @@ jobs:
         with:
           args: 'c("--no-manual", "--as-cran")'
           error-on: '"warning"'
+
+  testExpected:
+    name: testExpected
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: [rcmdcheck]
+
+    steps:
+      - name: Require successful R-CMD-check matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          result='${{ needs.rcmdcheck.result }}'
+          echo "R-CMD-check matrix result: ${result}"
+          [ "${result}" = "success" ]
+
+  security:
+    name: securityExpected
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Scan tracked files for obvious secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          pattern='(gh[pousr]_[A-Za-z0-9]{20,255}|github_pat_[A-Za-z0-9_]{20,255}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|xox[baprs]-[A-Za-z0-9-]{10,}|-----BEGIN (RSA|OPENSSH|EC|DSA|PGP) PRIVATE KEY-----)'
+          if git grep -nEI -- "${pattern}" -- . ':(exclude)docs/deps'; then
+            echo "Potential secret-like content detected."
+            exit 1
+          fi
+
+          echo "No obvious secret patterns detected."
