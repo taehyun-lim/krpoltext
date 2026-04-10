@@ -2,7 +2,8 @@
 
 home:
   strip_header: false
-  sidebar: false
+  sidebar:
+    structure: [links, license, citation, authors, dev, toc]
 
 redirects:
   - [README.html, index.html]
