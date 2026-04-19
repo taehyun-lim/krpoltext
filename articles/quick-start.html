@@ -98,7 +98,10 @@ Statements Corpora. <em>Scientific Data</em>, 12, 1030. <a href="https://doi.org
 session and then cached locally as RDS. In non-interactive sessions, use
 a local file path or a pre-populated cache. The <code>load_*()</code>
 helpers prefer managed Parquet artifacts by default; the examples below
-make that explicit.</p>
+make that explicit. The public <code>campaign_booklet</code> artifact is
+documented in enriched form and includes linked NEC fields such as
+<code>huboid</code>, <code>sg_id</code>, <code>sg_typecode</code>, and
+<code>link_status</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://taehyun-lim.github.io/krpoltext/">krpoltext</a></span><span class="op">)</span></span>
 <span></span>
@@ -147,6 +150,9 @@ in the dataset.</p>
 </h2>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Linkage-derived NEC fields exposed in the public artifact</span></span>
+<span><span class="va">cb</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"huboid"</span>, <span class="st">"sg_id"</span>, <span class="st">"sg_typecode"</span>, <span class="st">"link_status"</span><span class="op">)</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># National Assembly candidates only</span></span>
 <span><span class="va">assembly</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_docs.html">get_docs</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span>, office <span class="op">=</span> <span class="st">"national_assembly"</span>, .data <span class="op">=</span> <span class="va">cb</span><span class="op">)</span></span>

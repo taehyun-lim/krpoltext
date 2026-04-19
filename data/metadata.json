@@ -1,28 +1,62 @@
 {
   "campaign_booklet": {
     "name": "South Korean Election Campaign Booklets",
-    "description": "Official campaign booklets (manifesto booklets) filed by 49,678 individual candidates in South Korean presidential, National Assembly, and local elections from 2000 to 2022. Text extracted via OCR and parsed using the khaiii Korean morphological analyzer.",
+    "description": "Official campaign booklets (manifesto booklets) filed by 49,678 individual candidates in South Korean presidential, National Assembly, and local elections from 2000 to 2022. The dataset is distributed in two public variants: the original corpus artifact and an enriched artifact with conservative NEC linkage fields for integration workflows.",
     "time_coverage": "2000-2022",
     "n_entries": 49678,
-    "n_columns": 31,
     "version": "v2022",
     "package_version": "0.2.0",
-    "supported_formats": ["csv", "parquet"],
-    "managed_formats": ["csv", "parquet"],
+    "default_variant": "original",
+    "available_variants": ["original", "enriched"],
     "source_url": "https://osf.io/rct9y/",
-    "download_url": "https://osf.io/download/6ybj8/",
-    "download_urls": {
-      "csv": "https://osf.io/download/6ybj8/",
-      "parquet": "https://osf.io/download/pxg2k/"
-    },
     "paper_doi": "10.1038/s41597-025-05220-4",
     "license": "CC BY-NC-ND 4.0",
     "citation": "Lim, T.H. (2025). South Korean Election Campaign Booklet and Party Statements Corpora. Scientific Data, 12, 1030. https://doi.org/10.1038/s41597-025-05220-4",
     "osf_citation": "Lim, T.H. (2024). South Korean Election Campaign Booklet Corpus and Party Statements Corpus. OSF. https://doi.org/10.17605/OSF.IO/RCT9Y",
-    "notes": {
-      "missing_values": "2,283 candidates lack a booklet; 151 are missing biographical information. 23 booklets were unprocessable.",
-      "identifiers": "'code' uniquely identifies each document. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis.",
-      "text_processing": "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version."
+    "variants": {
+      "original": {
+        "variant": "original",
+        "description": "Original krpoltext campaign booklet corpus artifact covering 49,678 document rows from South Korean presidential, National Assembly, and local elections, 2000-2022.",
+        "variant_description": "The original krpoltext campaign booklet corpus artifact.",
+        "recommended_use": "General corpus analysis and backward-compatible workflows.",
+        "n_columns": 31,
+        "supported_formats": ["csv", "parquet"],
+        "managed_formats": ["csv", "parquet"],
+        "download_url": "https://osf.io/download/6ybj8/",
+        "download_urls": {
+          "csv": "https://osf.io/download/6ybj8/",
+          "parquet": "https://osf.io/download/pxg2k/"
+        },
+        "schema_url": "data/schema/campaign_booklet.json",
+        "notes": {
+          "missing_values": "2,283 rows have no booklet code or text because a booklet was not available. 151 are missing biographical information. 23 booklets were unprocessable.",
+          "text_processing": "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version.",
+          "identifiers": "'code' is the krpoltext document row identifier, but some original rows have missing code values, so row identity should not be inferred from code alone. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis.",
+          "provenance": "The original variant is the source corpus artifact distributed without NEC linkage fields."
+        }
+      },
+      "enriched": {
+        "variant": "enriched",
+        "description": "Enriched campaign booklet artifact using the same document-row universe as the original CSV source, with conservative NEC linkage fields such as 'huboid', 'sg_id', and 'sg_typecode' added to improve interoperability with kr-elections-mcp and related NEC-aligned workflows.",
+        "variant_description": "The same document-row universe as the original CSV source, plus conservative NEC linkage fields for integration workflows.",
+        "recommended_use": "NEC-aligned workflows, kr-elections-mcp, and linkage-aware joins.",
+        "n_columns": 37,
+        "supported_formats": ["csv", "parquet"],
+        "managed_formats": ["csv", "parquet"],
+        "download_url": "https://osf.io/download/69e3eec5352dbdd881fd8d7b/",
+        "download_urls": {
+          "csv": "https://osf.io/download/69e3eec5352dbdd881fd8d7b/",
+          "parquet": "https://osf.io/download/69e3ee72a0e06b0928fd8ae2/"
+        },
+        "schema_url": "data/schema/campaign_booklet_enriched.json",
+        "notes": {
+          "missing_values": "2,283 rows have no booklet code or text because a booklet was not available. 151 are missing biographical information. 23 booklets were unprocessable.",
+          "text_processing": "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version.",
+          "identifiers": "'code' is the krpoltext document row identifier, but some rows have missing code values, so row identity should not be inferred from code alone. 'huboid' is a linked NEC identifier, not a native krpoltext identifier. Rows with 'link_status == \"resolved\"' are expected to have a non-null 'huboid'. 'sg_id' and 'sg_typecode' describe the NEC-aligned election scope attached to the row. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis.",
+          "provenance": "The enriched variant is a row-preserving transformation of the original campaign_booklet CSV source. It adds conservative NEC linkage metadata to improve interoperability with kr-elections-mcp and related NEC-aligned workflows.",
+          "artifact_transition": "When the enriched campaign_booklet artifact is rebuilt or republished, update registry checksums, sizes, and URLs in lockstep with this schema."
+        }
+      }
     }
   },
   "party_statements": {

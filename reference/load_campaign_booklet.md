@@ -1,9 +1,7 @@
 # Load the South Korean Election Campaign Booklet corpus
 
 Loads the election campaign booklet dataset (2000–2022) as a
-`data.table`. The dataset contains manifesto booklets from 49,678
-individual candidates across presidential, National Assembly, and local
-elections.
+`data.table`. `campaign_booklet` is available in two public variants:
 
 ## Usage
 
@@ -13,7 +11,8 @@ load_campaign_booklet(
   format = c("parquet", "csv"),
   cache = TRUE,
   refresh = FALSE,
-  data_version = NULL
+  data_version = NULL,
+  variant = NULL
 )
 ```
 
@@ -45,33 +44,33 @@ load_campaign_booklet(
   Character or `NULL`; the data artifact version to load. Defaults to
   the latest available version.
 
+- variant:
+
+  Character or `NULL`; which public `campaign_booklet` variant to load.
+  Defaults to `"original"`. Use `"enriched"` to load the NEC-linked
+  variant.
+
 ## Value
 
 A
-[data.table::data.table](https://rdrr.io/pkg/data.table/man/data.table.html)
-with the following columns:
+[data.table::data.table](https://rdrr.io/pkg/data.table/man/data.table.html).
 
-|             |                                         |
-|-------------|-----------------------------------------|
-| Column      | Description                             |
-| `date`      | Election date                           |
-| `name`      | Candidate name                          |
-| `region`    | Region (province/metropolitan city)     |
-| `district`  | Electoral district                      |
-| `office_id` | Office type identifier                  |
-| `office`    | Office type (e.g., `national_assembly`) |
-| `party`     | Party name (Korean)                     |
-| `party_eng` | Party name (English)                    |
-| `result`    | Election result                         |
-| `sex`       | Sex of the candidate                    |
-| `age`       | Age at the time of election             |
-| `text`      | Full text of the campaign booklet       |
-| `filtered`  | Filtered/preprocessed text indicator    |
-
-See `data_dictionary.md` for the complete column reference, and the Data
-Descriptor (Tables 4–8) for detailed variable mappings.
+See `data_dictionary.md` for the complete column reference. `original`
+returns the historical corpus fields only. `enriched` keeps the same
+document-row universe and adds conservative NEC linkage metadata.
+Because some original rows have missing `code` values, row identity
+should not be inferred from `code` alone.
 
 ## Details
+
+- `original`: the original krpoltext corpus artifact
+
+- `enriched`: the same document-row universe plus conservative NEC
+  linkage fields such as `huboid`, `sg_id`, `sg_typecode`,
+  `link_status`, `matcher_version`, and `nec_snapshot_id`
+
+The default is `variant = "original"`. Use `variant = "enriched"` for
+NEC-aligned workflows such as `kr-elections-mcp`.
 
 For full methodology and variable descriptions, see the Data Descriptor:
 Lim, T.H. (2025). *Scientific Data*, 12, 1030.

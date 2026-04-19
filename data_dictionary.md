@@ -12,7 +12,7 @@ Data repository: <https://doi.org/10.17605/OSF.IO/RCT9Y>
 
 ------------------------------------------------------------------------
 
-## 1. Election Campaign Booklets (`sk_election_campaign_booklet_v2022.csv`)
+## 1. Election Campaign Booklets (`campaign_booklet` public artifact)
 
 Official election campaign booklets (공보물) from **49,678 individual
 candidates** across presidential, National Assembly, and local elections
@@ -20,39 +20,49 @@ in South Korea (2000–2022). Text was extracted via OCR (black-and-white,
 page-by-page using the Google Drive API) and parsed using the khaiii
 Korean morphological analyzer.
 
-| Column         | Type      | Description                                                                                       |
-|----------------|-----------|---------------------------------------------------------------------------------------------------|
-| `date`         | character | Election date (YYYY-MM-DD)                                                                        |
-| `name`         | character | Candidate name (Korean)                                                                           |
-| `region`       | character | Metropolitan region (province or metropolitan city)                                               |
-| `district`     | character | Electoral district                                                                                |
-| `office_id`    | integer   | Office type identifier (see mapping below)                                                        |
-| `office`       | character | Office type label (see mapping below)                                                             |
-| `giho`         | integer   | Candidate ballot number                                                                           |
-| `party`        | character | Political party name (Korean)                                                                     |
-| `party_eng`    | character | Political party name (English); transliteration if no official English name                       |
-| `result`       | character | Election result (Korean): 당선 (elected) / 낙선 (defeated)                                        |
-| `sex`          | character | Sex: 남 (male) / 여 (female)                                                                      |
-| `birthday`     | character | Date of birth (YYYY-MM-DD)                                                                        |
-| `age`          | integer   | Age at the time of the election                                                                   |
-| `job_id`       | integer   | Original NEC job category identifier (varies across years)                                        |
-| `job`          | character | Standardized job category (Korean)                                                                |
-| `job_name`     | character | Job title (Korean)                                                                                |
-| `job_name_eng` | character | Job title (English)                                                                               |
-| `job_code`     | integer   | Standardized job code (consistent across years; see paper Table 6)                                |
-| `edu_id`       | integer   | Original NEC education level identifier (varies across years)                                     |
-| `edu`          | character | Education description (Korean, free-text from NEC)                                                |
-| `edu_name`     | character | Standardized education level label (Korean)                                                       |
-| `edu_name_eng` | character | Standardized education level label (English)                                                      |
-| `edu_code`     | integer   | Standardized education code (consistent across years; see paper Table 7)                          |
-| `career1`      | character | Career description 1                                                                              |
-| `career2`      | character | Career description 2                                                                              |
-| `pages`        | integer   | Number of pages in the booklet                                                                    |
-| `code`         | character | **Unique document identifier**                                                                    |
-| `sex_code`     | integer   | Sex code: 1 = male, 0 = female                                                                    |
-| `result_code`  | integer   | Result code: 1 = elected, 0 = not elected                                                         |
-| `text`         | character | Full OCR-extracted text of the campaign booklet                                                   |
-| `filtered`     | character | Parsed text after morphological analysis; Korean-only, numbers/foreign characters/symbols removed |
+The package and API expose this corpus in enriched form, with
+linkage-derived NEC alignment fields such as `huboid`, `sg_id`,
+`sg_typecode`, `link_status`, `matcher_version`, and `nec_snapshot_id`.
+
+| Column            | Type      | Description                                                                                          |
+|-------------------|-----------|------------------------------------------------------------------------------------------------------|
+| `date`            | character | Election date (YYYY-MM-DD)                                                                           |
+| `name`            | character | Candidate name (Korean)                                                                              |
+| `region`          | character | Metropolitan region (province or metropolitan city)                                                  |
+| `district`        | character | Electoral district                                                                                   |
+| `office_id`       | integer   | Office type identifier (see mapping below)                                                           |
+| `office`          | character | Office type label (see mapping below)                                                                |
+| `giho`            | integer   | Candidate ballot number                                                                              |
+| `party`           | character | Political party name (Korean)                                                                        |
+| `party_eng`       | character | Political party name (English); transliteration if no official English name                          |
+| `result`          | character | Election result (Korean): 당선 (elected) / 낙선 (defeated)                                           |
+| `sex`             | character | Sex: 남 (male) / 여 (female)                                                                         |
+| `birthday`        | character | Date of birth (YYYY-MM-DD)                                                                           |
+| `age`             | integer   | Age at the time of the election                                                                      |
+| `job_id`          | integer   | Original NEC job category identifier (varies across years)                                           |
+| `job`             | character | Standardized job category (Korean)                                                                   |
+| `job_name`        | character | Job title (Korean)                                                                                   |
+| `job_name_eng`    | character | Job title (English)                                                                                  |
+| `job_code`        | integer   | Standardized job code (consistent across years; see paper Table 6)                                   |
+| `edu_id`          | integer   | Original NEC education level identifier (varies across years)                                        |
+| `edu`             | character | Education description (Korean, free-text from NEC)                                                   |
+| `edu_name`        | character | Standardized education level label (Korean)                                                          |
+| `edu_name_eng`    | character | Standardized education level label (English)                                                         |
+| `edu_code`        | integer   | Standardized education code (consistent across years; see paper Table 7)                             |
+| `career1`         | character | Career description 1                                                                                 |
+| `career2`         | character | Career description 2                                                                                 |
+| `pages`           | integer   | Number of pages in the booklet                                                                       |
+| `code`            | character | **Unique document row identifier**                                                                   |
+| `huboid`          | character | Linked NEC candidate identifier for `kr-elections-mcp` alignment; may be missing for unresolved rows |
+| `sg_id`           | character | Linked NEC election identifier associated with `huboid`                                              |
+| `sg_typecode`     | character | Linked NEC election type identifier associated with `huboid`                                         |
+| `link_status`     | character | NEC linkage status: `resolved`, `ambiguous`, `not_found`, or `rejected`                              |
+| `matcher_version` | character | Version of the linkage pipeline used to assign NEC fields                                            |
+| `nec_snapshot_id` | character | Identifier of the NEC snapshot used for linkage                                                      |
+| `sex_code`        | integer   | Sex code: 1 = male, 0 = female                                                                       |
+| `result_code`     | integer   | Result code: 1 = elected, 0 = not elected                                                            |
+| `text`            | character | Full OCR-extracted text of the campaign booklet                                                      |
+| `filtered`        | character | Parsed text after morphological analysis; Korean-only, numbers/foreign characters/symbols removed    |
 
 ### Office Mapping (`office_id` → `office`)
 
@@ -71,14 +81,20 @@ Korean morphological analyzer.
 - **Missing values**: 2,283 candidates lack a booklet; 151 are missing
   biographical information. 23 booklets were unprocessable (corrupted
   files). See paper Section “Methods” for details.
-- **Identifiers**: `code` uniquely identifies each document. `job_id`
-  and `edu_id` vary across election years; use `job_code` and `edu_code`
-  for consistent cross-year analysis.
+- **Identifiers**: `code` uniquely identifies each document row.
+  `huboid` is a linkage-derived NEC candidacy identifier and may be
+  missing when linkage is unresolved. `sg_id` and `sg_typecode` identify
+  the linked NEC election scope. `job_id` and `edu_id` vary across
+  election years; use `job_code` and `edu_code` for consistent
+  cross-year analysis.
 - **Caution on Basic Assembly**: Basic Assembly booklets have lower
   average word counts, potentially due to lower PDF quality or genuinely
   shorter texts. See paper for discussion.
 - **`filtered`**: Morphologically parsed using khaiii; retains only
   Korean content words.
+- **Provenance**: The package and static API describe the enriched
+  public artifact. A native pre-linkage source snapshot may be retained
+  separately for provenance and reproducibility.
 
 ------------------------------------------------------------------------
 

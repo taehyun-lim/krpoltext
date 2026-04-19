@@ -97,7 +97,7 @@
 <td><strong>선거공보 코퍼스</strong></td>
 <td>2000–2022</td>
 <td>49,678 candidates</td>
-<td>대통령선거, 국회의원선거, 지방선거 후보자의 선거공보 텍스트</td>
+<td>대통령선거, 국회의원선거, 지방선거 후보자의 선거공보 텍스트로, <code>original</code>과 <code>enriched</code> 두 variant로 제공</td>
 </tr>
 <tr class="even">
 <td><strong>정당 성명 코퍼스</strong></td>
@@ -108,6 +108,14 @@
 </tbody>
 </table>
 <p>데이터는 <a href="https://osf.io/rct9y/" class="external-link">Open Science Framework</a>에 호스팅되어 있으며 (DOI: <a href="https://doi.org/10.17605/OSF.IO/RCT9Y" class="external-link">10.17605/OSF.IO/RCT9Y</a>), 관리형 아티팩트가 필요할 경우 대화형 세션에서 처음 사용할 때 자동으로 다운로드됩니다. 비대화형 세션에서는 로컬 파일 경로나 미리 채워둔 cache를 사용해야 합니다.</p>
+<p><code>campaign_booklet</code>는 두 개의 공개 variant로 제공됩니다.</p>
+<ul>
+<li>
+<code>original</code>: 기존 krpoltext 선거공보 코퍼스 아티팩트</li>
+<li>
+<code>enriched</code>: 동일한 문서-행 universe를 유지하면서 <code>huboid</code>, <code>sg_id</code>, <code>sg_typecode</code>, <code>link_status</code>, <code>matcher_version</code>, <code>nec_snapshot_id</code> 같은 보수적 NEC linkage 필드를 추가한 variant</li>
+</ul>
+<p><code><a href="reference/load_campaign_booklet.html">load_campaign_booklet()</a></code>의 기본값은 <code>variant = "original"</code>입니다. <code>kr-elections-mcp</code> 같은 NEC-aligned workflow에는 <code>variant = "enriched"</code>를 사용하는 것이 적합합니다.</p>
 <div class="section level2">
 <h2 id="릴리스-노트">릴리스 노트<a class="anchor" aria-label="anchor" href="#%EB%A6%B4%EB%A6%AC%EC%8A%A4-%EB%85%B8%ED%8A%B8"></a>
 </h2>
@@ -134,8 +142,19 @@
 <span><span class="co"># 관리형 Parquet 아티팩트를 명시적으로 사용</span></span>
 <span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_party_statements.html">load_party_statements</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span>
 <span><span class="va">cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span>
+<span><span class="va">cb_enriched</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span>, variant <span class="op">=</span> <span class="st">"enriched"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 기본 campaign_booklet는 original 코퍼스 아티팩트를 로드</span></span>
+<span><span class="va">cb</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"party"</span>, <span class="st">"text"</span><span class="op">)</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># NEC-linked workflow에는 enriched variant 사용</span></span>
+<span><span class="va">cb_enriched</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"huboid"</span>, <span class="st">"sg_id"</span>, <span class="st">"sg_typecode"</span>, <span class="st">"link_status"</span><span class="op">)</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># 메타데이터 확인</span></span>
+<span><span class="fu"><a href="reference/metadata.html">metadata</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/metadata.html">metadata</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span>, variant <span class="op">=</span> <span class="st">"enriched"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/schema.html">schema</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/schema.html">schema</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span>, variant <span class="op">=</span> <span class="st">"enriched"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/metadata.html">metadata</a></span><span class="op">(</span><span class="st">"party_statements"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/schema.html">schema</a></span><span class="op">(</span><span class="st">"party_statements"</span><span class="op">)</span></span>
 <span></span>
@@ -156,14 +175,26 @@
 <h2 id="데이터-다운로드">데이터 다운로드<a class="anchor" aria-label="anchor" href="#%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C"></a>
 </h2>
 <p>관리형 아티팩트는 현재 OSF에서 CSV와 Parquet 두 형식으로 제공됩니다. <code>load_*()</code> helper는 관리형 Parquet 아티팩트를 사용할 수 있지만, <code><a href="reference/download_data.html">download_data()</a></code>는 여전히 CSV prefetch helper입니다. 로컬 CSV나 Parquet 파일 경로를 직접 넘길 수도 있습니다.</p>
+<p><code>campaign_booklet</code>의 기존 unsuffixed 파일명은 <code>original</code> 아티팩트를 뜻합니다.</p>
+<ul>
+<li><code>sk_election_campaign_booklet_v2022.csv</code></li>
+<li><code>sk_election_campaign_booklet_v2022.parquet</code></li>
+</ul>
+<p><code>enriched</code> 아티팩트는 suffixed 파일명을 사용합니다.</p>
+<ul>
+<li><code>sk_election_campaign_booklet_enriched_v2022.csv</code></li>
+<li><code>sk_election_campaign_booklet_enriched_v2022.parquet</code></li>
+</ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 관리형 Parquet를 명시적으로 사용</span></span>
 <span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_party_statements.html">load_party_statements</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span>
 <span><span class="va">cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span>
+<span><span class="va">cb_enriched</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span>, variant <span class="op">=</span> <span class="st">"enriched"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 또는 CSV를 명시적으로 사용</span></span>
 <span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_party_statements.html">load_party_statements</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"csv"</span><span class="op">)</span></span>
 <span><span class="va">cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"csv"</span><span class="op">)</span></span>
+<span><span class="va">cb_enriched</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"csv"</span>, variant <span class="op">=</span> <span class="st">"enriched"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 두 데이터셋의 CSV cache를 미리 받아두기</span></span>
 <span><span class="fu"><a href="reference/download_data.html">download_data</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -261,9 +292,13 @@
 </tr>
 <tr class="odd">
 <td><a href="https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json"><code>/data/schema/campaign_booklet.json</code></a></td>
-<td>선거공보 컬럼 스키마</td>
+<td>original 선거공보 아티팩트의 컬럼 스키마</td>
 </tr>
 <tr class="even">
+<td><a href="https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet_enriched.json"><code>/data/schema/campaign_booklet_enriched.json</code></a></td>
+<td>enriched 선거공보 아티팩트의 컬럼 스키마</td>
+</tr>
+<tr class="odd">
 <td><a href="https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json"><code>/data/schema/party_statements.json</code></a></td>
 <td>정당 성명 컬럼 스키마</td>
 </tr>

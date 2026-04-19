@@ -49,6 +49,7 @@
 <div id="data-api" class="section level1">
 
 <p>Machine-readable metadata, checksums, download URLs, and schemas are available as static JSON files.</p>
+<p>For <code>campaign_booklet</code>, the static API now exposes two public variants: <code>original</code> and <code>enriched</code>. The original variant keeps the historical artifact filenames. The enriched variant uses suffixed filenames and adds conservative NEC linkage fields such as <code>huboid</code>, <code>sg_id</code>, <code>sg_typecode</code>, and <code>link_status</code>.</p>
 <div class="section level2">
 <h2 id="canonical-github-pages-endpoints">Canonical GitHub Pages endpoints<a class="anchor" aria-label="anchor" href="#canonical-github-pages-endpoints"></a></h2>
 <table class="table"><colgroup><col width="43%"><col width="56%"></colgroup><thead><tr class="header"><th>Endpoint</th>
@@ -58,8 +59,10 @@
 </tr><tr class="even"><td><a href="https://taehyun-lim.github.io/krpoltext/data/metadata.json"><code>/data/metadata.json</code></a></td>
 <td>Dataset descriptions and citation info</td>
 </tr><tr class="odd"><td><a href="https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json"><code>/data/schema/campaign_booklet.json</code></a></td>
-<td>Column schema for campaign booklets</td>
-</tr><tr class="even"><td><a href="https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json"><code>/data/schema/party_statements.json</code></a></td>
+<td>Column schema for the original campaign booklet artifact</td>
+</tr><tr class="even"><td><a href="https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet_enriched.json"><code>/data/schema/campaign_booklet_enriched.json</code></a></td>
+<td>Column schema for the enriched campaign booklet artifact</td>
+</tr><tr class="odd"><td><a href="https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json"><code>/data/schema/party_statements.json</code></a></td>
 <td>Column schema for party statements</td>
 </tr></tbody></table></div>
 <div class="section level2">
@@ -73,7 +76,9 @@
 <td><a href="https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/metadata.json" class="external-link uri">https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/metadata.json</a></td>
 </tr><tr class="odd"><td><code>/data/schema/campaign_booklet.json</code></td>
 <td><a href="https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/schema/campaign_booklet.json" class="external-link uri">https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/schema/campaign_booklet.json</a></td>
-</tr><tr class="even"><td><code>/data/schema/party_statements.json</code></td>
+</tr><tr class="even"><td><code>/data/schema/campaign_booklet_enriched.json</code></td>
+<td><a href="https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/schema/campaign_booklet_enriched.json" class="external-link uri">https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/schema/campaign_booklet_enriched.json</a></td>
+</tr><tr class="odd"><td><code>/data/schema/party_statements.json</code></td>
 <td><a href="https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/schema/party_statements.json" class="external-link uri">https://raw.githubusercontent.com/taehyun-lim/krpoltext/gh-pages/data/schema/party_statements.json</a></td>
 </tr></tbody></table><p>The GitHub Pages URLs remain the canonical public endpoints.</p>
 </div>

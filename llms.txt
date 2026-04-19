@@ -10,16 +10,27 @@ political text corpora described in:
 > Statements Corpora. *Scientific Data*, 12, 1030.
 > <https://doi.org/10.1038/s41597-025-05220-4>
 
-| Corpus                         | Period    | Candidates / Entries | Description                                                                                |
-|--------------------------------|-----------|----------------------|--------------------------------------------------------------------------------------------|
-| **Election Campaign Booklets** | 2000–2022 | 49,678 candidates    | Manifesto booklets from candidates in presidential, National Assembly, and local elections |
-| **Party Statements**           | 2003–2022 | 83,201 statements    | Official statements and leadership meeting minutes from the two major parties              |
+| Corpus                         | Period    | Candidates / Entries | Description                                                                                                                                 |
+|--------------------------------|-----------|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| **Election Campaign Booklets** | 2000–2022 | 49,678 candidates    | Manifesto booklets from candidates in presidential, National Assembly, and local elections, available in `original` and `enriched` variants |
+| **Party Statements**           | 2003–2022 | 83,201 statements    | Official statements and leadership meeting minutes from the two major parties                                                               |
 
 Data is hosted on the [Open Science Framework](https://osf.io/rct9y/)
 (DOI: [10.17605/OSF.IO/RCT9Y](https://doi.org/10.17605/OSF.IO/RCT9Y)).
 If a managed artifact is needed, it is downloaded automatically on first
 use in interactive sessions; non-interactive sessions should use a local
 file path or a pre-populated cache.
+
+`campaign_booklet` is available in two public variants:
+
+- `original`: the original krpoltext corpus artifact
+- `enriched`: the same document-row universe plus conservative NEC
+  linkage fields such as `huboid`, `sg_id`, `sg_typecode`,
+  `link_status`, `matcher_version`, and `nec_snapshot_id`
+
+[`load_campaign_booklet()`](https://taehyun-lim.github.io/krpoltext/reference/load_campaign_booklet.md)
+defaults to `variant = "original"`. Use `variant = "enriched"` for
+NEC-aligned workflows such as `kr-elections-mcp`.
 
 ## Release Notes
 
@@ -43,8 +54,19 @@ library(krpoltext)
 # Load datasets from managed Parquet artifacts when available
 ps <- load_party_statements(format = "parquet")
 cb <- load_campaign_booklet(format = "parquet")
+cb_enriched <- load_campaign_booklet(format = "parquet", variant = "enriched")
+
+# Default campaign_booklet loads the original corpus artifact
+cb[, c("code", "party", "text")]
+
+# Use the enriched variant for NEC-linked workflows
+cb_enriched[, c("code", "huboid", "sg_id", "sg_typecode", "link_status")]
 
 # Explore metadata
+metadata("campaign_booklet")
+metadata("campaign_booklet", variant = "enriched")
+schema("campaign_booklet")
+schema("campaign_booklet", variant = "enriched")
 metadata("party_statements")
 schema("party_statements")
 
@@ -68,16 +90,29 @@ Managed artifacts are available from OSF in both CSV and Parquet
 formats. The `load_*()` helpers can use managed Parquet artifacts, while
 [`download_data()`](https://taehyun-lim.github.io/krpoltext/reference/download_data.md)
 remains a CSV-prefetch helper. You can also point the loaders at local
-CSV or Parquet files:
+CSV or Parquet files.
+
+For `campaign_booklet`, the historical unsuffixed filenames remain the
+`original` artifact:
+
+- `sk_election_campaign_booklet_v2022.csv`
+- `sk_election_campaign_booklet_v2022.parquet`
+
+The `enriched` artifact uses suffixed filenames:
+
+- `sk_election_campaign_booklet_enriched_v2022.csv`
+- `sk_election_campaign_booklet_enriched_v2022.parquet`
 
 ``` r
-# Use managed Parquet explicitly (also the default preference)
+# Use managed Parquet explicitly
 ps <- load_party_statements(format = "parquet")
 cb <- load_campaign_booklet(format = "parquet")
+cb_enriched <- load_campaign_booklet(format = "parquet", variant = "enriched")
 
 # Or use CSV explicitly
 ps <- load_party_statements(format = "csv")
 cb <- load_campaign_booklet(format = "csv")
+cb_enriched <- load_campaign_booklet(format = "csv", variant = "enriched")
 
 # Prefetch CSV caches for both datasets
 download_data()
@@ -122,12 +157,13 @@ topfeatures(dfm_obj, 20)
 Dataset metadata and download links are available as a static JSON API
 via GitHub Pages, with no server required:
 
-| Endpoint                                                                                                          | Description                                              |
-|-------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|
-| [`/data/index.json`](https://taehyun-lim.github.io/krpoltext/data/index.json)                                     | Resource index (files, versions, SHA-256, download URLs) |
-| [`/data/metadata.json`](https://taehyun-lim.github.io/krpoltext/data/metadata.json)                               | Dataset descriptions and citation info                   |
-| [`/data/schema/campaign_booklet.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json) | Column schema for campaign booklets                      |
-| [`/data/schema/party_statements.json`](https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json) | Column schema for party statements                       |
+| Endpoint                                                                                                                            | Description                                              |
+|-------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|
+| [`/data/index.json`](https://taehyun-lim.github.io/krpoltext/data/index.json)                                                       | Resource index (files, versions, SHA-256, download URLs) |
+| [`/data/metadata.json`](https://taehyun-lim.github.io/krpoltext/data/metadata.json)                                                 | Dataset descriptions and citation info                   |
+| [`/data/schema/campaign_booklet.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json)                   | Column schema for the original campaign booklet artifact |
+| [`/data/schema/campaign_booklet_enriched.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet_enriched.json) | Column schema for the enriched campaign booklet artifact |
+| [`/data/schema/party_statements.json`](https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json)                   | Column schema for party statements                       |
 
 API overview and fallback URLs:
 <https://taehyun-lim.github.io/krpoltext/data-api.html>

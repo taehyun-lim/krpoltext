@@ -21,7 +21,9 @@ If a managed artifact is needed, it is downloaded from
 then cached locally as RDS. In non-interactive sessions, use a local
 file path or a pre-populated cache. The `load_*()` helpers prefer
 managed Parquet artifacts by default; the examples below make that
-explicit.
+explicit. The public `campaign_booklet` artifact is documented in
+enriched form and includes linked NEC fields such as `huboid`, `sg_id`,
+`sg_typecode`, and `link_status`.
 
 ``` r
 library(krpoltext)
@@ -72,6 +74,9 @@ table(ps$partisan)
 
 ``` r
 cb <- load_campaign_booklet(format = "parquet")
+
+# Linkage-derived NEC fields exposed in the public artifact
+cb[, c("code", "huboid", "sg_id", "sg_typecode", "link_status")]
 
 # National Assembly candidates only
 assembly <- get_docs("campaign_booklet", office = "national_assembly", .data = cb)

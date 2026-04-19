@@ -59,7 +59,7 @@ dataset-specific extras such as office mappings.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">schema</span><span class="op">(</span>dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span>, <span class="st">"party_statements"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">schema</span><span class="op">(</span>dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span>, <span class="st">"party_statements"</span><span class="op">)</span>, variant <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -69,6 +69,12 @@ dataset-specific extras such as office mappings.</p>
 <dl><dt id="arg-dataset">dataset<a class="anchor" aria-label="anchor" href="#arg-dataset"></a></dt>
 <dd><p>Character; which dataset to describe. One of
 <code>"campaign_booklet"</code> or <code>"party_statements"</code>.</p></dd>
+
+
+<dt id="arg-variant">variant<a class="anchor" aria-label="anchor" href="#arg-variant"></a></dt>
+<dd><p>Character or <code>NULL</code>; optional dataset variant. For
+<code>campaign_booklet</code>, defaults to <code>"original"</code> and may also be set to
+<code>"enriched"</code>. Other datasets do not define variants.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -86,7 +92,7 @@ dataset-specific extras such as office mappings.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "South Korean Election Campaign Booklets"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $description</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Official campaign booklets (manifesto booklets) filed by 49,678 individual candidates in South Korean presidential, National Assembly, and local elections from 2000 to 2022. Text extracted via OCR and parsed using the khaiii Korean morphological analyzer."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Original krpoltext campaign booklet corpus artifact covering 49,678 document rows from South Korean presidential, National Assembly, and local elections, 2000-2022."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $time_coverage</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2000-2022"</span>
@@ -96,6 +102,21 @@ dataset-specific extras such as office mappings.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $package_version</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "0.2.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $variant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "original"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $default_variant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "original"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $available_variants</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "original" "enriched"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $variant_description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "The original krpoltext campaign booklet corpus artifact."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $recommended_use</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "General corpus analysis and backward-compatible workflows."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $identifier_columns</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "code"</span>
@@ -446,7 +467,7 @@ dataset-specific extras such as office mappings.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[27]]$description</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Unique document identifier"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "krpoltext document row identifier"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[27]]$identifier</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
@@ -499,13 +520,16 @@ dataset-specific extras such as office mappings.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $notes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $notes$missing_values</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2,283 candidates lack a booklet; 151 are missing biographical information. 23 booklets were unprocessable."</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$identifiers</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "'code' uniquely identifies each document. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2,283 rows have no booklet code or text because a booklet was not available. 151 are missing biographical information. 23 booklets were unprocessable."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $notes$text_processing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$identifiers</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "'code' is the krpoltext document row identifier, but some original rows have missing code values, so row identity should not be inferred from code alone. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$provenance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "The original variant is the source corpus artifact distributed without NEC linkage fields."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $extras</span>
@@ -588,6 +612,678 @@ dataset-specific extras such as office mappings.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$row_universe</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Original campaign_booklet CSV source artifact."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="fu">schema</span><span class="op">(</span><span class="st">"campaign_booklet"</span>, variant <span class="op">=</span> <span class="st">"enriched"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $dataset</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "campaign_booklet"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "South Korean Election Campaign Booklets"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Enriched campaign booklet artifact using the same document-row universe as the original CSV source, with conservative NEC linkage fields such as 'huboid', 'sg_id', and 'sg_typecode' added to improve interoperability with kr-elections-mcp and related NEC-aligned workflows."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $time_coverage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2000-2022"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $data_version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "v2022"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $package_version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "0.2.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $variant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "enriched"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $default_variant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "original"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $available_variants</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "original" "enriched"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $variant_description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "The same document-row universe as the original CSV source, plus conservative NEC linkage fields for integration workflows."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $recommended_use</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NEC-aligned workflows, kr-elections-mcp, and linkage-aware joins."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $identifier_columns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "code"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $text_columns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "text"     "filtered"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $supported_formats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "csv"     "parquet"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $managed_formats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "csv"     "parquet"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$csv$format</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "csv"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$csv$file</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sk_election_campaign_booklet_enriched_v2022.csv"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$csv$download_url</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://osf.io/download/69e3eec5352dbdd881fd8d7b/"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$csv$sha256</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "08779d4c27a02635c7bf08a332170ac0a5bf1295e825e3b29061c62f95598586"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$csv$size_bytes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 760045361</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$csv$managed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$parquet</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$parquet$format</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "parquet"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$parquet$file</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sk_election_campaign_booklet_enriched_v2022.parquet"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$parquet$download_url</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://osf.io/download/69e3ee72a0e06b0928fd8ae2/"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$parquet$sha256</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "d8901cd2cebef30116f8865847727bb10855478ee556bc0dcfb5a04e838ad8f4"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$parquet$size_bytes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 406231949</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $artifacts$parquet$managed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[1]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "date"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[1]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[1]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Election date (YYYY-MM-DD)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[2]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "name"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[2]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[2]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Candidate name (Korean)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[3]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "region"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[3]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[3]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Metropolitan region (province or metropolitan city)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[4]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "district"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[4]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[4]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Electoral district"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[5]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[5]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "office_id"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[5]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integer"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[5]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Office type identifier (1=president, 2=national_assembly, 3=edu_superintendent, 4=metro_head, 5=metro_assembly, 6=basic_head, 7=basic_assembly)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[6]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[6]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "office"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[6]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[6]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Office type label (president, national_assembly, edu_superintendent, metro_head, metro_assembly, basic_head, basic_assembly)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[7]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[7]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "giho"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[7]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integer"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[7]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Candidate ballot number"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[8]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[8]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "party"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[8]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[8]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Political party name (Korean)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[9]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[9]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "party_eng"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[9]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[9]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Political party name (English); transliteration if no official English name"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[10]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[10]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "result"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[10]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[10]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Election result in Korean"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[11]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[11]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sex"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[11]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[11]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Sex in Korean"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[12]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[12]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "birthday"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[12]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[12]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Date of birth (YYYY-MM-DD)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[13]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[13]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "age"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[13]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integer"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[13]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Age at the time of the election"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[14]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[14]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "job_id"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[14]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integer"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[14]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Original NEC job category identifier (varies across years)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[15]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[15]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "job"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[15]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[15]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Standardized job category (Korean)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[16]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[16]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "job_name"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[16]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[16]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Job title (Korean)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[17]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[17]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "job_name_eng"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[17]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[17]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Job title (English)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[18]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[18]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "job_code"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[18]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integer"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[18]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Standardized job code consistent across years"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[19]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[19]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "edu_id"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[19]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integer"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[19]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Original NEC education level identifier (varies across years)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[20]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[20]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "edu"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[20]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[20]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Education description (Korean, free-text from NEC)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[21]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[21]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "edu_name"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[21]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[21]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Standardized education level label (Korean)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[22]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[22]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "edu_name_eng"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[22]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[22]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Standardized education level label (English)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[23]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[23]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "edu_code"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[23]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integer"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[23]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Standardized education code consistent across years"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[24]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[24]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "career1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[24]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[24]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Career description 1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[25]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[25]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "career2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[25]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[25]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Career description 2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[26]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[26]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "pages"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[26]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integer"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[26]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Number of pages in the booklet"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[27]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[27]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "code"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[27]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[27]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "krpoltext document row identifier"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[27]]$identifier</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[28]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[28]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "huboid"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[28]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[28]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Linked NEC candidate identifier used for conservative kr-elections-mcp alignment; unresolved rows remain NA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[29]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[29]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sg_id"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[29]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[29]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Linked NEC election identifier used for NEC-aligned workflows"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[30]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[30]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sg_typecode"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[30]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[30]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Linked NEC election type identifier used for NEC-aligned workflows"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[31]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[31]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "link_status"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[31]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[31]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Linkage status for NEC alignment (resolved, ambiguous, not_found, rejected)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[32]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[32]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "matcher_version"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[32]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[32]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Version of the linkage pipeline used to assign NEC fields"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[33]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[33]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "nec_snapshot_id"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[33]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[33]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Identifier of the NEC snapshot used to assign NEC fields"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[34]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[34]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sex_code"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[34]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integer"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[34]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Sex code: 1 = male, 0 = female"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[35]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[35]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "result_code"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[35]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "integer"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[35]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Result code: 1 = elected, 0 = not elected"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[36]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[36]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "text"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[36]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[36]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Full OCR-extracted text of the campaign booklet"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[37]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[37]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "filtered"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[37]]$type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "character"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns[[37]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Parsed text after morphological analysis; Korean-only, numbers, foreign characters, and symbols removed"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$missing_values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2,283 rows have no booklet code or text because a booklet was not available. 151 are missing biographical information. 23 booklets were unprocessable."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$text_processing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$identifiers</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "'code' is the krpoltext document row identifier, but some rows have missing code values, so row identity should not be inferred from code alone. 'huboid' is a linked NEC identifier, not a native krpoltext identifier. Rows with 'link_status == \"resolved\"' are expected to have a non-null 'huboid'. 'sg_id' and 'sg_typecode' describe the NEC-aligned election scope attached to the row. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$provenance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "The enriched variant is a row-preserving transformation of the original campaign_booklet CSV source. It adds conservative NEC linkage metadata to improve interoperability with kr-elections-mcp and related NEC-aligned workflows."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$artifact_transition</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "When the enriched campaign_booklet artifact is rebuilt or republished, update registry checksums, sizes, and URLs in lockstep with this schema."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[1]]$office_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[1]]$office</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "president"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[1]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Presidential election"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[2]]$office_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[2]]$office</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "national_assembly"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[2]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "National Assembly election"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[3]]$office_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[3]]$office</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "edu_superintendent"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[3]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Education superintendent"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[4]]$office_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[4]]$office</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "metro_head"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[4]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Metropolitan city mayor / provincial governor"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[5]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[5]]$office_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[5]]$office</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "metro_assembly"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[5]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Metropolitan assembly member"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[6]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[6]]$office_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[6]]$office</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "basic_head"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[6]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Basic local government head"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[7]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[7]]$office_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[7]]$office</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "basic_assembly"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$office_mapping[[7]]$description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Basic assembly member"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$row_universe</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Same document-row universe as the original campaign_booklet CSV source; some rows have missing code values."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[1]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "huboid"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[1]]$role</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "linked_nec_candidate_identifier"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[1]]$nullable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[2]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sg_id"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[2]]$role</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "linked_nec_election_identifier"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[2]]$nullable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[3]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sg_typecode"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[3]]$role</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "linked_nec_election_type_identifier"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[3]]$nullable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[4]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "link_status"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[4]]$role</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "linkage_status"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[4]]$nullable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[5]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[5]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "matcher_version"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[5]]$role</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "linkage_provenance"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[5]]$nullable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[6]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[6]]$name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "nec_snapshot_id"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[6]]$role</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "linkage_provenance"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $extras$linkage_fields[[6]]$nullable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">schema</span><span class="op">(</span><span class="st">"party_statements"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dataset</span>
@@ -607,6 +1303,21 @@ dataset-specific extras such as office mappings.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $package_version</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "0.2.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $variant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $default_variant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $available_variants</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $variant_description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $recommended_use</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $identifier_columns</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "id"</span>

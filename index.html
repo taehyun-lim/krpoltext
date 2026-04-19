@@ -94,7 +94,7 @@
 <td><strong>Election Campaign Booklets</strong></td>
 <td>2000–2022</td>
 <td>49,678 candidates</td>
-<td>Manifesto booklets from candidates in presidential, National Assembly, and local elections</td>
+<td>Manifesto booklets from candidates in presidential, National Assembly, and local elections, available in <code>original</code> and <code>enriched</code> variants</td>
 </tr>
 <tr class="even">
 <td><strong>Party Statements</strong></td>
@@ -105,6 +105,15 @@
 </tbody>
 </table>
 <p>Data is hosted on the <a href="https://osf.io/rct9y/" class="external-link">Open Science Framework</a> (DOI: <a href="https://doi.org/10.17605/OSF.IO/RCT9Y" class="external-link">10.17605/OSF.IO/RCT9Y</a>). If a managed artifact is needed, it is downloaded automatically on first use in interactive sessions; non-interactive sessions should use a local file path or a pre-populated cache.</p>
+<p><code>campaign_booklet</code> is available in two public variants:</p>
+<ul>
+<li>
+<code>original</code>: the original krpoltext corpus artifact</li>
+<li>
+<code>enriched</code>: the same document-row universe plus conservative NEC linkage fields such as <code>huboid</code>, <code>sg_id</code>, <code>sg_typecode</code>, <code>link_status</code>, <code>matcher_version</code>, and <code>nec_snapshot_id</code>
+</li>
+</ul>
+<p><code><a href="reference/load_campaign_booklet.html">load_campaign_booklet()</a></code> defaults to <code>variant = "original"</code>. Use <code>variant = "enriched"</code> for NEC-aligned workflows such as <code>kr-elections-mcp</code>.</p>
 <div class="section level2">
 <h2 id="release-notes">Release Notes<a class="anchor" aria-label="anchor" href="#release-notes"></a>
 </h2>
@@ -131,8 +140,19 @@
 <span><span class="co"># Load datasets from managed Parquet artifacts when available</span></span>
 <span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_party_statements.html">load_party_statements</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span>
 <span><span class="va">cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span>
+<span><span class="va">cb_enriched</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span>, variant <span class="op">=</span> <span class="st">"enriched"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Default campaign_booklet loads the original corpus artifact</span></span>
+<span><span class="va">cb</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"party"</span>, <span class="st">"text"</span><span class="op">)</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Use the enriched variant for NEC-linked workflows</span></span>
+<span><span class="va">cb_enriched</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"huboid"</span>, <span class="st">"sg_id"</span>, <span class="st">"sg_typecode"</span>, <span class="st">"link_status"</span><span class="op">)</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Explore metadata</span></span>
+<span><span class="fu"><a href="reference/metadata.html">metadata</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/metadata.html">metadata</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span>, variant <span class="op">=</span> <span class="st">"enriched"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/schema.html">schema</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/schema.html">schema</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span>, variant <span class="op">=</span> <span class="st">"enriched"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/metadata.html">metadata</a></span><span class="op">(</span><span class="st">"party_statements"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/schema.html">schema</a></span><span class="op">(</span><span class="st">"party_statements"</span><span class="op">)</span></span>
 <span></span>
@@ -152,15 +172,27 @@
 <div class="section level2">
 <h2 id="data-download">Data Download<a class="anchor" aria-label="anchor" href="#data-download"></a>
 </h2>
-<p>Managed artifacts are available from OSF in both CSV and Parquet formats. The <code>load_*()</code> helpers can use managed Parquet artifacts, while <code><a href="reference/download_data.html">download_data()</a></code> remains a CSV-prefetch helper. You can also point the loaders at local CSV or Parquet files:</p>
+<p>Managed artifacts are available from OSF in both CSV and Parquet formats. The <code>load_*()</code> helpers can use managed Parquet artifacts, while <code><a href="reference/download_data.html">download_data()</a></code> remains a CSV-prefetch helper. You can also point the loaders at local CSV or Parquet files.</p>
+<p>For <code>campaign_booklet</code>, the historical unsuffixed filenames remain the <code>original</code> artifact:</p>
+<ul>
+<li><code>sk_election_campaign_booklet_v2022.csv</code></li>
+<li><code>sk_election_campaign_booklet_v2022.parquet</code></li>
+</ul>
+<p>The <code>enriched</code> artifact uses suffixed filenames:</p>
+<ul>
+<li><code>sk_election_campaign_booklet_enriched_v2022.csv</code></li>
+<li><code>sk_election_campaign_booklet_enriched_v2022.parquet</code></li>
+</ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Use managed Parquet explicitly (also the default preference)</span></span>
+<code class="sourceCode R"><span><span class="co"># Use managed Parquet explicitly</span></span>
 <span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_party_statements.html">load_party_statements</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span>
 <span><span class="va">cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span>
+<span><span class="va">cb_enriched</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"parquet"</span>, variant <span class="op">=</span> <span class="st">"enriched"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Or use CSV explicitly</span></span>
 <span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_party_statements.html">load_party_statements</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"csv"</span><span class="op">)</span></span>
 <span><span class="va">cb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"csv"</span><span class="op">)</span></span>
+<span><span class="va">cb_enriched</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_campaign_booklet.html">load_campaign_booklet</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"csv"</span>, variant <span class="op">=</span> <span class="st">"enriched"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Prefetch CSV caches for both datasets</span></span>
 <span><span class="fu"><a href="reference/download_data.html">download_data</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -257,9 +289,13 @@
 </tr>
 <tr class="odd">
 <td><a href="https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json"><code>/data/schema/campaign_booklet.json</code></a></td>
-<td>Column schema for campaign booklets</td>
+<td>Column schema for the original campaign booklet artifact</td>
 </tr>
 <tr class="even">
+<td><a href="https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet_enriched.json"><code>/data/schema/campaign_booklet_enriched.json</code></a></td>
+<td>Column schema for the enriched campaign booklet artifact</td>
+</tr>
+<tr class="odd">
 <td><a href="https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json"><code>/data/schema/party_statements.json</code></a></td>
 <td>Column schema for party statements</td>
 </tr>

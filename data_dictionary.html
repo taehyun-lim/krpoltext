@@ -54,8 +54,9 @@
 </blockquote>
 <p>Data repository: <a href="https://doi.org/10.17605/OSF.IO/RCT9Y" class="external-link uri">https://doi.org/10.17605/OSF.IO/RCT9Y</a></p>
 <hr><div class="section level2">
-<h2 id="id_1-election-campaign-booklets-sk_election_campaign_booklet_v2022csv">1. Election Campaign Booklets (<code>sk_election_campaign_booklet_v2022.csv</code>)<a class="anchor" aria-label="anchor" href="#id_1-election-campaign-booklets-sk_election_campaign_booklet_v2022csv"></a></h2>
+<h2 id="id_1-election-campaign-booklets-campaign_booklet-public-artifact">1. Election Campaign Booklets (<code>campaign_booklet</code> public artifact)<a class="anchor" aria-label="anchor" href="#id_1-election-campaign-booklets-campaign_booklet-public-artifact"></a></h2>
 <p>Official election campaign booklets (공보물) from <strong>49,678 individual candidates</strong> across presidential, National Assembly, and local elections in South Korea (2000–2022). Text was extracted via OCR (black-and-white, page-by-page using the Google Drive API) and parsed using the khaiii Korean morphological analyzer.</p>
+<p>The package and API expose this corpus in enriched form, with linkage-derived NEC alignment fields such as <code>huboid</code>, <code>sg_id</code>, <code>sg_typecode</code>, <code>link_status</code>, <code>matcher_version</code>, and <code>nec_snapshot_id</code>.</p>
 <table class="table"><colgroup><col width="29%"><col width="22%"><col width="48%"></colgroup><thead><tr class="header"><th>Column</th>
 <th>Type</th>
 <th>Description</th>
@@ -139,7 +140,28 @@
 <td>Number of pages in the booklet</td>
 </tr><tr class="odd"><td><code>code</code></td>
 <td>character</td>
-<td><strong>Unique document identifier</strong></td>
+<td><strong>Unique document row identifier</strong></td>
+</tr><tr class="even"><td><code>huboid</code></td>
+<td>character</td>
+<td>Linked NEC candidate identifier for <code>kr-elections-mcp</code> alignment; may be missing for unresolved rows</td>
+</tr><tr class="odd"><td><code>sg_id</code></td>
+<td>character</td>
+<td>Linked NEC election identifier associated with <code>huboid</code>
+</td>
+</tr><tr class="even"><td><code>sg_typecode</code></td>
+<td>character</td>
+<td>Linked NEC election type identifier associated with <code>huboid</code>
+</td>
+</tr><tr class="odd"><td><code>link_status</code></td>
+<td>character</td>
+<td>NEC linkage status: <code>resolved</code>, <code>ambiguous</code>, <code>not_found</code>, or <code>rejected</code>
+</td>
+</tr><tr class="even"><td><code>matcher_version</code></td>
+<td>character</td>
+<td>Version of the linkage pipeline used to assign NEC fields</td>
+</tr><tr class="odd"><td><code>nec_snapshot_id</code></td>
+<td>character</td>
+<td>Identifier of the NEC snapshot used for linkage</td>
 </tr><tr class="even"><td><code>sex_code</code></td>
 <td>integer</td>
 <td>Sex code: 1 = male, 0 = female</td>
@@ -184,11 +206,13 @@
 <ul><li>
 <strong>Missing values</strong>: 2,283 candidates lack a booklet; 151 are missing biographical information. 23 booklets were unprocessable (corrupted files). See paper Section “Methods” for details.</li>
 <li>
-<strong>Identifiers</strong>: <code>code</code> uniquely identifies each document. <code>job_id</code> and <code>edu_id</code> vary across election years; use <code>job_code</code> and <code>edu_code</code> for consistent cross-year analysis.</li>
+<strong>Identifiers</strong>: <code>code</code> uniquely identifies each document row. <code>huboid</code> is a linkage-derived NEC candidacy identifier and may be missing when linkage is unresolved. <code>sg_id</code> and <code>sg_typecode</code> identify the linked NEC election scope. <code>job_id</code> and <code>edu_id</code> vary across election years; use <code>job_code</code> and <code>edu_code</code> for consistent cross-year analysis.</li>
 <li>
 <strong>Caution on Basic Assembly</strong>: Basic Assembly booklets have lower average word counts, potentially due to lower PDF quality or genuinely shorter texts. See paper for discussion.</li>
 <li>
 <strong><code>filtered</code></strong>: Morphologically parsed using khaiii; retains only Korean content words.</li>
+<li>
+<strong>Provenance</strong>: The package and static API describe the enriched public artifact. A native pre-linkage source snapshot may be retained separately for provenance and reproducibility.</li>
 </ul><hr></div>
 </div>
 <div class="section level2">

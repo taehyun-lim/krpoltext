@@ -56,7 +56,7 @@ column names, versions, identifier fields, and available storage formats.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">metadata</span><span class="op">(</span>dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span>, <span class="st">"party_statements"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">metadata</span><span class="op">(</span>dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"campaign_booklet"</span>, <span class="st">"party_statements"</span><span class="op">)</span>, variant <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -66,6 +66,12 @@ column names, versions, identifier fields, and available storage formats.</p>
 <dl><dt id="arg-dataset">dataset<a class="anchor" aria-label="anchor" href="#arg-dataset"></a></dt>
 <dd><p>Character; which dataset to describe. One of
 <code>"campaign_booklet"</code> or <code>"party_statements"</code>.</p></dd>
+
+
+<dt id="arg-variant">variant<a class="anchor" aria-label="anchor" href="#arg-variant"></a></dt>
+<dd><p>Character or <code>NULL</code>; optional dataset variant. For
+<code>campaign_booklet</code>, defaults to <code>"original"</code> and may also be set to
+<code>"enriched"</code>. Other datasets do not define variants.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -80,7 +86,7 @@ column names, versions, identifier fields, and available storage formats.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "South Korean Election Campaign Booklets"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $description</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Official campaign booklets (manifesto booklets) filed by 49,678 individual candidates in South Korean presidential, National Assembly, and local elections from 2000 to 2022. Text extracted via OCR and parsed using the khaiii Korean morphological analyzer."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Original krpoltext campaign booklet corpus artifact covering 49,678 document rows from South Korean presidential, National Assembly, and local elections, 2000-2022."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $time_coverage</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2000-2022"</span>
@@ -102,6 +108,21 @@ column names, versions, identifier fields, and available storage formats.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $package_version</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "0.2.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $variant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "original"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $default_variant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "original"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $available_variants</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "original" "enriched"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $variant_description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "The original krpoltext campaign booklet corpus artifact."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $recommended_use</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "General corpus analysis and backward-compatible workflows."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $identifier_columns</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "code"</span>
@@ -132,13 +153,106 @@ column names, versions, identifier fields, and available storage formats.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $notes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $notes$missing_values</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2,283 candidates lack a booklet; 151 are missing biographical information. 23 booklets were unprocessable."</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$identifiers</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "'code' uniquely identifies each document. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2,283 rows have no booklet code or text because a booklet was not available. 151 are missing biographical information. 23 booklets were unprocessable."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $notes$text_processing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$identifiers</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "'code' is the krpoltext document row identifier, but some original rows have missing code values, so row identity should not be inferred from code alone. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$provenance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "The original variant is the source corpus artifact distributed without NEC linkage fields."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="fu">metadata</span><span class="op">(</span><span class="st">"campaign_booklet"</span>, variant <span class="op">=</span> <span class="st">"enriched"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "South Korean Election Campaign Booklets"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Enriched campaign booklet artifact using the same document-row universe as the original CSV source, with conservative NEC linkage fields such as 'huboid', 'sg_id', and 'sg_typecode' added to improve interoperability with kr-elections-mcp and related NEC-aligned workflows."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $time_coverage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2000-2022"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $columns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "date"            "name"            "region"          "district"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "office_id"       "office"          "giho"            "party"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "party_eng"       "result"          "sex"             "birthday"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "age"             "job_id"          "job"             "job_name"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "job_name_eng"    "job_code"        "edu_id"          "edu"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "edu_name"        "edu_name_eng"    "edu_code"        "career1"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "career2"         "pages"           "code"            "huboid"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [29] "sg_id"           "sg_typecode"     "link_status"     "matcher_version"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "nec_snapshot_id" "sex_code"        "result_code"     "text"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [37] "filtered"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $n_candidates_or_entries</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 49678</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $data_version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "v2022"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $package_version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "0.2.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $variant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "enriched"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $default_variant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "original"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $available_variants</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "original" "enriched"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $variant_description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "The same document-row universe as the original CSV source, plus conservative NEC linkage fields for integration workflows."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $recommended_use</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NEC-aligned workflows, kr-elections-mcp, and linkage-aware joins."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $identifier_columns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "code"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $text_columns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "text"     "filtered"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $supported_formats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "csv"     "parquet"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $managed_formats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "csv"     "parquet"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $source_url</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://osf.io/rct9y/"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $paper_doi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "10.1038/s41597-025-05220-4"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $license</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CC BY-NC-ND 4.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $citation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Lim, T.H. (2025). South Korean Election Campaign Booklet and Party Statements Corpora. Scientific Data, 12, 1030. https://doi.org/10.1038/s41597-025-05220-4"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $osf_citation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Lim, T.H. (2024). South Korean Election Campaign Booklet Corpus and Party Statements Corpus. OSF. https://doi.org/10.17605/OSF.IO/RCT9Y"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$missing_values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2,283 rows have no booklet code or text because a booklet was not available. 151 are missing biographical information. 23 booklets were unprocessable."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$text_processing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$identifiers</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "'code' is the krpoltext document row identifier, but some rows have missing code values, so row identity should not be inferred from code alone. 'huboid' is a linked NEC identifier, not a native krpoltext identifier. Rows with 'link_status == \"resolved\"' are expected to have a non-null 'huboid'. 'sg_id' and 'sg_typecode' describe the NEC-aligned election scope attached to the row. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$provenance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "The enriched variant is a row-preserving transformation of the original campaign_booklet CSV source. It adds conservative NEC linkage metadata to improve interoperability with kr-elections-mcp and related NEC-aligned workflows."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $notes$artifact_transition</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "When the enriched campaign_booklet artifact is rebuilt or republished, update registry checksums, sizes, and URLs in lockstep with this schema."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">metadata</span><span class="op">(</span><span class="st">"party_statements"</span><span class="op">)</span></span></span>
@@ -163,6 +277,21 @@ column names, versions, identifier fields, and available storage formats.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $package_version</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "0.2.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $variant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $default_variant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $available_variants</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $variant_description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $recommended_use</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $identifier_columns</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "id"</span>

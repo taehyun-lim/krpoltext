@@ -18,10 +18,10 @@ DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.18704318-1682D4?logo=z
 > Statements Corpora. *Scientific Data*, 12, 1030.
 > <https://doi.org/10.1038/s41597-025-05220-4>
 
-| 코퍼스               | 기간      | 후보자 / 문서 수  | 설명                                                        |
-|----------------------|-----------|-------------------|-------------------------------------------------------------|
-| **선거공보 코퍼스**  | 2000–2022 | 49,678 candidates | 대통령선거, 국회의원선거, 지방선거 후보자의 선거공보 텍스트 |
-| **정당 성명 코퍼스** | 2003–2022 | 83,201 statements | 양대 정당의 공식 성명과 지도부 회의 발언문                  |
+| 코퍼스               | 기간      | 후보자 / 문서 수  | 설명                                                                                                     |
+|----------------------|-----------|-------------------|----------------------------------------------------------------------------------------------------------|
+| **선거공보 코퍼스**  | 2000–2022 | 49,678 candidates | 대통령선거, 국회의원선거, 지방선거 후보자의 선거공보 텍스트로, `original`과 `enriched` 두 variant로 제공 |
+| **정당 성명 코퍼스** | 2003–2022 | 83,201 statements | 양대 정당의 공식 성명과 지도부 회의 발언문                                                               |
 
 데이터는 [Open Science Framework](https://osf.io/rct9y/)에 호스팅되어
 있으며 (DOI:
@@ -29,6 +29,18 @@ DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.18704318-1682D4?logo=z
 아티팩트가 필요할 경우 대화형 세션에서 처음 사용할 때 자동으로
 다운로드됩니다. 비대화형 세션에서는 로컬 파일 경로나 미리 채워둔 cache를
 사용해야 합니다.
+
+`campaign_booklet`는 두 개의 공개 variant로 제공됩니다.
+
+- `original`: 기존 krpoltext 선거공보 코퍼스 아티팩트
+- `enriched`: 동일한 문서-행 universe를 유지하면서 `huboid`, `sg_id`,
+  `sg_typecode`, `link_status`, `matcher_version`, `nec_snapshot_id`
+  같은 보수적 NEC linkage 필드를 추가한 variant
+
+[`load_campaign_booklet()`](https://taehyun-lim.github.io/krpoltext/reference/load_campaign_booklet.md)의
+기본값은 `variant = "original"`입니다. `kr-elections-mcp` 같은
+NEC-aligned workflow에는 `variant = "enriched"`를 사용하는 것이
+적합합니다.
 
 ## 릴리스 노트
 
@@ -52,8 +64,19 @@ library(krpoltext)
 # 관리형 Parquet 아티팩트를 명시적으로 사용
 ps <- load_party_statements(format = "parquet")
 cb <- load_campaign_booklet(format = "parquet")
+cb_enriched <- load_campaign_booklet(format = "parquet", variant = "enriched")
+
+# 기본 campaign_booklet는 original 코퍼스 아티팩트를 로드
+cb[, c("code", "party", "text")]
+
+# NEC-linked workflow에는 enriched variant 사용
+cb_enriched[, c("code", "huboid", "sg_id", "sg_typecode", "link_status")]
 
 # 메타데이터 확인
+metadata("campaign_booklet")
+metadata("campaign_booklet", variant = "enriched")
+schema("campaign_booklet")
+schema("campaign_booklet", variant = "enriched")
 metadata("party_statements")
 schema("party_statements")
 
@@ -79,14 +102,27 @@ assembly <- get_docs("campaign_booklet", office = "national_assembly", .data = c
 여전히 CSV prefetch helper입니다. 로컬 CSV나 Parquet 파일 경로를 직접
 넘길 수도 있습니다.
 
+`campaign_booklet`의 기존 unsuffixed 파일명은 `original` 아티팩트를
+뜻합니다.
+
+- `sk_election_campaign_booklet_v2022.csv`
+- `sk_election_campaign_booklet_v2022.parquet`
+
+`enriched` 아티팩트는 suffixed 파일명을 사용합니다.
+
+- `sk_election_campaign_booklet_enriched_v2022.csv`
+- `sk_election_campaign_booklet_enriched_v2022.parquet`
+
 ``` r
 # 관리형 Parquet를 명시적으로 사용
 ps <- load_party_statements(format = "parquet")
 cb <- load_campaign_booklet(format = "parquet")
+cb_enriched <- load_campaign_booklet(format = "parquet", variant = "enriched")
 
 # 또는 CSV를 명시적으로 사용
 ps <- load_party_statements(format = "csv")
 cb <- load_campaign_booklet(format = "csv")
+cb_enriched <- load_campaign_booklet(format = "csv", variant = "enriched")
 
 # 두 데이터셋의 CSV cache를 미리 받아두기
 download_data()
@@ -131,12 +167,13 @@ topfeatures(dfm_obj, 20)
 데이터셋 metadata와 다운로드 링크는 GitHub Pages를 통해 정적 JSON
 API로도 제공됩니다. 별도의 서버가 필요하지 않습니다.
 
-| 엔드포인트                                                                                                        | 설명                                                   |
-|-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------|
-| [`/data/index.json`](https://taehyun-lim.github.io/krpoltext/data/index.json)                                     | 파일, 버전, SHA-256, 다운로드 URL이 담긴 리소스 인덱스 |
-| [`/data/metadata.json`](https://taehyun-lim.github.io/krpoltext/data/metadata.json)                               | 데이터셋 설명과 인용 정보                              |
-| [`/data/schema/campaign_booklet.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json) | 선거공보 컬럼 스키마                                   |
-| [`/data/schema/party_statements.json`](https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json) | 정당 성명 컬럼 스키마                                  |
+| 엔드포인트                                                                                                                          | 설명                                                   |
+|-------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------|
+| [`/data/index.json`](https://taehyun-lim.github.io/krpoltext/data/index.json)                                                       | 파일, 버전, SHA-256, 다운로드 URL이 담긴 리소스 인덱스 |
+| [`/data/metadata.json`](https://taehyun-lim.github.io/krpoltext/data/metadata.json)                                                 | 데이터셋 설명과 인용 정보                              |
+| [`/data/schema/campaign_booklet.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json)                   | original 선거공보 아티팩트의 컬럼 스키마               |
+| [`/data/schema/campaign_booklet_enriched.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet_enriched.json) | enriched 선거공보 아티팩트의 컬럼 스키마               |
+| [`/data/schema/party_statements.json`](https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json)                   | 정당 성명 컬럼 스키마                                  |
 
 API 안내와 대체 URL:
 <https://taehyun-lim.github.io/krpoltext/data-api.html>
