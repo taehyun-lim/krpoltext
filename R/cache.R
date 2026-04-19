@@ -308,7 +308,7 @@ read_with_cache <- function(dataset,
 
     if (!is.null(spec$url)) {
       if (!interactive()) {
-        if (!identical(candidate, tail(candidate_formats, 1L))) {
+        if (!identical(candidate, utils::tail(candidate_formats, 1L))) {
           notes <- c(
             notes,
             paste0(

@@ -27,7 +27,7 @@ test_that("metadata returns dataset-level package-facing information", {
   expect_identical(m_cb_enriched$variant, "enriched")
   expect_true(all(c("huboid", "sg_id", "sg_typecode", "link_status") %in% m_cb_enriched$columns))
   expect_match(m_cb_enriched$notes$identifiers, "huboid", fixed = TRUE)
-  expect_equal(m_cb_enriched$managed_formats, character())
+  expect_equal(m_cb_enriched$managed_formats, c("csv", "parquet"))
 
   m_ps <- metadata("party_statements")
   expect_true("year" %in% m_ps$columns)

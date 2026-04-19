@@ -23,3 +23,4 @@
 ^.*\.Rcheck$
 ^\.zenodo\.json$
 ^krpoltext_.*\.tar\.gz$
+^data-api\.md$
