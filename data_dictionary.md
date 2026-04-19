@@ -12,13 +12,17 @@ Data repository: <https://doi.org/10.17605/OSF.IO/RCT9Y>
 
 ---
 
-## 1. Election Campaign Booklets (`sk_election_campaign_booklet_v2022.csv`)
+## 1. Election Campaign Booklets (`campaign_booklet` public artifact)
 
 Official election campaign booklets (공보물) from **49,678 individual
 candidates** across presidential, National Assembly, and local elections in
 South Korea (2000–2022). Text was extracted via OCR (black-and-white,
 page-by-page using the Google Drive API) and parsed using the khaiii Korean
 morphological analyzer.
+
+The package and API expose this corpus in enriched form, with
+linkage-derived NEC alignment fields such as `huboid`, `sg_id`,
+`sg_typecode`, `link_status`, `matcher_version`, and `nec_snapshot_id`.
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -48,7 +52,13 @@ morphological analyzer.
 | `career1` | character | Career description 1 |
 | `career2` | character | Career description 2 |
 | `pages` | integer | Number of pages in the booklet |
-| `code` | character | **Unique document identifier** |
+| `code` | character | **Unique document row identifier** |
+| `huboid` | character | Linked NEC candidate identifier for `kr-elections-mcp` alignment; may be missing for unresolved rows |
+| `sg_id` | character | Linked NEC election identifier associated with `huboid` |
+| `sg_typecode` | character | Linked NEC election type identifier associated with `huboid` |
+| `link_status` | character | NEC linkage status: `resolved`, `ambiguous`, `not_found`, or `rejected` |
+| `matcher_version` | character | Version of the linkage pipeline used to assign NEC fields |
+| `nec_snapshot_id` | character | Identifier of the NEC snapshot used for linkage |
 | `sex_code` | integer | Sex code: 1 = male, 0 = female |
 | `result_code` | integer | Result code: 1 = elected, 0 = not elected |
 | `text` | character | Full OCR-extracted text of the campaign booklet |
@@ -71,14 +81,19 @@ morphological analyzer.
 - **Missing values**: 2,283 candidates lack a booklet; 151 are missing
   biographical information. 23 booklets were unprocessable (corrupted files).
   See paper Section "Methods" for details.
-- **Identifiers**: `code` uniquely identifies each document. `job_id` and
-  `edu_id` vary across election years; use `job_code` and `edu_code` for
-  consistent cross-year analysis.
+- **Identifiers**: `code` uniquely identifies each document row. `huboid` is
+  a linkage-derived NEC candidacy identifier and may be missing when linkage
+  is unresolved. `sg_id` and `sg_typecode` identify the linked NEC election
+  scope. `job_id` and `edu_id` vary across election years; use `job_code` and
+  `edu_code` for consistent cross-year analysis.
 - **Caution on Basic Assembly**: Basic Assembly booklets have lower average
   word counts, potentially due to lower PDF quality or genuinely shorter texts.
   See paper for discussion.
 - **`filtered`**: Morphologically parsed using khaiii; retains only Korean
   content words.
+- **Provenance**: The package and static API describe the enriched public
+  artifact. A native pre-linkage source snapshot may be retained separately
+  for provenance and reproducibility.
 
 ---
 

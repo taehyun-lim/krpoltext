@@ -4,11 +4,15 @@
 \alias{metadata}
 \title{Retrieve dataset metadata}
 \usage{
-metadata(dataset = c("campaign_booklet", "party_statements"))
+metadata(dataset = c("campaign_booklet", "party_statements"), variant = NULL)
 }
 \arguments{
 \item{dataset}{Character; which dataset to describe. One of
 \code{"campaign_booklet"} or \code{"party_statements"}.}
+
+\item{variant}{Character or \code{NULL}; optional dataset variant. For
+\code{campaign_booklet}, defaults to \code{"original"} and may also be set to
+\code{"enriched"}. Other datasets do not define variants.}
 }
 \value{
 A named list with dataset metadata.
@@ -19,5 +23,6 @@ column names, versions, identifier fields, and available storage formats.
 }
 \examples{
 metadata("campaign_booklet")
+metadata("campaign_booklet", variant = "enriched")
 metadata("party_statements")
 }

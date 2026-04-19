@@ -16,12 +16,22 @@ cache_dir <- function(create = TRUE) {
 
 #' Build a cache key for a dataset artifact
 #' @noRd
-cache_key <- function(dataset, format = c("parquet", "csv"), data_version = NULL) {
+cache_key <- function(dataset,
+                      format = c("parquet", "csv"),
+                      data_version = NULL,
+                      variant = NULL) {
   dataset <- .dataset_key(dataset)
   format <- match.arg(format)
   data_version <- .resolve_data_version(dataset, data_version)
+  variant <- .resolve_variant(dataset, data_version = data_version, variant = variant)
 
-  paste(dataset, data_version, format, sep = "__")
+  parts <- c(dataset, data_version)
+  if (!is.null(variant)) {
+    parts <- c(parts, variant)
+  }
+  parts <- c(parts, format)
+
+  paste(parts, collapse = "__")
 }
 
 #' Build cache file path for a dataset artifact
@@ -29,10 +39,14 @@ cache_key <- function(dataset, format = c("parquet", "csv"), data_version = NULL
 cache_path <- function(dataset,
                        format = c("parquet", "csv"),
                        data_version = NULL,
+                       variant = NULL,
                        create_dir = TRUE) {
   file.path(
     cache_dir(create = create_dir),
-    paste0(cache_key(dataset, format = format, data_version = data_version), ".rds")
+    paste0(
+      cache_key(dataset, format = format, data_version = data_version, variant = variant),
+      ".rds"
+    )
   )
 }
 
@@ -43,6 +57,14 @@ cache_path <- function(dataset,
     cache_dir(create = create_dir),
     paste0(.legacy_cache_basename(dataset, data_version), ".rds")
   )
+}
+
+#' Whether it is safe to reuse legacy CSV cache keys
+#' @noRd
+.allow_legacy_cache <- function(dataset, variant = NULL, data_version = NULL) {
+  dataset <- .dataset_key(dataset)
+  resolved_variant <- .resolve_variant(dataset, data_version = data_version, variant = variant)
+  is.null(resolved_variant)
 }
 
 #' Find a bundled artifact path
@@ -126,10 +148,12 @@ cache_path <- function(dataset,
 
 #' Build the managed-download message shown by load_* helpers
 #' @noRd
-.managed_download_message <- function(dataset, format) {
+.managed_download_message <- function(dataset, format, variant = NULL) {
+  variant_text <- if (is.null(variant)) "" else paste0(" (variant: ", variant, ")")
+
   paste0(
     "Data not found locally. Attempting to download managed ",
-    .format_label(format),
+    .format_label(format), variant_text,
     " artifact from OSF...\n",
     "Run download_data(\"", dataset, "\") to prefetch the CSV cache explicitly."
   )
@@ -208,13 +232,15 @@ read_with_cache <- function(dataset,
                             cache = TRUE,
                             refresh = FALSE,
                             format = c("parquet", "csv"),
-                            data_version = NULL) {
+                            data_version = NULL,
+                            variant = NULL) {
   stopifnot(is.logical(cache), length(cache) == 1L)
   stopifnot(is.logical(refresh), length(refresh) == 1L)
 
   dataset <- .dataset_key(dataset)
   format <- match.arg(format)
   data_version <- .resolve_data_version(dataset, data_version)
+  variant <- .resolve_variant(dataset, data_version = data_version, variant = variant)
 
   if (!is.null(path) && !is.character(path)) {
     stop("`path` must be NULL or a character string.", call. = FALSE)
@@ -223,7 +249,15 @@ read_with_cache <- function(dataset,
   if (!is.null(path)) {
     path_format <- .path_format(path, format = format)
     dt <- .read_source_file(path, format = path_format)
-    if (cache) save_cache(dt, dataset, format = path_format, data_version = data_version)
+    if (cache) {
+      save_cache(
+        dt,
+        dataset,
+        format = path_format,
+        data_version = data_version,
+        variant = variant
+      )
+    }
     return(dt)
   }
 
@@ -240,6 +274,7 @@ read_with_cache <- function(dataset,
       dataset,
       format = candidate,
       data_version = data_version,
+      variant = variant,
       create_dir = FALSE
     )
     if (cache && !refresh && file.exists(cp)) {
@@ -247,7 +282,7 @@ read_with_cache <- function(dataset,
       return(readRDS(cp))
     }
 
-    if (cache && !refresh && candidate == "csv") {
+    if (cache && !refresh && candidate == "csv" && .allow_legacy_cache(dataset, variant, data_version)) {
       legacy_cp <- .legacy_cache_path(dataset, data_version = data_version, create_dir = FALSE)
       if (file.exists(legacy_cp)) {
         if (candidate != format) .emit_load_notes(notes)
@@ -255,11 +290,18 @@ read_with_cache <- function(dataset,
       }
     }
 
-    spec <- .artifact_spec(dataset, format = candidate, data_version = data_version)
+    spec <- .artifact_spec(
+      dataset,
+      format = candidate,
+      data_version = data_version,
+      variant = variant
+    )
     bundled <- .bundled_artifact_path(spec$file)
     if (nzchar(bundled)) {
       dt <- .read_source_file(bundled, format = candidate)
-      if (cache) save_cache(dt, dataset, format = candidate, data_version = data_version)
+      if (cache) {
+        save_cache(dt, dataset, format = candidate, data_version = data_version, variant = variant)
+      }
       if (candidate != format) .emit_load_notes(notes)
       return(dt)
     }
@@ -281,14 +323,16 @@ read_with_cache <- function(dataset,
       }
 
       if (!refresh) {
-        message(.managed_download_message(dataset, candidate))
+        message(.managed_download_message(dataset, candidate, variant = variant))
       }
 
       artifact_path <- .download_artifact(spec, quiet = FALSE)
       on.exit(unlink(artifact_path), add = TRUE)
 
       dt <- .read_source_file(artifact_path, format = candidate)
-      if (cache) save_cache(dt, dataset, format = candidate, data_version = data_version)
+      if (cache) {
+        save_cache(dt, dataset, format = candidate, data_version = data_version, variant = variant)
+      }
       if (candidate != format) .emit_load_notes(notes)
       return(dt)
     }
@@ -317,8 +361,18 @@ read_with_cache <- function(dataset,
 
 #' Save a data.table to the cache
 #' @noRd
-save_cache <- function(dt, dataset, format = c("parquet", "csv"), data_version = NULL) {
-  cp <- cache_path(dataset, format = format, data_version = data_version, create_dir = TRUE)
+save_cache <- function(dt,
+                       dataset,
+                       format = c("parquet", "csv"),
+                       data_version = NULL,
+                       variant = NULL) {
+  cp <- cache_path(
+    dataset,
+    format = format,
+    data_version = data_version,
+    variant = variant,
+    create_dir = TRUE
+  )
   saveRDS(dt, cp)
   invisible(cp)
 }

@@ -9,7 +9,8 @@ load_campaign_booklet(
   format = c("parquet", "csv"),
   cache = TRUE,
   refresh = FALSE,
-  data_version = NULL
+  data_version = NULL,
+  variant = NULL
 )
 }
 \arguments{
@@ -28,35 +29,35 @@ source CSV is re-read. Defaults to \code{FALSE}.}
 
 \item{data_version}{Character or \code{NULL}; the data artifact version to load.
 Defaults to the latest available version.}
+
+\item{variant}{Character or \code{NULL}; which public \code{campaign_booklet} variant
+to load. Defaults to \code{"original"}. Use \code{"enriched"} to load the
+NEC-linked variant.}
 }
 \value{
-A \link[data.table:data.table]{data.table::data.table} with the following columns:\tabular{ll}{
-   Column \tab Description \cr
-   \code{date} \tab Election date \cr
-   \code{name} \tab Candidate name \cr
-   \code{region} \tab Region (province/metropolitan city) \cr
-   \code{district} \tab Electoral district \cr
-   \code{office_id} \tab Office type identifier \cr
-   \code{office} \tab Office type (e.g., \code{national_assembly}) \cr
-   \code{party} \tab Party name (Korean) \cr
-   \code{party_eng} \tab Party name (English) \cr
-   \code{result} \tab Election result \cr
-   \code{sex} \tab Sex of the candidate \cr
-   \code{age} \tab Age at the time of election \cr
-   \code{text} \tab Full text of the campaign booklet \cr
-   \code{filtered} \tab Filtered/preprocessed text indicator \cr
-}
+A \link[data.table:data.table]{data.table::data.table}.
 
-
-See \code{data_dictionary.md} for the complete column reference, and
-the Data Descriptor (Tables 4--8) for detailed variable mappings.
+See \code{data_dictionary.md} for the complete column reference. \code{original}
+returns the historical corpus fields only. \code{enriched} keeps the same
+document-row universe and adds conservative NEC linkage metadata. Because
+some original rows have missing \code{code} values, row identity should not be
+inferred from \code{code} alone.
 }
 \description{
 Loads the election campaign booklet dataset (2000--2022) as a \code{data.table}.
-The dataset contains manifesto booklets from 49,678 individual candidates
-across presidential, National Assembly, and local elections.
+\code{campaign_booklet} is available in two public variants:
 }
 \details{
+\itemize{
+\item \code{original}: the original krpoltext corpus artifact
+\item \code{enriched}: the same document-row universe plus conservative NEC linkage
+fields such as \code{huboid}, \code{sg_id}, \code{sg_typecode}, \code{link_status},
+\code{matcher_version}, and \code{nec_snapshot_id}
+}
+
+The default is \code{variant = "original"}. Use \code{variant = "enriched"} for
+NEC-aligned workflows such as \code{kr-elections-mcp}.
+
 For full methodology and variable descriptions, see the Data Descriptor:
 Lim, T.H. (2025). \emph{Scientific Data}, 12, 1030.
 \doi{10.1038/s41597-025-05220-4}

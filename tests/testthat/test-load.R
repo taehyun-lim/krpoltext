@@ -4,6 +4,7 @@ test_that("load functions can read local CSV files", {
   booklet_path <- tempfile(fileext = ".csv")
   booklet_dt <- data.table::data.table(
     date = "2020-04-15",
+    code = "cb-1",
     party = "Example Party",
     text = "campaign text"
   )
@@ -12,7 +13,34 @@ test_that("load functions can read local CSV files", {
   cb <- load_campaign_booklet(path = booklet_path, format = "csv", cache = FALSE)
   expect_s3_class(cb, "data.table")
   expect_equal(nrow(cb), 1L)
-  expect_true(all(c("date", "party", "text") %in% names(cb)))
+  expect_true(all(c("date", "code", "party", "text") %in% names(cb)))
+  expect_false("huboid" %in% names(cb))
+
+  enriched_booklet_path <- tempfile(fileext = ".csv")
+  enriched_booklet_dt <- data.table::data.table(
+    date = "2020-04-15",
+    code = "cb-1",
+    party = "Example Party",
+    text = "campaign text",
+    huboid = NA_character_,
+    sg_id = NA_character_,
+    sg_typecode = NA_character_,
+    link_status = "not_found",
+    matcher_version = "linkage-v1",
+    nec_snapshot_id = "nec-v1"
+  )
+  data.table::fwrite(enriched_booklet_dt, enriched_booklet_path)
+
+  cb_enriched <- load_campaign_booklet(
+    path = enriched_booklet_path,
+    format = "csv",
+    cache = FALSE,
+    variant = "enriched"
+  )
+  expect_true(all(c(
+    "date", "code", "party", "text", "huboid", "sg_id",
+    "sg_typecode", "link_status", "matcher_version", "nec_snapshot_id"
+  ) %in% names(cb_enriched)))
 
   statements_path <- tempfile(fileext = ".csv")
   statements_dt <- data.table::data.table(
@@ -50,6 +78,7 @@ test_that("load functions can read local Parquet files when arrow is installed",
   booklet_path <- tempfile(fileext = ".parquet")
   booklet_dt <- data.table::data.table(
     date = "2020-04-15",
+    code = "cb-1",
     party = "Example Party",
     text = "campaign text"
   )
@@ -58,7 +87,34 @@ test_that("load functions can read local Parquet files when arrow is installed",
   cb <- load_campaign_booklet(path = booklet_path, format = "parquet", cache = FALSE)
   expect_s3_class(cb, "data.table")
   expect_equal(nrow(cb), 1L)
-  expect_true(all(c("date", "party", "text") %in% names(cb)))
+  expect_true(all(c("date", "code", "party", "text") %in% names(cb)))
+  expect_false("huboid" %in% names(cb))
+
+  enriched_booklet_path <- tempfile(fileext = ".parquet")
+  enriched_booklet_dt <- data.table::data.table(
+    date = "2020-04-15",
+    code = "cb-1",
+    party = "Example Party",
+    text = "campaign text",
+    huboid = NA_character_,
+    sg_id = NA_character_,
+    sg_typecode = NA_character_,
+    link_status = "not_found",
+    matcher_version = "linkage-v1",
+    nec_snapshot_id = "nec-v1"
+  )
+  arrow::write_parquet(as.data.frame(enriched_booklet_dt), enriched_booklet_path)
+
+  cb_enriched <- load_campaign_booklet(
+    path = enriched_booklet_path,
+    format = "parquet",
+    cache = FALSE,
+    variant = "enriched"
+  )
+  expect_true(all(c(
+    "date", "code", "party", "text", "huboid", "sg_id",
+    "sg_typecode", "link_status", "matcher_version", "nec_snapshot_id"
+  ) %in% names(cb_enriched)))
 
   statements_path <- tempfile(fileext = ".parquet")
   statements_dt <- data.table::data.table(
@@ -182,4 +238,5 @@ test_that("load functions reject invalid arguments", {
   expect_error(load_campaign_booklet(path = missing_path, format = "csv"))
   expect_error(load_campaign_booklet(data_version = 1))
   expect_error(load_campaign_booklet(data_version = "v1900"))
+  expect_error(load_campaign_booklet(variant = "invalid"))
 })

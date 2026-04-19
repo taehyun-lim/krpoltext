@@ -1,15 +1,15 @@
 {
   "dataset": "campaign_booklet",
   "name": "South Korean Election Campaign Booklets",
-  "description": "Original krpoltext campaign booklet corpus artifact covering 49,678 document rows from South Korean presidential, National Assembly, and local elections, 2000-2022.",
+  "description": "Enriched campaign booklet artifact using the same document-row universe as the original CSV source, with conservative NEC linkage fields such as 'huboid', 'sg_id', and 'sg_typecode' added to improve interoperability with kr-elections-mcp and related NEC-aligned workflows.",
   "time_coverage": "2000-2022",
   "data_version": "v2022",
   "package_version": "0.2.0",
-  "variant": "original",
+  "variant": "enriched",
   "default_variant": "original",
   "available_variants": ["original", "enriched"],
-  "variant_description": "The original krpoltext campaign booklet corpus artifact.",
-  "recommended_use": "General corpus analysis and backward-compatible workflows.",
+  "variant_description": "The same document-row universe as the original CSV source, plus conservative NEC linkage fields for integration workflows.",
+  "recommended_use": "NEC-aligned workflows, kr-elections-mcp, and linkage-aware joins.",
   "identifier_columns": "code",
   "text_columns": ["text", "filtered"],
   "supported_formats": ["csv", "parquet"],
@@ -17,18 +17,18 @@
   "artifacts": {
     "csv": {
       "format": "csv",
-      "file": "sk_election_campaign_booklet_v2022.csv",
-      "download_url": "https://osf.io/download/6ybj8/",
-      "sha256": "6ce6f40f5358829b167109d9ca9195e5089d2c6d05a61ad1c1925e424f55021d",
-      "size_bytes": 756245336,
+      "file": "sk_election_campaign_booklet_enriched_v2022.csv",
+      "download_url": "https://osf.io/download/69e3eec5352dbdd881fd8d7b/",
+      "sha256": "08779d4c27a02635c7bf08a332170ac0a5bf1295e825e3b29061c62f95598586",
+      "size_bytes": 760045361,
       "managed": true
     },
     "parquet": {
       "format": "parquet",
-      "file": "sk_election_campaign_booklet_v2022.parquet",
-      "download_url": "https://osf.io/download/pxg2k/",
-      "sha256": "a291a887d157963cffcffbe2c1ad60333222dd479bf4b01e90cec3a28d5c19a6",
-      "size_bytes": 406524268,
+      "file": "sk_election_campaign_booklet_enriched_v2022.parquet",
+      "download_url": "https://osf.io/download/69e3ee72a0e06b0928fd8ae2/",
+      "sha256": "d8901cd2cebef30116f8865847727bb10855478ee556bc0dcfb5a04e838ad8f4",
+      "size_bytes": 406231949,
       "managed": true
     }
   },
@@ -170,6 +170,36 @@
       "identifier": true
     },
     {
+      "name": "huboid",
+      "type": "character",
+      "description": "Linked NEC candidate identifier used for conservative kr-elections-mcp alignment; unresolved rows remain NA"
+    },
+    {
+      "name": "sg_id",
+      "type": "character",
+      "description": "Linked NEC election identifier used for NEC-aligned workflows"
+    },
+    {
+      "name": "sg_typecode",
+      "type": "character",
+      "description": "Linked NEC election type identifier used for NEC-aligned workflows"
+    },
+    {
+      "name": "link_status",
+      "type": "character",
+      "description": "Linkage status for NEC alignment (resolved, ambiguous, not_found, rejected)"
+    },
+    {
+      "name": "matcher_version",
+      "type": "character",
+      "description": "Version of the linkage pipeline used to assign NEC fields"
+    },
+    {
+      "name": "nec_snapshot_id",
+      "type": "character",
+      "description": "Identifier of the NEC snapshot used to assign NEC fields"
+    },
+    {
       "name": "sex_code",
       "type": "integer",
       "description": "Sex code: 1 = male, 0 = female"
@@ -193,8 +223,9 @@
   "notes": {
     "missing_values": "2,283 rows have no booklet code or text because a booklet was not available. 151 are missing biographical information. 23 booklets were unprocessable.",
     "text_processing": "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version.",
-    "identifiers": "'code' is the krpoltext document row identifier, but some original rows have missing code values, so row identity should not be inferred from code alone. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis.",
-    "provenance": "The original variant is the source corpus artifact distributed without NEC linkage fields."
+    "identifiers": "'code' is the krpoltext document row identifier, but some rows have missing code values, so row identity should not be inferred from code alone. 'huboid' is a linked NEC identifier, not a native krpoltext identifier. Rows with 'link_status == \"resolved\"' are expected to have a non-null 'huboid'. 'sg_id' and 'sg_typecode' describe the NEC-aligned election scope attached to the row. 'job_id' and 'edu_id' vary across election years; use 'job_code' and 'edu_code' for cross-year analysis.",
+    "provenance": "The enriched variant is a row-preserving transformation of the original campaign_booklet CSV source. It adds conservative NEC linkage metadata to improve interoperability with kr-elections-mcp and related NEC-aligned workflows.",
+    "artifact_transition": "When the enriched campaign_booklet artifact is rebuilt or republished, update registry checksums, sizes, and URLs in lockstep with this schema."
   },
   "extras": {
     "office_mapping": [
@@ -234,6 +265,38 @@
         "description": "Basic assembly member"
       }
     ],
-    "row_universe": "Original campaign_booklet CSV source artifact."
+    "row_universe": "Same document-row universe as the original campaign_booklet CSV source; some rows have missing code values.",
+    "linkage_fields": [
+      {
+        "name": "huboid",
+        "role": "linked_nec_candidate_identifier",
+        "nullable": true
+      },
+      {
+        "name": "sg_id",
+        "role": "linked_nec_election_identifier",
+        "nullable": true
+      },
+      {
+        "name": "sg_typecode",
+        "role": "linked_nec_election_type_identifier",
+        "nullable": true
+      },
+      {
+        "name": "link_status",
+        "role": "linkage_status",
+        "nullable": false
+      },
+      {
+        "name": "matcher_version",
+        "role": "linkage_provenance",
+        "nullable": true
+      },
+      {
+        "name": "nec_snapshot_id",
+        "role": "linkage_provenance",
+        "nullable": true
+      }
+    ]
   }
 }
