@@ -94,6 +94,12 @@ cache_path <- function(dataset,
   )
 }
 
+#' Whether the current session is interactive
+#' @noRd
+.is_interactive_session <- function() {
+  interactive()
+}
+
 #' Infer source format from a local path when possible
 #' @noRd
 .path_format <- function(path, format = c("parquet", "csv")) {
@@ -176,7 +182,7 @@ cache_path <- function(dataset,
 #' Confirm a managed download before starting it
 #' @noRd
 .confirm_managed_download <- function(dataset, spec) {
-  if (!.managed_download_requires_confirmation(dataset) || !interactive()) {
+  if (!.managed_download_requires_confirmation(dataset) || !.is_interactive_session()) {
     return(invisible(TRUE))
   }
 
@@ -345,7 +351,7 @@ read_with_cache <- function(dataset,
     }
 
     if (!is.null(spec$url)) {
-      if (!interactive()) {
+      if (!.is_interactive_session()) {
         if (!identical(candidate, utils::tail(candidate_formats, 1L))) {
           notes <- c(
             notes,

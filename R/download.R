@@ -65,7 +65,7 @@ download_data <- function(dataset = "all", force = FALSE, quiet = FALSE) {
       next
     }
 
-    if (!interactive()) {
+    if (!.is_interactive_session()) {
       stop(
         "Managed downloads are disabled in non-interactive sessions.\n",
         "Dataset: '", ds, "'.\n",

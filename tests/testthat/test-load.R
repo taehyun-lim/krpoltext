@@ -240,7 +240,7 @@ test_that("campaign booklet managed downloads require confirmation", {
   prompts <- character()
 
   testthat::local_mocked_bindings(
-    interactive = function() TRUE,
+    .is_interactive_session = function() TRUE,
     .ask_download_consent = function(prompt) {
       prompts <<- c(prompts, prompt)
       FALSE
@@ -262,7 +262,7 @@ test_that("party statements managed downloads also require confirmation", {
   prompts <- character()
 
   testthat::local_mocked_bindings(
-    interactive = function() TRUE,
+    .is_interactive_session = function() TRUE,
     .ask_download_consent = function(prompt) {
       prompts <<- c(prompts, prompt)
       FALSE
@@ -289,7 +289,7 @@ test_that("load_party_statements checks consent before managed download", {
   })
 
   testthat::local_mocked_bindings(
-    interactive = function() TRUE,
+    .is_interactive_session = function() TRUE,
     .bundled_artifact_path = function(file) "",
     .ask_download_consent = function(prompt) FALSE,
     .env = asNamespace("krpoltext")
@@ -314,7 +314,7 @@ test_that("load_campaign_booklet checks consent before managed download", {
   })
 
   testthat::local_mocked_bindings(
-    interactive = function() TRUE,
+    .is_interactive_session = function() TRUE,
     .bundled_artifact_path = function(file) "",
     .ask_download_consent = function(prompt) FALSE,
     .env = asNamespace("krpoltext")

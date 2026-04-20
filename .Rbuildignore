@@ -4,6 +4,8 @@
 ^\.claude($|/)
 ^\.codex-notes($|/)
 ^\.codex_tmp($|/)
+^\.cache($|/)
+^\.Rlib($|/)
 ^\.r-lib($|/)
 ^artifacts($|/)
 ^docs($|/)
