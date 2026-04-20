@@ -159,6 +159,44 @@ cache_path <- function(dataset,
   )
 }
 
+#' Whether managed downloads should prompt for confirmation
+#' @noRd
+.managed_download_requires_confirmation <- function(dataset) {
+  .dataset_key(dataset)
+  TRUE
+}
+
+#' Ask the user for managed-download confirmation
+#' @noRd
+.ask_download_consent <- function(prompt) {
+  answer <- readline(prompt)
+  tolower(trimws(answer)) %in% c("y", "yes")
+}
+
+#' Confirm a managed download before starting it
+#' @noRd
+.confirm_managed_download <- function(dataset, spec) {
+  if (!.managed_download_requires_confirmation(dataset) || !interactive()) {
+    return(invisible(TRUE))
+  }
+
+  if (.ask_download_consent(.managed_load_prompt(dataset, spec))) {
+    return(invisible(TRUE))
+  }
+
+  variant_text <- if (is.null(spec$variant)) "" else paste0(" (variant: ", spec$variant, ")")
+
+  stop(
+    "Download cancelled for '", dataset, "'", variant_text, ".\n",
+    "To proceed, either:\n",
+    "  1. run the loader again and answer yes,\n",
+    "  2. provide a local CSV or Parquet file via path=, or\n",
+    "  3. populate the cache in advance.\n",
+    "Manual download: https://osf.io/rct9y/",
+    call. = FALSE
+  )
+}
+
 #' Download a single artifact to a temporary file
 #' @noRd
 .download_artifact <- function(spec, quiet = FALSE) {
@@ -321,6 +359,8 @@ read_with_cache <- function(dataset,
 
         .abort_noninteractive_download(dataset = dataset, format = candidate)
       }
+
+      .confirm_managed_download(dataset, spec)
 
       if (!refresh) {
         message(.managed_download_message(dataset, candidate, variant = variant))

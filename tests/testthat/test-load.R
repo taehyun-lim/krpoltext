@@ -231,6 +231,102 @@ test_that("managed download messages include the artifact format", {
   expect_match(msg, "prefetch the CSV cache explicitly", fixed = TRUE)
 })
 
+test_that("campaign booklet managed downloads require confirmation", {
+  spec <- krpoltext:::.artifact_spec(
+    "campaign_booklet",
+    format = "parquet",
+    variant = "enriched"
+  )
+  prompts <- character()
+
+  testthat::local_mocked_bindings(
+    interactive = function() TRUE,
+    .ask_download_consent = function(prompt) {
+      prompts <<- c(prompts, prompt)
+      FALSE
+    },
+    .env = asNamespace("krpoltext")
+  )
+
+  expect_error(
+    krpoltext:::.confirm_managed_download("campaign_booklet", spec),
+    "Download cancelled"
+  )
+  expect_length(prompts, 1L)
+  expect_match(prompts[[1]], "campaign_booklet", fixed = TRUE)
+  expect_match(prompts[[1]], "variant: enriched", fixed = TRUE)
+})
+
+test_that("party statements managed downloads also require confirmation", {
+  spec <- krpoltext:::.artifact_spec("party_statements", format = "csv")
+  prompts <- character()
+
+  testthat::local_mocked_bindings(
+    interactive = function() TRUE,
+    .ask_download_consent = function(prompt) {
+      prompts <<- c(prompts, prompt)
+      FALSE
+    },
+    .env = asNamespace("krpoltext")
+  )
+
+  expect_error(
+    krpoltext:::.confirm_managed_download("party_statements", spec)
+  )
+  expect_length(prompts, 1L)
+  expect_match(prompts[[1]], "party_statements", fixed = TRUE)
+})
+
+test_that("load_party_statements checks consent before managed download", {
+  cache_env <- krpoltext:::.krpoltext_env
+  old_dir <- cache_env$cache_dir
+  test_cache <- file.path(tempdir(), "krpoltext_party_statements_prompt")
+  cache_env$cache_dir <- test_cache
+
+  on.exit({
+    unlink(test_cache, recursive = TRUE)
+    cache_env$cache_dir <- old_dir
+  })
+
+  testthat::local_mocked_bindings(
+    interactive = function() TRUE,
+    .bundled_artifact_path = function(file) "",
+    .ask_download_consent = function(prompt) FALSE,
+    .env = asNamespace("krpoltext")
+  )
+
+  expect_error(
+    load_party_statements(format = "csv", cache = TRUE, refresh = FALSE),
+    "Download cancelled"
+  )
+  expect_false(dir.exists(test_cache))
+})
+
+test_that("load_campaign_booklet checks consent before managed download", {
+  cache_env <- krpoltext:::.krpoltext_env
+  old_dir <- cache_env$cache_dir
+  test_cache <- file.path(tempdir(), "krpoltext_campaign_booklet_prompt")
+  cache_env$cache_dir <- test_cache
+
+  on.exit({
+    unlink(test_cache, recursive = TRUE)
+    cache_env$cache_dir <- old_dir
+  })
+
+  testthat::local_mocked_bindings(
+    interactive = function() TRUE,
+    .bundled_artifact_path = function(file) "",
+    .ask_download_consent = function(prompt) FALSE,
+    .env = asNamespace("krpoltext")
+  )
+
+  expect_error(
+    load_campaign_booklet(format = "csv", cache = TRUE, refresh = FALSE),
+    "Download cancelled"
+  )
+  expect_false(dir.exists(test_cache))
+})
+
 test_that("load functions reject invalid arguments", {
   missing_path <- tempfile(fileext = ".csv")
 

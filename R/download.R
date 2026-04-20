@@ -91,6 +91,28 @@ download_data <- function(dataset = "all", force = FALSE, quiet = FALSE) {
   invisible(results)
 }
 
+#' Format variant text for prompts
+#' @noRd
+.prompt_variant_text <- function(variant = NULL) {
+  if (is.null(variant)) {
+    return("")
+  }
+
+  paste0(" (variant: ", variant, ")")
+}
+
+#' Build the interactive prompt used by load_* helpers
+#' @noRd
+.managed_load_prompt <- function(dataset, spec) {
+  size_mb <- round(spec$size_bytes / 1e6)
+
+  paste0(
+    "'", dataset, "' is a large dataset. Download ",
+    .format_label(spec$format), .prompt_variant_text(spec$variant),
+    " artifact (", size_mb, " MB) from OSF? [y/N] "
+  )
+}
+
 #' Build the interactive prompt used by download_data()
 #' @noRd
 .download_prompt <- function(dataset, spec) {
@@ -98,6 +120,7 @@ download_data <- function(dataset = "all", force = FALSE, quiet = FALSE) {
 
   paste0(
     "Download '", dataset, "' ", .format_label(spec$format),
+    .prompt_variant_text(spec$variant),
     " artifact (", size_mb, " MB) from OSF? [y/N] "
   )
 }
