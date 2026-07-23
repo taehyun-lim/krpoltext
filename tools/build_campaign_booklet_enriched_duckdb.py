@@ -8,9 +8,11 @@ import importlib
 import json
 import re
 import sys
+import threading
 import time
 from collections import Counter
-from dataclasses import dataclass
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -24,10 +26,21 @@ LINKAGE_COLUMNS = (
     "matcher_version",
     "nec_snapshot_id",
 )
-DEFAULT_MATCHER_VERSION = "campaign-booklet-enrichment-rowsearch-v2"
+DEFAULT_MATCHER_VERSION = "campaign-booklet-enrichment-rowsearch-v3"
 DEFAULT_CANDIDATE_LIMIT = 50
 DEFAULT_PROFILE_LIMIT = 5
 DEFAULT_REQUEST_DELAY_SECONDS = 0.0
+MIN_RESOLUTION_GAP = 0.08
+FLOAT_COMPARISON_EPSILON = 1e-12
+AUDIT_EXAMPLE_LIMIT = 20
+VALID_LINK_STATUSES = {"resolved", "ambiguous", "not_found", "rejected"}
+DEBUG_FIELDNAMES = [
+    "code", "candidate_name", "sg_id", "sg_typecode", "raw_region", "canonical_region",
+    "district_label", "link_status", "message", "used_profiles", "top_huboid",
+    "top_candidate_name", "top_party_name", "top_district_label", "top_confidence",
+    "top_match_method", "top_strong_signals", "runner_huboid", "runner_confidence",
+    "runner_match_method", "error",
+]
 DUCKDB_TYPE_MAP = {"integer": "BIGINT", "character": "VARCHAR"}
 PROPORTIONAL_KEYWORD = "\ube44\ub840"
 RETRYABLE_HTTP_MARKERS = ("429", "Too Many Requests", "rate limit")
@@ -95,6 +108,21 @@ class ManualReviewOverride:
     status: str
     message: str
     huboid: str | None = None
+    accepted_candidate_names: tuple[str, ...] = ()
+
+
+@dataclass(slots=True)
+class TargetAudit:
+    row_count: int = 0
+    names: set[str] = field(default_factory=set)
+    parties: set[str] = field(default_factory=set)
+    gihos: set[str] = field(default_factory=set)
+    regions: set[str] = field(default_factory=set)
+    districts: set[str] = field(default_factory=set)
+    birthdays: set[str] = field(default_factory=set)
+    codes: set[str] = field(default_factory=set)
+    first_row: dict[str, str | None] | None = None
+    duplicate_rows: list[dict[str, str | None]] = field(default_factory=list)
 
 
 MANUAL_REVIEW_OVERRIDES: dict[tuple[str, str, str, str, str, str, str], ManualReviewOverride] = {
@@ -170,6 +198,7 @@ MANUAL_REVIEW_OVERRIDES: dict[tuple[str, str, str, str, str, str, str], ManualRe
         status="resolved",
         message="Manual review resolved the row to NEC huboid 100125215 despite the 권해정/권혜정 OCR variation.",
         huboid="100125215",
+        accepted_candidate_names=("권해정", "권혜정"),
     ),
 }
 
@@ -196,6 +225,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--nec-snapshot-id", default=f"nec-openapi-live-{build_stamp}")
     parser.add_argument("--candidate-limit", type=int, default=DEFAULT_CANDIDATE_LIMIT)
     parser.add_argument("--profile-limit", type=int, default=DEFAULT_PROFILE_LIMIT)
+    parser.add_argument(
+        "--prefetch-workers",
+        type=int,
+        default=0,
+        help="Pre-cache unique NEC candidate-name queries with this many workers before row linkage (0 disables).",
+    )
     parser.add_argument("--request-delay-seconds", type=float, default=DEFAULT_REQUEST_DELAY_SECONDS)
     parser.add_argument("--skip-parquet", action="store_true")
     parser.add_argument("--overwrite", action="store_true")
@@ -251,17 +286,6 @@ def download_file(requests_module: Any, url: str, destination: Path) -> Path:
 def resolve_output_path(base_dir: Path, value: str) -> Path:
     candidate = Path(value)
     return candidate if candidate.is_absolute() else base_dir / candidate
-
-
-def unique_strings(values: list[str | None]) -> list[str | None]:
-    seen: set[str | None] = set()
-    output: list[str | None] = []
-    for value in values:
-        if value in seen:
-            continue
-        seen.add(value)
-        output.append(value)
-    return output
 
 
 def normalize_region(region: str | None) -> str | None:
@@ -366,6 +390,355 @@ def make_row_record(row: dict[str, Any], build_region_district_label: Any, KrPol
         warnings=[],
         raw_fields={},
     )
+
+
+def _normalized_comparison(value: Any) -> str:
+    return re.sub(r"\s+", "", clean_text(value) or "").casefold()
+
+
+def _add_normalized(values: set[str], value: Any, normalizer: Any = _normalized_comparison) -> None:
+    cleaned = clean_text(value)
+    if not cleaned:
+        return
+    normalized = clean_text(normalizer(cleaned))
+    if normalized:
+        values.add(normalized)
+
+
+def _audit_row_summary(row: dict[str, Any]) -> dict[str, str | None]:
+    return {
+        name: clean_text(row.get(name))
+        for name in (
+            "date",
+            "name",
+            "region",
+            "district",
+            "office",
+            "giho",
+            "party",
+            "birthday",
+            "code",
+            "huboid",
+            "sg_id",
+            "sg_typecode",
+            "link_status",
+        )
+    }
+
+
+def _manual_reviewed_identity_names(
+    normalize_candidate_name: Any,
+) -> dict[tuple[str, str, str], set[str]]:
+    targets: dict[tuple[str, str, str], set[str]] = {}
+    for review_key, override in MANUAL_REVIEW_OVERRIDES.items():
+        if override.status != "resolved" or not override.huboid:
+            continue
+        date_value, source_name, _, district, office, _, _ = review_key
+        sg_id = extract_sg_id(date_value)
+        sg_typecode = infer_sg_typecode({"date": date_value, "office": office, "district": district})
+        if sg_id and sg_typecode:
+            accepted_names = override.accepted_candidate_names or (source_name,)
+            normalized_names = {
+                normalized
+                for name in accepted_names
+                if (normalized := clean_text(normalize_candidate_name(name)))
+            }
+            targets[(sg_id, sg_typecode, override.huboid)] = normalized_names
+    return targets
+
+
+def count_csv_rows(path: Path, *, encoding: str = "utf-8") -> int:
+    with path.open("r", encoding=encoding, newline="") as handle:
+        reader = csv.reader(handle)
+        if next(reader, None) is None:
+            return 0
+        return sum(1 for _ in reader)
+
+
+def collect_candidate_names(raw_csv: Path) -> list[str]:
+    names: set[str] = set()
+    with raw_csv.open("r", encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            name = clean_text(row.get("name"))
+            if name:
+                names.add(name)
+    return sorted(names)
+
+
+def prefetch_candidate_name_rows(
+    *,
+    raw_csv: Path,
+    workers: int,
+    settings: Any,
+    NecApiClient: Any,
+) -> dict[str, int]:
+    if workers <= 0:
+        return {
+            "candidate_names": 0,
+            "attempted": 0,
+            "completed": 0,
+            "errors": 0,
+            "skipped": 0,
+            "rate_limited": 0,
+        }
+
+    candidate_names = collect_candidate_names(raw_csv)
+    thread_state = threading.local()
+    stop_event = threading.Event()
+
+    def fetch_name(candidate_name: str) -> bool:
+        if stop_event.is_set():
+            return False
+        client = getattr(thread_state, "nec_client", None)
+        if client is None:
+            client = NecApiClient(settings)
+            thread_state.nec_client = client
+        try:
+            client._request_paginated_rows(
+                "candidate_search_name",
+                {"name": candidate_name},
+                max_pages=20,
+            )
+        except Exception as exc:
+            if any(marker.lower() in str(exc).lower() for marker in RETRYABLE_HTTP_MARKERS):
+                stop_event.set()
+            raise
+        return True
+
+    completed = 0
+    attempted = 0
+    errors = 0
+    skipped = 0
+    rate_limited = 0
+    print(
+        f"Pre-caching {len(candidate_names):,} unique candidate-name queries with {workers} workers.",
+        flush=True,
+    )
+    with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="nec-name-prefetch") as executor:
+        futures = {executor.submit(fetch_name, name): name for name in candidate_names}
+        for future in as_completed(futures):
+            try:
+                if future.result():
+                    attempted += 1
+                    completed += 1
+                else:
+                    skipped += 1
+            except Exception as exc:
+                attempted += 1
+                errors += 1
+                if any(marker.lower() in str(exc).lower() for marker in RETRYABLE_HTTP_MARKERS):
+                    rate_limited = 1
+                    stop_event.set()
+            settled = completed + errors + skipped
+            if settled % 500 == 0 or settled == len(candidate_names):
+                print(
+                    f"Pre-cached {completed:,}/{len(candidate_names):,} candidate names "
+                    f"(errors={errors:,}, skipped={skipped:,}).",
+                    flush=True,
+                )
+
+    if errors:
+        print(
+            "Some candidate-name prefetches failed; row linkage will retry them through the normal path.",
+            flush=True,
+        )
+    return {
+        "candidate_names": len(candidate_names),
+        "attempted": attempted,
+        "completed": completed,
+        "errors": errors,
+        "skipped": skipped,
+        "rate_limited": rate_limited,
+    }
+
+
+def audit_enriched_csv(
+    output_csv: Path,
+    *,
+    normalize_candidate_name: Any,
+    normalize_district_name: Any,
+    map_party_name: Any,
+) -> dict[str, Any]:
+    status_counts: Counter[str] = Counter()
+    invalid_status_rows = 0
+    resolved_missing_huboid = 0
+    unresolved_with_huboid = 0
+    resolved_missing_scope = 0
+    invalid_scope_rows = 0
+    invalid_huboid_rows = 0
+    target_audits: dict[tuple[str, str, str], TargetAudit] = {}
+    code_counts: Counter[str] = Counter()
+    code_targets: dict[str, set[tuple[str, str, str]]] = {}
+    code_first_rows: dict[str, dict[str, str | None]] = {}
+    code_examples: dict[str, list[dict[str, str | None]]] = {}
+    matcher_versions: set[str] = set()
+    nec_snapshot_ids: set[str] = set()
+    missing_matcher_version_rows = 0
+    missing_nec_snapshot_id_rows = 0
+    total_rows = 0
+
+    with output_csv.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            total_rows += 1
+            status = clean_text(row.get("link_status")) or ""
+            huboid = clean_text(row.get("huboid"))
+            sg_id = clean_text(row.get("sg_id"))
+            sg_typecode = clean_text(row.get("sg_typecode"))
+            matcher_version = clean_text(row.get("matcher_version"))
+            nec_snapshot_id = clean_text(row.get("nec_snapshot_id"))
+            status_counts[status or "missing"] += 1
+
+            if matcher_version:
+                matcher_versions.add(matcher_version)
+            else:
+                missing_matcher_version_rows += 1
+            if nec_snapshot_id:
+                nec_snapshot_ids.add(nec_snapshot_id)
+            else:
+                missing_nec_snapshot_id_rows += 1
+
+            if status not in VALID_LINK_STATUSES:
+                invalid_status_rows += 1
+            if huboid and not huboid.isdigit():
+                invalid_huboid_rows += 1
+            if status == "resolved":
+                if not huboid:
+                    resolved_missing_huboid += 1
+                if not sg_id or not sg_typecode:
+                    resolved_missing_scope += 1
+                elif not (len(sg_id) == 8 and sg_id.isdigit() and sg_typecode.isdigit()):
+                    invalid_scope_rows += 1
+            elif huboid:
+                unresolved_with_huboid += 1
+
+            target_key = (sg_id or "", sg_typecode or "", huboid or "")
+            if status == "resolved" and all(target_key):
+                target = target_audits.setdefault(target_key, TargetAudit())
+                target.row_count += 1
+                summary = _audit_row_summary(row)
+                if target.first_row is None:
+                    target.first_row = summary
+                elif len(target.duplicate_rows) < 2:
+                    if not target.duplicate_rows and target.first_row is not None:
+                        target.duplicate_rows.append(target.first_row)
+                    target.duplicate_rows.append(summary)
+
+                _add_normalized(target.names, row.get("name"), normalize_candidate_name)
+                _add_normalized(target.parties, row.get("party"), lambda value: _normalized_comparison(map_party_name(value)))
+                _add_normalized(target.gihos, row.get("giho"), normalize_giho_text)
+                _add_normalized(target.regions, row.get("region"), normalize_region)
+                _add_normalized(target.districts, row.get("district"), normalize_district_name)
+                _add_normalized(target.birthdays, row.get("birthday"), normalize_digits)
+                _add_normalized(target.codes, row.get("code"))
+
+            code = clean_text(row.get("code"))
+            if code:
+                code_counts[code] += 1
+                code_targets.setdefault(code, set()).add(target_key)
+                summary = _audit_row_summary(row)
+                if code_counts[code] == 1:
+                    code_first_rows[code] = summary
+                else:
+                    examples = code_examples.get(code)
+                    if examples is None:
+                        examples = [code_first_rows.pop(code)]
+                        code_examples[code] = examples
+                    if len(examples) < 3:
+                        examples.append(summary)
+
+    duplicate_targets = {key: audit for key, audit in target_audits.items() if audit.row_count > 1}
+    reviewed_identity_names = _manual_reviewed_identity_names(normalize_candidate_name)
+    identity_conflict_targets = {
+        key: audit
+        for key, audit in duplicate_targets.items()
+        if len(audit.names) > 1 or len(audit.birthdays) > 1 or len(audit.gihos) > 1
+    }
+    reviewed_identity_conflicts = {
+        key: audit
+        for key, audit in identity_conflict_targets.items()
+        if key in reviewed_identity_names
+        and len(audit.birthdays) <= 1
+        and len(audit.gihos) <= 1
+        and audit.names.issubset(reviewed_identity_names[key])
+    }
+    unreviewed_identity_conflicts = {
+        key: audit for key, audit in identity_conflict_targets.items() if key not in reviewed_identity_conflicts
+    }
+    party_conflicts = {key: audit for key, audit in duplicate_targets.items() if len(audit.parties) > 1}
+    region_conflicts = {key: audit for key, audit in duplicate_targets.items() if len(audit.regions) > 1}
+    district_conflicts = {key: audit for key, audit in duplicate_targets.items() if len(audit.districts) > 1}
+    duplicate_codes = {code: count for code, count in code_counts.items() if count > 1}
+    conflicting_codes = {
+        code: count for code, count in duplicate_codes.items() if len(code_targets.get(code, set())) > 1
+    }
+
+    def target_examples(items: dict[tuple[str, str, str], TargetAudit]) -> list[dict[str, Any]]:
+        return [
+            {
+                "sg_id": key[0],
+                "sg_typecode": key[1],
+                "huboid": key[2],
+                "row_count": audit.row_count,
+                "rows": audit.duplicate_rows,
+            }
+            for key, audit in list(sorted(items.items()))[:AUDIT_EXAMPLE_LIMIT]
+        ]
+
+    return {
+        "row_count": total_rows,
+        "status_counts": dict(status_counts),
+        "invalid_status_rows": invalid_status_rows,
+        "resolved_missing_huboid": resolved_missing_huboid,
+        "unresolved_with_huboid": unresolved_with_huboid,
+        "resolved_missing_scope": resolved_missing_scope,
+        "invalid_scope_rows": invalid_scope_rows,
+        "invalid_huboid_rows": invalid_huboid_rows,
+        "missing_matcher_version_rows": missing_matcher_version_rows,
+        "missing_nec_snapshot_id_rows": missing_nec_snapshot_id_rows,
+        "matcher_versions": sorted(matcher_versions),
+        "nec_snapshot_ids": sorted(nec_snapshot_ids),
+        "resolved_distinct_targets": len(target_audits),
+        "duplicate_target_groups": len(duplicate_targets),
+        "duplicate_target_rows": sum(audit.row_count for audit in duplicate_targets.values()),
+        "duplicate_target_extra_rows": sum(audit.row_count - 1 for audit in duplicate_targets.values()),
+        "identity_conflict_target_groups": len(identity_conflict_targets),
+        "unreviewed_identity_conflict_target_groups": len(unreviewed_identity_conflicts),
+        "party_conflict_target_groups": len(party_conflicts),
+        "region_conflict_target_groups": len(region_conflicts),
+        "district_conflict_target_groups": len(district_conflicts),
+        "duplicate_code_groups": len(duplicate_codes),
+        "duplicate_code_rows": sum(duplicate_codes.values()),
+        "conflicting_code_target_groups": len(conflicting_codes),
+        "duplicate_target_examples": target_examples(duplicate_targets),
+        "identity_conflict_examples": target_examples(identity_conflict_targets),
+        "party_conflict_examples": target_examples(party_conflicts),
+        "conflicting_code_examples": [
+            {"code": code, "row_count": conflicting_codes[code], "rows": code_examples[code]}
+            for code in list(sorted(conflicting_codes))[:AUDIT_EXAMPLE_LIMIT]
+        ],
+    }
+
+
+def audit_debug_csv(
+    debug_csv: Path,
+    *,
+    expected_fieldnames: list[str] | None = None,
+) -> dict[str, Any]:
+    row_count = 0
+    processing_error_rows = 0
+    with debug_csv.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        header_match = expected_fieldnames is None or reader.fieldnames == expected_fieldnames
+        for row in reader:
+            row_count += 1
+            if clean_text(row.get("error")):
+                processing_error_rows += 1
+    return {
+        "row_count": row_count,
+        "processing_error_rows": processing_error_rows,
+        "header_match": header_match,
+    }
 
 
 def dedupe_candidates(candidates: list[Any]) -> list[Any]:
@@ -494,106 +867,6 @@ def normalize_giho_text(value: Any) -> str:
         return ""
     digits = normalize_digits(text)
     return digits or text
-
-
-def scope_key(scope: Scope) -> tuple[str | None, str | None]:
-    return scope.sg_id, scope.sg_typecode
-
-
-def collect_scope_requests(raw_csv: Path, build_region_district_label: Any) -> dict[tuple[str, str], dict[str, Any]]:
-    scope_requests: dict[tuple[str, str], dict[str, Any]] = {}
-    with raw_csv.open("r", encoding="utf-8-sig", newline="") as handle:
-        reader = csv.DictReader(handle)
-        for row in reader:
-            scope = build_scope(row, build_region_district_label)
-            if not scope.sg_id or not scope.sg_typecode:
-                continue
-            key = (scope.sg_id, scope.sg_typecode)
-            entry = scope_requests.setdefault(
-                key,
-                {"regions": set(), "districts": set(), "row_count": 0},
-            )
-            entry["row_count"] += 1
-            if scope.canonical_region:
-                entry["regions"].add(scope.canonical_region)
-            if scope.raw_region:
-                entry["regions"].add(scope.raw_region)
-            if scope.district_label:
-                entry["districts"].add(scope.district_label)
-            if scope.district_raw:
-                entry["districts"].add(scope.district_raw)
-    return scope_requests
-
-
-def fetch_scope_candidates(
-    nec_client: Any,
-    *,
-    sg_id: str,
-    sg_typecode: str,
-    region_names: set[str],
-) -> list[Any]:
-    candidate_rows: list[dict[str, Any]] = []
-    try:
-        candidate_rows = call_with_retry(
-            nec_client._fetch_candidate_scope_rows,
-            sg_id=sg_id,
-            sg_typecode=sg_typecode,
-        )
-    except Exception:
-        candidate_rows = []
-    if not candidate_rows:
-        for region_name in sorted(region_names):
-            try:
-                candidate_rows.extend(
-                    call_with_retry(
-                        nec_client._fetch_candidate_scope_rows,
-                        sg_id=sg_id,
-                        sg_typecode=sg_typecode,
-                        sd_name=region_name,
-                    )
-                )
-            except Exception:
-                continue
-    if not candidate_rows:
-        try:
-            candidate_rows = call_with_retry(
-                nec_client._fetch_candidate_result_fallback_rows,
-                sg_id=sg_id,
-                sg_typecode=sg_typecode,
-            )
-        except Exception:
-            candidate_rows = []
-    if not candidate_rows:
-        for region_name in sorted(region_names):
-            try:
-                candidate_rows.extend(
-                    call_with_retry(
-                        nec_client._fetch_candidate_result_fallback_rows,
-                        sg_id=sg_id,
-                        sg_typecode=sg_typecode,
-                        sd_name=region_name,
-                    )
-                )
-            except Exception:
-                continue
-    return dedupe_candidates([nec_client._candidate_from_row(row) for row in candidate_rows if isinstance(row, dict)])
-
-
-def build_scope_candidate_index(
-    candidates_by_scope: dict[tuple[str, str], list[Any]],
-    *,
-    normalize_candidate_name: Any,
-) -> dict[tuple[str, str], dict[str, list[Any]]]:
-    index: dict[tuple[str, str], dict[str, list[Any]]] = {}
-    for key, candidates in candidates_by_scope.items():
-        name_index: dict[str, list[Any]] = {}
-        for candidate in candidates:
-            name_key = normalize_candidate_name(candidate.candidate_ref.candidate_name)
-            if not name_key:
-                continue
-            name_index.setdefault(name_key, []).append(candidate)
-        index[key] = name_index
-    return index
 
 
 def extract_candidate_raw_value(candidate: Any, first_of: Any, *names: str) -> str | None:
@@ -844,16 +1117,17 @@ def resolve_scores(scores: list[CandidateScore]) -> tuple[str, CandidateScore | 
     top = scores[0]
     runner_up = scores[1] if len(scores) > 1 else None
     runner_confidence = runner_up.confidence if runner_up else 0.0
-    gap = round(top.confidence - runner_confidence, 3)
+    gap = top.confidence - runner_confidence
+    gap_is_sufficient = gap + FLOAT_COMPARISON_EPSILON >= MIN_RESOLUTION_GAP
     if top.confidence < 0.55:
         return "not_found", None, "No NEC candidate matched the raw row strongly enough."
     if len(scores) == 1 and top.base_exact:
         return "resolved", top, "Resolved from election, office, district, and name context."
     if top.identity_verified and (
-        runner_up is None or top.strong_signal_count > runner_up.strong_signal_count or gap >= 0.08
+        runner_up is None or top.strong_signal_count > runner_up.strong_signal_count or gap_is_sufficient
     ):
         return "resolved", top, "Resolved using stronger personal identifiers."
-    if top.strong_signal_count >= 2 and gap >= 0.08:
+    if top.strong_signal_count >= 2 and gap_is_sufficient:
         return "resolved", top, "Resolved using multiple corroborating metadata fields."
     return "ambiguous", None, "Multiple NEC candidates remain plausible for this raw row."
 
@@ -1063,12 +1337,14 @@ def build_summary(
     counts: Counter[str],
     total_rows: int,
     validation: dict[str, Any],
+    include_parquet: bool,
 ) -> dict[str, Any]:
     artifacts = {
+        "raw_csv": {"file": raw_csv.name, "size_bytes": raw_csv.stat().st_size, "sha256": sha256_file(raw_csv)},
         "csv": {"file": output_csv.name, "size_bytes": output_csv.stat().st_size, "sha256": sha256_file(output_csv)},
         "debug_csv": {"file": debug_csv.name, "size_bytes": debug_csv.stat().st_size, "sha256": sha256_file(debug_csv)},
     }
-    if output_parquet.exists():
+    if include_parquet and output_parquet.exists():
         artifacts["parquet"] = {
             "file": output_parquet.name,
             "size_bytes": output_parquet.stat().st_size,
@@ -1089,12 +1365,17 @@ def build_summary(
     }
 
 
-def load_resume_state(output_csv: Path, fieldnames: list[str]) -> tuple[int, Counter[str], int]:
+def load_resume_state(
+    output_csv: Path,
+    fieldnames: list[str],
+    *,
+    matcher_version: str,
+    nec_snapshot_id: str,
+) -> tuple[int, Counter[str]]:
     processed_rows = 0
     counts: Counter[str] = Counter()
-    resolved_missing_huboid = 0
     if not output_csv.exists() or output_csv.stat().st_size == 0:
-        return processed_rows, counts, resolved_missing_huboid
+        return processed_rows, counts
     with output_csv.open("r", encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle)
         if reader.fieldnames != fieldnames:
@@ -1103,9 +1384,11 @@ def load_resume_state(output_csv: Path, fieldnames: list[str]) -> tuple[int, Cou
             processed_rows += 1
             status = row.get("link_status") or "not_found"
             counts[status] += 1
-            if status == "resolved" and not row.get("huboid"):
-                resolved_missing_huboid += 1
-    return processed_rows, counts, resolved_missing_huboid
+            if clean_text(row.get("matcher_version")) != matcher_version:
+                raise SystemExit("Existing enriched CSV matcher_version does not match this resume request.")
+            if clean_text(row.get("nec_snapshot_id")) != nec_snapshot_id:
+                raise SystemExit("Existing enriched CSV nec_snapshot_id does not match this resume request.")
+    return processed_rows, counts
 
 
 def main() -> None:
@@ -1157,16 +1440,37 @@ def main() -> None:
     settings.require_api_keys()
     nec_client = NecApiClient(settings)
 
+    prefetch_summary = prefetch_candidate_name_rows(
+        raw_csv=raw_csv,
+        workers=max(args.prefetch_workers, 0),
+        settings=settings,
+        NecApiClient=NecApiClient,
+    )
+
     print("Using row-driven NEC candidate search over raw campaign_booklet rows.", flush=True)
     profile_cache: dict[str | None, Any] = {}
     search_cache: dict[tuple[str, str, str, str], list[Any]] = {}
 
-    resumed_rows, counts, resolved_missing_huboid = load_resume_state(output_csv, fieldnames)
+    resumed_rows, counts = load_resume_state(
+        output_csv,
+        fieldnames,
+        matcher_version=args.matcher_version,
+        nec_snapshot_id=args.nec_snapshot_id,
+    )
     total_rows = resumed_rows
     csv_mode = "a" if resumed_rows > 0 else "w"
-    debug_mode = "a" if resumed_rows > 0 and debug_csv.exists() and debug_csv.stat().st_size > 0 else "w"
     if resumed_rows > 0:
+        if not debug_csv.exists() or debug_csv.stat().st_size == 0:
+            raise SystemExit("Cannot resume because the linkage debug CSV is missing or empty.")
+        resume_debug_audit = audit_debug_csv(debug_csv, expected_fieldnames=DEBUG_FIELDNAMES)
+        if not resume_debug_audit["header_match"]:
+            raise SystemExit("Cannot resume because the linkage debug CSV header is incompatible.")
+        if resume_debug_audit["row_count"] != resumed_rows:
+            raise SystemExit("Cannot resume because enriched and debug CSV row counts differ.")
+        if resume_debug_audit["processing_error_rows"]:
+            raise SystemExit("Cannot resume an artifact whose debug CSV already contains processing errors.")
         print(f"Resuming from row {resumed_rows:,} using existing enriched CSV at {output_csv}", flush=True)
+    debug_mode = "a" if resumed_rows > 0 else "w"
 
     with raw_csv.open("r", encoding="utf-8-sig", newline="") as source_handle, \
         output_csv.open(csv_mode, encoding="utf-8", newline="") as csv_handle, \
@@ -1179,14 +1483,7 @@ def main() -> None:
         writer = csv.DictWriter(csv_handle, fieldnames=fieldnames)
         if csv_mode == "w":
             writer.writeheader()
-        debug_fieldnames = [
-            "code", "candidate_name", "sg_id", "sg_typecode", "raw_region", "canonical_region",
-            "district_label", "link_status", "message", "used_profiles", "top_huboid",
-            "top_candidate_name", "top_party_name", "top_district_label", "top_confidence",
-            "top_match_method", "top_strong_signals", "runner_huboid", "runner_confidence",
-            "runner_match_method", "error",
-        ]
-        debug_writer = csv.DictWriter(debug_handle, fieldnames=debug_fieldnames)
+        debug_writer = csv.DictWriter(debug_handle, fieldnames=DEBUG_FIELDNAMES)
         if debug_mode == "w":
             debug_writer.writeheader()
 
@@ -1292,8 +1589,6 @@ def main() -> None:
             writer.writerow(coerced)
             debug_writer.writerow(debug_row)
             counts[coerced["link_status"] or "not_found"] += 1
-            if coerced["link_status"] == "resolved" and not coerced.get("huboid"):
-                resolved_missing_huboid += 1
             if total_rows % 500 == 0:
                 print(
                     f"Processed {total_rows:,} rows "
@@ -1304,15 +1599,47 @@ def main() -> None:
     with output_csv.open("r", encoding="utf-8", newline="") as csv_handle:
         csv_header = next(csv.reader(csv_handle), [])
 
+    linkage_audit = audit_enriched_csv(
+        output_csv,
+        normalize_candidate_name=normalize_candidate_name,
+        normalize_district_name=normalize_district_name,
+        map_party_name=map_party_name,
+    )
+    debug_audit = audit_debug_csv(debug_csv, expected_fieldnames=DEBUG_FIELDNAMES)
+    raw_row_count = count_csv_rows(raw_csv, encoding="utf-8-sig")
+    csv_row_count = linkage_audit["row_count"]
+    common_validation = {
+        "raw_columns_match_expected": True,
+        "csv_header_match": csv_header == fieldnames,
+        "row_count_preserved": raw_row_count == csv_row_count == total_rows,
+        "debug_row_count_match": debug_audit["row_count"] == csv_row_count,
+        "debug_header_match": debug_audit["header_match"],
+        "no_processing_errors": debug_audit["processing_error_rows"] == 0,
+        "valid_link_statuses": linkage_audit["invalid_status_rows"] == 0,
+        "resolved_requires_huboid": linkage_audit["resolved_missing_huboid"] == 0,
+        "unresolved_clears_huboid": linkage_audit["unresolved_with_huboid"] == 0,
+        "resolved_requires_scope": linkage_audit["resolved_missing_scope"] == 0,
+        "scope_format_valid": linkage_audit["invalid_scope_rows"] == 0,
+        "huboid_format_valid": linkage_audit["invalid_huboid_rows"] == 0,
+        "linkage_provenance_complete": (
+            linkage_audit["missing_matcher_version_rows"] == 0
+            and linkage_audit["missing_nec_snapshot_id_rows"] == 0
+        ),
+        "matcher_version_consistent": linkage_audit["matcher_versions"] == [args.matcher_version],
+        "nec_snapshot_id_consistent": linkage_audit["nec_snapshot_ids"] == [args.nec_snapshot_id],
+        "no_unreviewed_identity_conflicts": linkage_audit["unreviewed_identity_conflict_target_groups"] == 0,
+        "raw_row_count": raw_row_count,
+        "csv_row_count": csv_row_count,
+        "debug_row_count": debug_audit["row_count"],
+        "processing_error_rows": debug_audit["processing_error_rows"],
+        "candidate_name_prefetch": prefetch_summary,
+        "linkage_audit": linkage_audit,
+    }
+
     if args.skip_parquet:
         validation = {
-            "raw_columns_match_expected": True,
-            "csv_header_match": csv_header == fieldnames,
-            "row_count_preserved": True,
+            **common_validation,
             "csv_parquet_schema_match": None,
-            "resolved_requires_huboid": resolved_missing_huboid == 0,
-            "resolved_missing_huboid": resolved_missing_huboid,
-            "csv_row_count": total_rows,
             "parquet_row_count": None,
             "parquet_skipped": True,
         }
@@ -1326,13 +1653,12 @@ def main() -> None:
             duckdb_type_map=duckdb_type_map,
         )
         validation = {
-            "raw_columns_match_expected": True,
-            "csv_header_match": csv_header == fieldnames,
-            "row_count_preserved": parquet_validation["csv_row_count"] == total_rows == parquet_validation["parquet_row_count"],
+            **common_validation,
+            "row_count_preserved": (
+                common_validation["row_count_preserved"]
+                and parquet_validation["csv_row_count"] == csv_row_count == parquet_validation["parquet_row_count"]
+            ),
             "csv_parquet_schema_match": parquet_validation["parquet_columns_match"] and parquet_validation["parquet_types_match"],
-            "resolved_requires_huboid": resolved_missing_huboid == 0,
-            "resolved_missing_huboid": resolved_missing_huboid,
-            "csv_row_count": parquet_validation["csv_row_count"],
             "parquet_row_count": parquet_validation["parquet_row_count"],
             "parquet_skipped": False,
         }
@@ -1344,6 +1670,30 @@ def main() -> None:
         raise SystemExit("Parquet schema did not match the documented enriched schema.")
     if not validation["resolved_requires_huboid"]:
         raise SystemExit("Resolved rows without huboid were detected in the enriched artifact.")
+    if not validation["debug_row_count_match"]:
+        raise SystemExit("Debug CSV row count did not match the enriched CSV row count.")
+    if not validation["debug_header_match"]:
+        raise SystemExit("Debug CSV header did not match the expected diagnostic schema.")
+    if not validation["no_processing_errors"]:
+        raise SystemExit("Row processing errors were detected in the linkage debug CSV.")
+    if not validation["valid_link_statuses"]:
+        raise SystemExit("Invalid or missing link_status values were detected in the enriched artifact.")
+    if not validation["unresolved_clears_huboid"]:
+        raise SystemExit("Unresolved rows with non-null huboid values were detected in the enriched artifact.")
+    if not validation["resolved_requires_scope"]:
+        raise SystemExit("Resolved rows without sg_id or sg_typecode were detected in the enriched artifact.")
+    if not validation["scope_format_valid"]:
+        raise SystemExit("Malformed sg_id or sg_typecode values were detected in resolved rows.")
+    if not validation["huboid_format_valid"]:
+        raise SystemExit("Non-numeric huboid values were detected in the enriched artifact.")
+    if not validation["linkage_provenance_complete"]:
+        raise SystemExit("Rows without matcher_version or nec_snapshot_id provenance were detected.")
+    if not validation["matcher_version_consistent"]:
+        raise SystemExit("Multiple or unexpected matcher_version values were detected in the enriched artifact.")
+    if not validation["nec_snapshot_id_consistent"]:
+        raise SystemExit("Multiple or unexpected nec_snapshot_id values were detected in the enriched artifact.")
+    if not validation["no_unreviewed_identity_conflicts"]:
+        raise SystemExit("Unreviewed name, birthday, or giho conflicts share the same resolved NEC target.")
 
     summary = build_summary(
         output_csv=output_csv,
@@ -1355,6 +1705,7 @@ def main() -> None:
         counts=counts,
         total_rows=total_rows,
         validation=validation,
+        include_parquet=not args.skip_parquet,
     )
     summary_json.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2), flush=True)

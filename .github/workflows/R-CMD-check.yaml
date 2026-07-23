@@ -7,6 +7,20 @@ on:
     branches: [main, master]
 
 jobs:
+  linkage-audit-tools:
+    name: linkageAuditExpected
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Test campaign booklet linkage audit tools
+        run: python -m unittest discover -s tests -p "test_campaign_booklet_enriched_audit.py"
+
   rcmdcheck:
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.os }} (R ${{ matrix.config.r }})
@@ -48,7 +62,7 @@ jobs:
     name: testExpected
     runs-on: ubuntu-latest
     if: ${{ always() }}
-    needs: [rcmdcheck]
+    needs: [rcmdcheck, linkage-audit-tools]
 
     steps:
       - name: Require successful R-CMD-check matrix
@@ -56,8 +70,11 @@ jobs:
         run: |
           set -euo pipefail
           result='${{ needs.rcmdcheck.result }}'
+          linkage_result='${{ needs.linkage-audit-tools.result }}'
           echo "R-CMD-check matrix result: ${result}"
+          echo "Linkage audit tools result: ${linkage_result}"
           [ "${result}" = "success" ]
+          [ "${linkage_result}" = "success" ]
 
   security:
     name: securityExpected

@@ -12,6 +12,7 @@
 ^pkgdown($|/)
 ^schema($|/)
 ^tools($|/)
+^tests/.*\.py$
 ^vignettes/.*_cache$
 ^README\.Rmd$
 ^README_kr\.md$
