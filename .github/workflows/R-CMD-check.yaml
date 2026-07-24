@@ -18,6 +18,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install linkage audit dependencies
+        run: python -m pip install "duckdb>=1.1,<2" "pyarrow>=18,<26"
+
       - name: Test campaign booklet linkage audit tools
         run: python -m unittest discover -s tests -p "test_campaign_booklet_enriched_audit.py"
 
