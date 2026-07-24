@@ -11,6 +11,7 @@ Data Descriptor:
 ## Step 1: Load and Filter
 
 ``` r
+
 library(krpoltext)
 
 ps <- load_party_statements(format = "parquet")
@@ -23,6 +24,7 @@ cat("Years:", paste(range(ps_sub$year), collapse = "-"), "\n")
 ## Step 2: Convert to quanteda Corpus
 
 ``` r
+
 library(quanteda)
 
 corp <- as_quanteda_corpus(ps_sub, docid_field = "id")
@@ -36,6 +38,7 @@ text (via khaiii). You can use it directly or tokenize the raw `text`
 column:
 
 ``` r
+
 toks <- tokens(corp, remove_punct = TRUE, remove_numbers = TRUE)
 dfm_ps <- dfm(toks)
 dfm_ps
@@ -44,6 +47,7 @@ dfm_ps
 ## Step 4: Exploratory Analysis
 
 ``` r
+
 topfeatures(dfm_ps, 20)
 
 # By partisan group
@@ -54,6 +58,7 @@ topfeatures(dfm_group, 10, groups = TRUE)
 ## Step 5: Keyword Analysis (Keyness)
 
 ``` r
+
 library(quanteda.textstats)
 
 dfm_binary <- dfm_group(dfm_ps, groups = conservative)
@@ -64,6 +69,7 @@ head(keyness, 20)
 ## Step 6: Campaign Booklet Analysis
 
 ``` r
+
 cb <- load_campaign_booklet(format = "parquet")
 cb_assembly <- get_docs(
   "campaign_booklet",
@@ -84,17 +90,20 @@ topfeatures(dfm_result, 10, groups = TRUE)
 ## Saving Results
 
 ``` r
+
 saveRDS(dfm_ps, "dfm_party_statements_2010_2022.rds")
 ```
 
 ## Citation
 
 ``` r
+
 citation("krpoltext")
 ```
 
 ## Session Info
 
 ``` r
+
 sessionInfo()
 ```

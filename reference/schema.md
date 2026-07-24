@@ -171,7 +171,7 @@ schema("campaign_booklet")
 #> [1] "integer"
 #> 
 #> $columns[[5]]$description
-#> [1] "Office type identifier (1=president, 2=national_assembly, 3=edu_superintendent, 4=metro_head, 5=metro_assembly, 6=basic_head, 7=basic_assembly)"
+#> [1] "Office type identifier (1=president, 2=national_assembly, 3=metro_head, 4=basic_head, 5=metro_assembly, 6=basic_assembly, 11=education_superintendent)"
 #> 
 #> 
 #> $columns[[6]]
@@ -182,7 +182,7 @@ schema("campaign_booklet")
 #> [1] "character"
 #> 
 #> $columns[[6]]$description
-#> [1] "Office type label (president, national_assembly, edu_superintendent, metro_head, metro_assembly, basic_head, basic_assembly)"
+#> [1] "Office type label (president, national_assembly, metro_head, basic_head, metro_assembly, basic_assembly, education_superintendent)"
 #> 
 #> 
 #> $columns[[7]]
@@ -507,10 +507,10 @@ schema("campaign_booklet")
 #> [1] 3
 #> 
 #> $extras$office_mapping[[3]]$office
-#> [1] "edu_superintendent"
+#> [1] "metro_head"
 #> 
 #> $extras$office_mapping[[3]]$description
-#> [1] "Education superintendent"
+#> [1] "Metropolitan city mayor / provincial governor"
 #> 
 #> 
 #> $extras$office_mapping[[4]]
@@ -518,10 +518,10 @@ schema("campaign_booklet")
 #> [1] 4
 #> 
 #> $extras$office_mapping[[4]]$office
-#> [1] "metro_head"
+#> [1] "basic_head"
 #> 
 #> $extras$office_mapping[[4]]$description
-#> [1] "Metropolitan city mayor / provincial governor"
+#> [1] "Basic local government head"
 #> 
 #> 
 #> $extras$office_mapping[[5]]
@@ -540,21 +540,21 @@ schema("campaign_booklet")
 #> [1] 6
 #> 
 #> $extras$office_mapping[[6]]$office
-#> [1] "basic_head"
+#> [1] "basic_assembly"
 #> 
 #> $extras$office_mapping[[6]]$description
-#> [1] "Basic local government head"
+#> [1] "Basic assembly member"
 #> 
 #> 
 #> $extras$office_mapping[[7]]
 #> $extras$office_mapping[[7]]$office_id
-#> [1] 7
+#> [1] 11
 #> 
 #> $extras$office_mapping[[7]]$office
-#> [1] "basic_assembly"
+#> [1] "education_superintendent"
 #> 
 #> $extras$office_mapping[[7]]$description
-#> [1] "Basic assembly member"
+#> [1] "Education superintendent"
 #> 
 #> 
 #> 
@@ -617,10 +617,10 @@ schema("campaign_booklet", variant = "enriched")
 #> [1] "sk_election_campaign_booklet_enriched_v2022.csv"
 #> 
 #> $artifacts$csv$download_url
-#> [1] "https://osf.io/download/69e3eec5352dbdd881fd8d7b/"
+#> [1] "https://osf.io/download/6a62910d6ba5fc9524faad7a/"
 #> 
 #> $artifacts$csv$sha256
-#> [1] "08779d4c27a02635c7bf08a332170ac0a5bf1295e825e3b29061c62f95598586"
+#> [1] "48831e2619105d313baa5f4c98e4e1591d8f414066a79333af0019ccce24dd6d"
 #> 
 #> $artifacts$csv$size_bytes
 #> [1] 760045361
@@ -637,16 +637,48 @@ schema("campaign_booklet", variant = "enriched")
 #> [1] "sk_election_campaign_booklet_enriched_v2022.parquet"
 #> 
 #> $artifacts$parquet$download_url
-#> [1] "https://osf.io/download/69e3ee72a0e06b0928fd8ae2/"
+#> [1] "https://osf.io/download/6a6290aa990177bd263deb4d/"
 #> 
 #> $artifacts$parquet$sha256
-#> [1] "d8901cd2cebef30116f8865847727bb10855478ee556bc0dcfb5a04e838ad8f4"
+#> [1] "db55adb7dcb0ea85cb014c9e25f05feff22d597b0da252f99eff095c6a2c3977"
 #> 
 #> $artifacts$parquet$size_bytes
-#> [1] 406231949
+#> [1] 404269277
 #> 
 #> $artifacts$parquet$managed
 #> [1] TRUE
+#> 
+#> 
+#> $artifacts$lookup_parquet
+#> $artifacts$lookup_parquet$format
+#> [1] "parquet"
+#> 
+#> $artifacts$lookup_parquet$role
+#> [1] "metadata_lookup"
+#> 
+#> $artifacts$lookup_parquet$file
+#> [1] "sk_election_campaign_booklet_enriched_lookup_v2022.parquet"
+#> 
+#> $artifacts$lookup_parquet$download_url
+#> [1] "https://osf.io/download/6a628ff2f37a081c97a322f7/"
+#> 
+#> $artifacts$lookup_parquet$sha256
+#> [1] "3c783400e71edca26843101929843d90b2b569b5ebd3c675dda9943b4f7c22a6"
+#> 
+#> $artifacts$lookup_parquet$source_artifact_sha256
+#> [1] "db55adb7dcb0ea85cb014c9e25f05feff22d597b0da252f99eff095c6a2c3977"
+#> 
+#> $artifacts$lookup_parquet$size_bytes
+#> [1] 3275371
+#> 
+#> $artifacts$lookup_parquet$managed
+#> [1] TRUE
+#> 
+#> $artifacts$lookup_parquet$n_rows
+#> [1] 49678
+#> 
+#> $artifacts$lookup_parquet$n_cols
+#> [1] 38
 #> 
 #> 
 #> 
@@ -703,7 +735,7 @@ schema("campaign_booklet", variant = "enriched")
 #> [1] "integer"
 #> 
 #> $columns[[5]]$description
-#> [1] "Office type identifier (1=president, 2=national_assembly, 3=edu_superintendent, 4=metro_head, 5=metro_assembly, 6=basic_head, 7=basic_assembly)"
+#> [1] "Office type identifier (1=president, 2=national_assembly, 3=metro_head, 4=basic_head, 5=metro_assembly, 6=basic_assembly, 11=education_superintendent)"
 #> 
 #> 
 #> $columns[[6]]
@@ -714,7 +746,7 @@ schema("campaign_booklet", variant = "enriched")
 #> [1] "character"
 #> 
 #> $columns[[6]]$description
-#> [1] "Office type label (president, national_assembly, edu_superintendent, metro_head, metro_assembly, basic_head, basic_assembly)"
+#> [1] "Office type label (president, national_assembly, metro_head, basic_head, metro_assembly, basic_assembly, education_superintendent)"
 #> 
 #> 
 #> $columns[[7]]
@@ -1108,10 +1140,10 @@ schema("campaign_booklet", variant = "enriched")
 #> [1] 3
 #> 
 #> $extras$office_mapping[[3]]$office
-#> [1] "edu_superintendent"
+#> [1] "metro_head"
 #> 
 #> $extras$office_mapping[[3]]$description
-#> [1] "Education superintendent"
+#> [1] "Metropolitan city mayor / provincial governor"
 #> 
 #> 
 #> $extras$office_mapping[[4]]
@@ -1119,10 +1151,10 @@ schema("campaign_booklet", variant = "enriched")
 #> [1] 4
 #> 
 #> $extras$office_mapping[[4]]$office
-#> [1] "metro_head"
+#> [1] "basic_head"
 #> 
 #> $extras$office_mapping[[4]]$description
-#> [1] "Metropolitan city mayor / provincial governor"
+#> [1] "Basic local government head"
 #> 
 #> 
 #> $extras$office_mapping[[5]]
@@ -1141,21 +1173,21 @@ schema("campaign_booklet", variant = "enriched")
 #> [1] 6
 #> 
 #> $extras$office_mapping[[6]]$office
-#> [1] "basic_head"
+#> [1] "basic_assembly"
 #> 
 #> $extras$office_mapping[[6]]$description
-#> [1] "Basic local government head"
+#> [1] "Basic assembly member"
 #> 
 #> 
 #> $extras$office_mapping[[7]]
 #> $extras$office_mapping[[7]]$office_id
-#> [1] 7
+#> [1] 11
 #> 
 #> $extras$office_mapping[[7]]$office
-#> [1] "basic_assembly"
+#> [1] "education_superintendent"
 #> 
 #> $extras$office_mapping[[7]]$description
-#> [1] "Basic assembly member"
+#> [1] "Education superintendent"
 #> 
 #> 
 #> 

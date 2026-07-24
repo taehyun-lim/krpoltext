@@ -37,3 +37,8 @@ Useful links:
 
 **Maintainer**: Tae Hyun Lim <tlim@hamilton.edu>
 ([ORCID](https://orcid.org/0000-0002-0429-2683))
+
+Authors:
+
+- Tae Hyun Lim <tlim@hamilton.edu>
+  ([ORCID](https://orcid.org/0000-0002-0429-2683))

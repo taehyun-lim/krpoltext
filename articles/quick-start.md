@@ -10,6 +10,7 @@ corpora described in:
 ## Installation
 
 ``` r
+
 # install.packages("remotes")
 remotes::install_github("taehyun-lim/krpoltext")
 ```
@@ -27,6 +28,7 @@ explicit. `campaign_booklet` is available in two public variants:
 `huboid`, `sg_id`, `sg_typecode`, and `link_status`.
 
 ``` r
+
 library(krpoltext)
 
 # Load the party statements corpus from managed Parquet
@@ -37,6 +39,7 @@ ps
 ## Explore Metadata
 
 ``` r
+
 meta <- metadata("party_statements")
 meta$name
 meta$time_coverage
@@ -50,6 +53,7 @@ meta$columns
 dynamically filters on any column that exists in the dataset.
 
 ``` r
+
 # Statements from 2020
 docs_2020 <- get_docs("party_statements", year = 2020, .data = ps)
 nrow(docs_2020)
@@ -67,6 +71,7 @@ nrow(conservative_recent)
 ## Quick Summary
 
 ``` r
+
 table(ps$year)
 table(ps$partisan)
 ```
@@ -74,6 +79,7 @@ table(ps$partisan)
 ## Campaign Booklets
 
 ``` r
+
 cb <- load_campaign_booklet(format = "parquet")
 
 # Load the NEC-linked enriched variant when needed

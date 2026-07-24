@@ -18,10 +18,10 @@ DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.18704318-1682D4?logo=z
 > Statements Corpora. *Scientific Data*, 12, 1030.
 > <https://doi.org/10.1038/s41597-025-05220-4>
 
-| 코퍼스               | 기간      | 후보자 / 문서 수  | 설명                                                                                                     |
-|----------------------|-----------|-------------------|----------------------------------------------------------------------------------------------------------|
-| **선거공보 코퍼스**  | 2000–2022 | 49,678 candidates | 대통령선거, 국회의원선거, 지방선거 후보자의 선거공보 텍스트로, `original`과 `enriched` 두 variant로 제공 |
-| **정당 성명 코퍼스** | 2003–2022 | 83,201 statements | 양대 정당의 공식 성명과 지도부 회의 발언문                                                               |
+| 코퍼스 | 기간 | 후보자 / 문서 수 | 설명 |
+|----|----|----|----|
+| **선거공보 코퍼스** | 2000–2022 | 49,678 candidates | 대통령선거, 국회의원선거, 지방선거 후보자의 선거공보 텍스트로, `original`과 `enriched` 두 variant로 제공 |
+| **정당 성명 코퍼스** | 2003–2022 | 83,201 statements | 양대 정당의 공식 성명과 지도부 회의 발언문 |
 
 데이터는 [Open Science Framework](https://osf.io/rct9y/)에 호스팅되어
 있으며 (DOI:
@@ -52,6 +52,7 @@ NEC-aligned workflow에는 `variant = "enriched"`를 사용하는 것이
 ## 설치
 
 ``` r
+
 # install.packages("remotes")
 remotes::install_github("taehyun-lim/krpoltext")
 ```
@@ -59,6 +60,7 @@ remotes::install_github("taehyun-lim/krpoltext")
 ## 빠른 시작
 
 ``` r
+
 library(krpoltext)
 
 # 관리형 Parquet 아티팩트를 명시적으로 사용
@@ -114,6 +116,7 @@ assembly <- get_docs("campaign_booklet", office = "national_assembly", .data = c
 - `sk_election_campaign_booklet_enriched_v2022.parquet`
 
 ``` r
+
 # 관리형 Parquet를 명시적으로 사용
 ps <- load_party_statements(format = "parquet")
 cb <- load_campaign_booklet(format = "parquet")
@@ -139,6 +142,7 @@ ps <- load_party_statements(path = "~/Downloads/sk_party_statements_v2022.parque
 ## quanteda 연동
 
 ``` r
+
 library(quanteda)
 
 corp <- as_quanteda_corpus(ps, docid_field = "id")
@@ -149,31 +153,31 @@ topfeatures(dfm_obj, 20)
 
 ## 주요 함수
 
-| 함수                                                                                                    | 설명                                        |
-|---------------------------------------------------------------------------------------------------------|---------------------------------------------|
-| [`load_campaign_booklet()`](https://taehyun-lim.github.io/krpoltext/reference/load_campaign_booklet.md) | 선거공보 코퍼스 로드                        |
-| [`load_party_statements()`](https://taehyun-lim.github.io/krpoltext/reference/load_party_statements.md) | 정당 성명 코퍼스 로드                       |
-| [`metadata()`](https://taehyun-lim.github.io/krpoltext/reference/metadata.md)                           | 데이터셋 메타데이터와 버전 확인             |
-| [`schema()`](https://taehyun-lim.github.io/krpoltext/reference/schema.md)                               | 컬럼 단위 스키마와 아티팩트 메타데이터 확인 |
-| [`get_docs()`](https://taehyun-lim.github.io/krpoltext/reference/get_docs.md)                           | 문서를 필터링하고 필요 컬럼만 선택          |
-| [`filter_docs()`](https://taehyun-lim.github.io/krpoltext/reference/filter_docs.md)                     | 메모리 데이터에 strict 필터 적용            |
-| [`select_vars()`](https://taehyun-lim.github.io/krpoltext/reference/select_vars.md)                     | 메모리 데이터에서 컬럼 선택                 |
-| [`as_quanteda_corpus()`](https://taehyun-lim.github.io/krpoltext/reference/as_quanteda_corpus.md)       | `quanteda` 코퍼스로 변환                    |
-| [`download_data()`](https://taehyun-lim.github.io/krpoltext/reference/download_data.md)                 | OSF에서 데이터 다운로드                     |
-| [`clear_cache()`](https://taehyun-lim.github.io/krpoltext/reference/clear_cache.md)                     | 캐시된 데이터 삭제                          |
+| 함수 | 설명 |
+|----|----|
+| [`load_campaign_booklet()`](https://taehyun-lim.github.io/krpoltext/reference/load_campaign_booklet.md) | 선거공보 코퍼스 로드 |
+| [`load_party_statements()`](https://taehyun-lim.github.io/krpoltext/reference/load_party_statements.md) | 정당 성명 코퍼스 로드 |
+| [`metadata()`](https://taehyun-lim.github.io/krpoltext/reference/metadata.md) | 데이터셋 메타데이터와 버전 확인 |
+| [`schema()`](https://taehyun-lim.github.io/krpoltext/reference/schema.md) | 컬럼 단위 스키마와 아티팩트 메타데이터 확인 |
+| [`get_docs()`](https://taehyun-lim.github.io/krpoltext/reference/get_docs.md) | 문서를 필터링하고 필요 컬럼만 선택 |
+| [`filter_docs()`](https://taehyun-lim.github.io/krpoltext/reference/filter_docs.md) | 메모리 데이터에 strict 필터 적용 |
+| [`select_vars()`](https://taehyun-lim.github.io/krpoltext/reference/select_vars.md) | 메모리 데이터에서 컬럼 선택 |
+| [`as_quanteda_corpus()`](https://taehyun-lim.github.io/krpoltext/reference/as_quanteda_corpus.md) | `quanteda` 코퍼스로 변환 |
+| [`download_data()`](https://taehyun-lim.github.io/krpoltext/reference/download_data.md) | OSF에서 데이터 다운로드 |
+| [`clear_cache()`](https://taehyun-lim.github.io/krpoltext/reference/clear_cache.md) | 캐시된 데이터 삭제 |
 
 ## 정적 데이터 API
 
 데이터셋 metadata와 다운로드 링크는 GitHub Pages를 통해 정적 JSON
 API로도 제공됩니다. 별도의 서버가 필요하지 않습니다.
 
-| 엔드포인트                                                                                                                          | 설명                                                   |
-|-------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------|
-| [`/data/index.json`](https://taehyun-lim.github.io/krpoltext/data/index.json)                                                       | 파일, 버전, SHA-256, 다운로드 URL이 담긴 리소스 인덱스 |
-| [`/data/metadata.json`](https://taehyun-lim.github.io/krpoltext/data/metadata.json)                                                 | 데이터셋 설명과 인용 정보                              |
-| [`/data/schema/campaign_booklet.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json)                   | original 선거공보 아티팩트의 컬럼 스키마               |
-| [`/data/schema/campaign_booklet_enriched.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet_enriched.json) | enriched 선거공보 아티팩트의 컬럼 스키마               |
-| [`/data/schema/party_statements.json`](https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json)                   | 정당 성명 컬럼 스키마                                  |
+| 엔드포인트 | 설명 |
+|----|----|
+| [`/data/index.json`](https://taehyun-lim.github.io/krpoltext/data/index.json) | 파일, 버전, SHA-256, 다운로드 URL이 담긴 리소스 인덱스 |
+| [`/data/metadata.json`](https://taehyun-lim.github.io/krpoltext/data/metadata.json) | 데이터셋 설명과 인용 정보 |
+| [`/data/schema/campaign_booklet.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json) | original 선거공보 아티팩트의 컬럼 스키마 |
+| [`/data/schema/campaign_booklet_enriched.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet_enriched.json) | enriched 선거공보 아티팩트의 컬럼 스키마 |
+| [`/data/schema/party_statements.json`](https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json) | 정당 성명 컬럼 스키마 |
 
 API 안내와 대체 URL:
 <https://taehyun-lim.github.io/krpoltext/data-api.html>
@@ -185,6 +189,7 @@ raw URL에서도 받을 수 있습니다.
 **R** 패키지 설치 없이 사용:
 
 ``` r
+
 api <- "https://taehyun-lim.github.io/krpoltext/data/metadata.json"
 meta <- jsonlite::fromJSON(api)
 url <- meta$party_statements$download_urls$csv
@@ -231,6 +236,7 @@ R 패키지 자체를 인용할 때는 다음 형식을 사용할 수 있습니�
 현재 패키지 citation은 R에서 아래처럼 확인할 수도 있습니다.
 
 ``` r
+
 citation("krpoltext")
 ```
 

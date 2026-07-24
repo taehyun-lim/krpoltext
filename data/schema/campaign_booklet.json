@@ -56,12 +56,12 @@
     {
       "name": "office_id",
       "type": "integer",
-      "description": "Office type identifier (1=president, 2=national_assembly, 3=edu_superintendent, 4=metro_head, 5=metro_assembly, 6=basic_head, 7=basic_assembly)"
+      "description": "Office type identifier (1=president, 2=national_assembly, 3=metro_head, 4=basic_head, 5=metro_assembly, 6=basic_assembly, 11=education_superintendent)"
     },
     {
       "name": "office",
       "type": "character",
-      "description": "Office type label (president, national_assembly, edu_superintendent, metro_head, metro_assembly, basic_head, basic_assembly)"
+      "description": "Office type label (president, national_assembly, metro_head, basic_head, metro_assembly, basic_assembly, education_superintendent)"
     },
     {
       "name": "giho",
@@ -210,13 +210,13 @@
       },
       {
         "office_id": 3,
-        "office": "edu_superintendent",
-        "description": "Education superintendent"
+        "office": "metro_head",
+        "description": "Metropolitan city mayor / provincial governor"
       },
       {
         "office_id": 4,
-        "office": "metro_head",
-        "description": "Metropolitan city mayor / provincial governor"
+        "office": "basic_head",
+        "description": "Basic local government head"
       },
       {
         "office_id": 5,
@@ -225,13 +225,13 @@
       },
       {
         "office_id": 6,
-        "office": "basic_head",
-        "description": "Basic local government head"
-      },
-      {
-        "office_id": 7,
         "office": "basic_assembly",
         "description": "Basic assembly member"
+      },
+      {
+        "office_id": 11,
+        "office": "education_superintendent",
+        "description": "Education superintendent"
       }
     ],
     "row_universe": "Original campaign_booklet CSV source artifact."

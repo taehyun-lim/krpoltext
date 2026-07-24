@@ -24,57 +24,57 @@ The package and API expose this corpus in enriched form, with
 linkage-derived NEC alignment fields such as `huboid`, `sg_id`,
 `sg_typecode`, `link_status`, `matcher_version`, and `nec_snapshot_id`.
 
-| Column            | Type      | Description                                                                                          |
-|-------------------|-----------|------------------------------------------------------------------------------------------------------|
-| `date`            | character | Election date (YYYY-MM-DD)                                                                           |
-| `name`            | character | Candidate name (Korean)                                                                              |
-| `region`          | character | Metropolitan region (province or metropolitan city)                                                  |
-| `district`        | character | Electoral district                                                                                   |
-| `office_id`       | integer   | Office type identifier (see mapping below)                                                           |
-| `office`          | character | Office type label (see mapping below)                                                                |
-| `giho`            | integer   | Candidate ballot number                                                                              |
-| `party`           | character | Political party name (Korean)                                                                        |
-| `party_eng`       | character | Political party name (English); transliteration if no official English name                          |
-| `result`          | character | Election result (Korean): 당선 (elected) / 낙선 (defeated)                                           |
-| `sex`             | character | Sex: 남 (male) / 여 (female)                                                                         |
-| `birthday`        | character | Date of birth (YYYY-MM-DD)                                                                           |
-| `age`             | integer   | Age at the time of the election                                                                      |
-| `job_id`          | integer   | Original NEC job category identifier (varies across years)                                           |
-| `job`             | character | Standardized job category (Korean)                                                                   |
-| `job_name`        | character | Job title (Korean)                                                                                   |
-| `job_name_eng`    | character | Job title (English)                                                                                  |
-| `job_code`        | integer   | Standardized job code (consistent across years; see paper Table 6)                                   |
-| `edu_id`          | integer   | Original NEC education level identifier (varies across years)                                        |
-| `edu`             | character | Education description (Korean, free-text from NEC)                                                   |
-| `edu_name`        | character | Standardized education level label (Korean)                                                          |
-| `edu_name_eng`    | character | Standardized education level label (English)                                                         |
-| `edu_code`        | integer   | Standardized education code (consistent across years; see paper Table 7)                             |
-| `career1`         | character | Career description 1                                                                                 |
-| `career2`         | character | Career description 2                                                                                 |
-| `pages`           | integer   | Number of pages in the booklet                                                                       |
-| `code`            | character | **Unique document row identifier**                                                                   |
-| `huboid`          | character | Linked NEC candidate identifier for `kr-elections-mcp` alignment; may be missing for unresolved rows |
-| `sg_id`           | character | Linked NEC election identifier associated with `huboid`                                              |
-| `sg_typecode`     | character | Linked NEC election type identifier associated with `huboid`                                         |
-| `link_status`     | character | NEC linkage status: `resolved`, `ambiguous`, `not_found`, or `rejected`                              |
-| `matcher_version` | character | Version of the linkage pipeline used to assign NEC fields                                            |
-| `nec_snapshot_id` | character | Identifier of the NEC snapshot used for linkage                                                      |
-| `sex_code`        | integer   | Sex code: 1 = male, 0 = female                                                                       |
-| `result_code`     | integer   | Result code: 1 = elected, 0 = not elected                                                            |
-| `text`            | character | Full OCR-extracted text of the campaign booklet                                                      |
-| `filtered`        | character | Parsed text after morphological analysis; Korean-only, numbers/foreign characters/symbols removed    |
+| Column | Type | Description |
+|----|----|----|
+| `date` | character | Election date (YYYY-MM-DD) |
+| `name` | character | Candidate name (Korean) |
+| `region` | character | Metropolitan region (province or metropolitan city) |
+| `district` | character | Electoral district |
+| `office_id` | integer | Office type identifier (see mapping below) |
+| `office` | character | Office type label (see mapping below) |
+| `giho` | integer | Candidate ballot number |
+| `party` | character | Political party name (Korean) |
+| `party_eng` | character | Political party name (English); transliteration if no official English name |
+| `result` | character | Election result (Korean): 당선 (elected) / 낙선 (defeated) |
+| `sex` | character | Sex: 남 (male) / 여 (female) |
+| `birthday` | character | Date of birth (YYYY-MM-DD) |
+| `age` | integer | Age at the time of the election |
+| `job_id` | integer | Original NEC job category identifier (varies across years) |
+| `job` | character | Standardized job category (Korean) |
+| `job_name` | character | Job title (Korean) |
+| `job_name_eng` | character | Job title (English) |
+| `job_code` | integer | Standardized job code (consistent across years; see paper Table 6) |
+| `edu_id` | integer | Original NEC education level identifier (varies across years) |
+| `edu` | character | Education description (Korean, free-text from NEC) |
+| `edu_name` | character | Standardized education level label (Korean) |
+| `edu_name_eng` | character | Standardized education level label (English) |
+| `edu_code` | integer | Standardized education code (consistent across years; see paper Table 7) |
+| `career1` | character | Career description 1 |
+| `career2` | character | Career description 2 |
+| `pages` | integer | Number of pages in the booklet |
+| `code` | character | **Unique document row identifier** |
+| `huboid` | character | Linked NEC candidate identifier for `kr-elections-mcp` alignment; may be missing for unresolved rows |
+| `sg_id` | character | Linked NEC election identifier associated with `huboid` |
+| `sg_typecode` | character | Linked NEC election type identifier associated with `huboid` |
+| `link_status` | character | NEC linkage status: `resolved`, `ambiguous`, `not_found`, or `rejected` |
+| `matcher_version` | character | Version of the linkage pipeline used to assign NEC fields |
+| `nec_snapshot_id` | character | Identifier of the NEC snapshot used for linkage |
+| `sex_code` | integer | Sex code: 1 = male, 0 = female |
+| `result_code` | integer | Result code: 1 = elected, 0 = not elected |
+| `text` | character | Full OCR-extracted text of the campaign booklet |
+| `filtered` | character | Parsed text after morphological analysis; Korean-only, numbers/foreign characters/symbols removed |
 
 ### Office Mapping (`office_id` → `office`)
 
-| office_id | office             | Description                                         |
-|-----------|--------------------|-----------------------------------------------------|
-| 1         | president          | Presidential election                               |
-| 2         | national_assembly  | National Assembly election                          |
-| 3         | edu_superintendent | Education superintendent                            |
-| 4         | metro_head         | Metropolitan city mayor / provincial governor       |
-| 5         | metro_assembly     | Metropolitan assembly member                        |
-| 6         | basic_head         | Basic local government head (district head / mayor) |
-| 7         | basic_assembly     | Basic assembly member                               |
+| office_id | office | Description |
+|----|----|----|
+| 1 | president | Presidential election |
+| 2 | national_assembly | National Assembly election |
+| 3 | edu_superintendent | Education superintendent |
+| 4 | metro_head | Metropolitan city mayor / provincial governor |
+| 5 | metro_assembly | Metropolitan assembly member |
+| 6 | basic_head | Basic local government head (district head / mayor) |
+| 7 | basic_assembly | Basic assembly member |
 
 ### Notes
 
@@ -107,17 +107,17 @@ center-right Conservative Party (현 국민의힘). Total: **83,201
 statements** (35,115 conservative + 48,086 progressive; see paper Table
 9 for yearly breakdown).
 
-| Column         | Type      | Description                                                     |
-|----------------|-----------|-----------------------------------------------------------------|
-| `no`           | integer   | Sequential entry number within each party                       |
-| `year`         | integer   | Year the statement was posted                                   |
-| `ymd`          | character | Full date (YYYY-MM-DD)                                          |
-| `title`        | character | Title of the statement                                          |
-| `text`         | character | Full text of the statement                                      |
-| `filtered`     | character | Parsed text after morphological analysis; Korean-only           |
-| `partisan`     | character | Party affiliation: Progressive / Conservative                   |
-| `conservative` | integer   | Binary indicator: 1 = Conservative Party, 0 = Progressive Party |
-| `id`           | character | **Unique document identifier** (party prefix + entry number)    |
+| Column | Type | Description |
+|----|----|----|
+| `no` | integer | Sequential entry number within each party |
+| `year` | integer | Year the statement was posted |
+| `ymd` | character | Full date (YYYY-MM-DD) |
+| `title` | character | Title of the statement |
+| `text` | character | Full text of the statement |
+| `filtered` | character | Parsed text after morphological analysis; Korean-only |
+| `partisan` | character | Party affiliation: Progressive / Conservative |
+| `conservative` | integer | Binary indicator: 1 = Conservative Party, 0 = Progressive Party |
+| `id` | character | **Unique document identifier** (party prefix + entry number) |
 
 ### Notes
 

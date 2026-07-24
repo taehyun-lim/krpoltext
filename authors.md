@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/taehyun-lim/krpoltext/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/taehyun-lim/krpoltext/blob/codex/campaign-booklet-v3/inst/CITATION)
 
 Lim T (2025). “South Korean Election Campaign Booklet and Party
 Statements Corpora.” *Scientific Data*, **12**, 1030.
@@ -26,7 +26,7 @@ Statements Corpora.” *Scientific Data*, **12**, 1030.
 
 Lim T (2024). “South Korean Election Campaign Booklet Corpus and Party
 Statements Corpus.”
-[doi:10.17605/OSF.IO/RCT9Y](https://doi.org/10.17605/OSF.IO/RCT9Y), Open
+[doi:10.17605/OSF.IO/RCT9Y](https://doi.org/10.17605/OSF.IO/RCT9Y). Open
 Science Framework, <https://osf.io/rct9y/>.
 
     @Misc{,
@@ -39,7 +39,7 @@ Science Framework, <https://osf.io/rct9y/>.
     }
 
 Lim T (2026). *krpoltext: Korean Political Text Corpora for R*.
-[doi:10.5281/zenodo.18704318](https://doi.org/10.5281/zenodo.18704318),
+[doi:10.5281/zenodo.18704318](https://doi.org/10.5281/zenodo.18704318).
 R package version 0.2.0, <https://github.com/taehyun-lim/krpoltext>.
 
     @Manual{,

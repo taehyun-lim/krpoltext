@@ -10,10 +10,10 @@ political text corpora described in:
 > Statements Corpora. *Scientific Data*, 12, 1030.
 > <https://doi.org/10.1038/s41597-025-05220-4>
 
-| Corpus                         | Period    | Candidates / Entries | Description                                                                                                                                 |
-|--------------------------------|-----------|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| **Election Campaign Booklets** | 2000–2022 | 49,678 candidates    | Manifesto booklets from candidates in presidential, National Assembly, and local elections, available in `original` and `enriched` variants |
-| **Party Statements**           | 2003–2022 | 83,201 statements    | Official statements and leadership meeting minutes from the two major parties                                                               |
+| Corpus | Period | Candidates / Entries | Description |
+|----|----|----|----|
+| **Election Campaign Booklets** | 2000–2022 | 49,678 candidates | Manifesto booklets from candidates in presidential, National Assembly, and local elections, available in `original` and `enriched` variants |
+| **Party Statements** | 2003–2022 | 83,201 statements | Official statements and leadership meeting minutes from the two major parties |
 
 Data is hosted on the [Open Science Framework](https://osf.io/rct9y/)
 (DOI: [10.17605/OSF.IO/RCT9Y](https://doi.org/10.17605/OSF.IO/RCT9Y)).
@@ -42,6 +42,7 @@ Recent package changes are summarized in:
 ## Installation
 
 ``` r
+
 # install.packages("remotes")
 remotes::install_github("taehyun-lim/krpoltext")
 ```
@@ -49,6 +50,7 @@ remotes::install_github("taehyun-lim/krpoltext")
 ## Quick Start
 
 ``` r
+
 library(krpoltext)
 
 # Load datasets from managed Parquet artifacts when available
@@ -104,6 +106,7 @@ The `enriched` artifact uses suffixed filenames:
 - `sk_election_campaign_booklet_enriched_v2022.parquet`
 
 ``` r
+
 # Use managed Parquet explicitly
 ps <- load_party_statements(format = "parquet")
 cb <- load_campaign_booklet(format = "parquet")
@@ -129,6 +132,7 @@ checksums. Subsequent loads take ~2 seconds.
 ## Integration with quanteda
 
 ``` r
+
 library(quanteda)
 
 corp <- as_quanteda_corpus(ps, docid_field = "id")
@@ -139,31 +143,31 @@ topfeatures(dfm_obj, 20)
 
 ## Functions
 
-| Function                                                                                                | Description                                    |
-|---------------------------------------------------------------------------------------------------------|------------------------------------------------|
-| [`load_campaign_booklet()`](https://taehyun-lim.github.io/krpoltext/reference/load_campaign_booklet.md) | Load the campaign booklet corpus               |
-| [`load_party_statements()`](https://taehyun-lim.github.io/krpoltext/reference/load_party_statements.md) | Load the party statements corpus               |
-| [`metadata()`](https://taehyun-lim.github.io/krpoltext/reference/metadata.md)                           | Dataset metadata (columns, versions, citation) |
-| [`schema()`](https://taehyun-lim.github.io/krpoltext/reference/schema.md)                               | Column-level schema and artifact metadata      |
-| [`get_docs()`](https://taehyun-lim.github.io/krpoltext/reference/get_docs.md)                           | Filter documents and optionally select columns |
-| [`filter_docs()`](https://taehyun-lim.github.io/krpoltext/reference/filter_docs.md)                     | Apply strict filters to an in-memory table     |
-| [`select_vars()`](https://taehyun-lim.github.io/krpoltext/reference/select_vars.md)                     | Select columns from an in-memory table         |
-| [`as_quanteda_corpus()`](https://taehyun-lim.github.io/krpoltext/reference/as_quanteda_corpus.md)       | Convert to a quanteda corpus object            |
-| [`download_data()`](https://taehyun-lim.github.io/krpoltext/reference/download_data.md)                 | Download datasets from OSF                     |
-| [`clear_cache()`](https://taehyun-lim.github.io/krpoltext/reference/clear_cache.md)                     | Remove cached data files                       |
+| Function | Description |
+|----|----|
+| [`load_campaign_booklet()`](https://taehyun-lim.github.io/krpoltext/reference/load_campaign_booklet.md) | Load the campaign booklet corpus |
+| [`load_party_statements()`](https://taehyun-lim.github.io/krpoltext/reference/load_party_statements.md) | Load the party statements corpus |
+| [`metadata()`](https://taehyun-lim.github.io/krpoltext/reference/metadata.md) | Dataset metadata (columns, versions, citation) |
+| [`schema()`](https://taehyun-lim.github.io/krpoltext/reference/schema.md) | Column-level schema and artifact metadata |
+| [`get_docs()`](https://taehyun-lim.github.io/krpoltext/reference/get_docs.md) | Filter documents and optionally select columns |
+| [`filter_docs()`](https://taehyun-lim.github.io/krpoltext/reference/filter_docs.md) | Apply strict filters to an in-memory table |
+| [`select_vars()`](https://taehyun-lim.github.io/krpoltext/reference/select_vars.md) | Select columns from an in-memory table |
+| [`as_quanteda_corpus()`](https://taehyun-lim.github.io/krpoltext/reference/as_quanteda_corpus.md) | Convert to a quanteda corpus object |
+| [`download_data()`](https://taehyun-lim.github.io/krpoltext/reference/download_data.md) | Download datasets from OSF |
+| [`clear_cache()`](https://taehyun-lim.github.io/krpoltext/reference/clear_cache.md) | Remove cached data files |
 
 ## Static Data API
 
 Dataset metadata and download links are available as a static JSON API
 via GitHub Pages, with no server required:
 
-| Endpoint                                                                                                                            | Description                                              |
-|-------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|
-| [`/data/index.json`](https://taehyun-lim.github.io/krpoltext/data/index.json)                                                       | Resource index (files, versions, SHA-256, download URLs) |
-| [`/data/metadata.json`](https://taehyun-lim.github.io/krpoltext/data/metadata.json)                                                 | Dataset descriptions and citation info                   |
-| [`/data/schema/campaign_booklet.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json)                   | Column schema for the original campaign booklet artifact |
+| Endpoint | Description |
+|----|----|
+| [`/data/index.json`](https://taehyun-lim.github.io/krpoltext/data/index.json) | Resource index (files, versions, SHA-256, download URLs) |
+| [`/data/metadata.json`](https://taehyun-lim.github.io/krpoltext/data/metadata.json) | Dataset descriptions and citation info |
+| [`/data/schema/campaign_booklet.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet.json) | Column schema for the original campaign booklet artifact |
 | [`/data/schema/campaign_booklet_enriched.json`](https://taehyun-lim.github.io/krpoltext/data/schema/campaign_booklet_enriched.json) | Column schema for the enriched campaign booklet artifact |
-| [`/data/schema/party_statements.json`](https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json)                   | Column schema for party statements                       |
+| [`/data/schema/party_statements.json`](https://taehyun-lim.github.io/krpoltext/data/schema/party_statements.json) | Column schema for party statements |
 
 API overview and fallback URLs:
 <https://taehyun-lim.github.io/krpoltext/data-api.html>
@@ -175,6 +179,7 @@ also available here:
 **R** (without installing the package):
 
 ``` r
+
 api <- "https://taehyun-lim.github.io/krpoltext/data/metadata.json"
 meta <- jsonlite::fromJSON(api)
 url <- meta$party_statements$download_urls$csv
@@ -221,6 +226,7 @@ For the R package itself, cite:
 You can also retrieve the current package citation in R:
 
 ``` r
+
 citation("krpoltext")
 ```
 
