@@ -94,6 +94,21 @@ schema <- function(dataset = c("campaign_booklet", "party_statements"), variant 
     )
   })
   names(artifact_specs) <- names(artifacts)
+  lookup_artifact <- artifacts$parquet$lookup
+  if (!is.null(lookup_artifact)) {
+    artifact_specs$lookup_parquet <- list(
+      format = "parquet",
+      role = "metadata_lookup",
+      file = lookup_artifact$file,
+      download_url = lookup_artifact$url,
+      sha256 = lookup_artifact$sha256,
+      source_artifact_sha256 = artifacts$parquet$sha256,
+      size_bytes = lookup_artifact$size_bytes,
+      managed = !is.null(lookup_artifact$url) && nzchar(lookup_artifact$url),
+      n_rows = lookup_artifact$n_rows,
+      n_cols = lookup_artifact$n_cols
+    )
+  }
 
   list(
     dataset = dataset,

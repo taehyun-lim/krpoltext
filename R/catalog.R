@@ -31,11 +31,11 @@
   office_mapping <- list(
     list(office_id = 1L, office = "president", description = "Presidential election"),
     list(office_id = 2L, office = "national_assembly", description = "National Assembly election"),
-    list(office_id = 3L, office = "edu_superintendent", description = "Education superintendent"),
-    list(office_id = 4L, office = "metro_head", description = "Metropolitan city mayor / provincial governor"),
+    list(office_id = 3L, office = "metro_head", description = "Metropolitan city mayor / provincial governor"),
+    list(office_id = 4L, office = "basic_head", description = "Basic local government head"),
     list(office_id = 5L, office = "metro_assembly", description = "Metropolitan assembly member"),
-    list(office_id = 6L, office = "basic_head", description = "Basic local government head"),
-    list(office_id = 7L, office = "basic_assembly", description = "Basic assembly member")
+    list(office_id = 6L, office = "basic_assembly", description = "Basic assembly member"),
+    list(office_id = 11L, office = "education_superintendent", description = "Education superintendent")
   )
 
   campaign_original_columns <- list(
@@ -48,8 +48,8 @@
       "integer",
       paste(
         "Office type identifier (1=president, 2=national_assembly,",
-        "3=edu_superintendent, 4=metro_head, 5=metro_assembly,",
-        "6=basic_head, 7=basic_assembly)"
+        "3=metro_head, 4=basic_head, 5=metro_assembly,",
+        "6=basic_assembly, 11=education_superintendent)"
       )
     ),
     .column_spec(
@@ -57,8 +57,8 @@
       "character",
       paste(
         "Office type label (president, national_assembly,",
-        "edu_superintendent, metro_head, metro_assembly,",
-        "basic_head, basic_assembly)"
+        "metro_head, basic_head, metro_assembly, basic_assembly,",
+        "education_superintendent)"
       )
     ),
     .column_spec("giho", "integer", "Candidate ballot number"),

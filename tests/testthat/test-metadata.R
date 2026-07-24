@@ -53,11 +53,32 @@ test_that("schema returns column definitions aligned with metadata", {
   )
   expect_true(all(vapply(s_cb$columns, function(x) all(c("name", "type", "description") %in% names(x)), logical(1))))
   expect_true("office_mapping" %in% names(s_cb$extras))
+  expect_equal(
+    stats::setNames(
+      vapply(s_cb$extras$office_mapping, `[[`, integer(1), "office_id"),
+      vapply(s_cb$extras$office_mapping, `[[`, character(1), "office")
+    ),
+    c(
+      president = 1L,
+      national_assembly = 2L,
+      metro_head = 3L,
+      basic_head = 4L,
+      metro_assembly = 5L,
+      basic_assembly = 6L,
+      education_superintendent = 11L
+    )
+  )
   expect_false("linkage_fields" %in% names(s_cb$extras))
   expect_false("huboid" %in% vapply(s_cb$columns, `[[`, character(1), "name"))
 
   expect_true("linkage_fields" %in% names(s_cb_enriched$extras))
   expect_true("huboid" %in% vapply(s_cb_enriched$columns, `[[`, character(1), "name"))
+  expect_true("lookup_parquet" %in% names(s_cb_enriched$artifacts))
+  expect_identical(s_cb_enriched$artifacts$lookup_parquet$role, "metadata_lookup")
+  expect_identical(
+    s_cb_enriched$artifacts$lookup_parquet$source_artifact_sha256,
+    s_cb_enriched$artifacts$parquet$sha256
+  )
   expect_equal(
     vapply(s_cb_enriched$columns, `[[`, character(1), "name"),
     m_cb_enriched$columns

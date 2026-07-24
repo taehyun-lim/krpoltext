@@ -56,6 +56,26 @@ dataset_variants <- function(dataset) {
   as.list(variants)
 }
 
+lookup_artifact_payload <- function(artifact) {
+  lookup <- artifact$lookup
+  if (is.null(lookup)) {
+    return(NULL)
+  }
+
+  list(
+    file = lookup$file,
+    format = "parquet",
+    role = "metadata_lookup",
+    size_bytes = lookup$size_bytes,
+    sha256 = lookup$sha256,
+    source_artifact_sha256 = artifact$sha256,
+    download_url = lookup$url,
+    managed = !is.null(lookup$url) && nzchar(lookup$url),
+    n_rows = lookup$n_rows,
+    n_cols = lookup$n_cols
+  )
+}
+
 # ---------------------------------------------------------------------------
 # index.json
 # ---------------------------------------------------------------------------
@@ -103,6 +123,10 @@ for (dataset in datasets) {
         resource$variant <- meta$variant
         resource$default_for_package <- identical(meta$variant, meta$default_variant)
         resource$recommended_for <- meta$recommended_use
+      }
+      lookup_artifact <- lookup_artifact_payload(artifact)
+      if (!is.null(lookup_artifact)) {
+        resource$lookup_artifact <- lookup_artifact
       }
 
       resource_rows[[length(resource_rows) + 1L]] <- resource
@@ -199,6 +223,12 @@ build_meta_entry <- function(dataset) {
         data_version = meta$data_version,
         variant = variant_name
       )
+      parquet_artifact <- pkg_fun(".artifact_spec")(
+        dataset,
+        format = "parquet",
+        data_version = meta$data_version,
+        variant = variant_name
+      )
 
       list(
         variant = meta$variant,
@@ -210,6 +240,7 @@ build_meta_entry <- function(dataset) {
         managed_formats = meta$managed_formats,
         download_url = csv_artifact$url,
         download_urls = managed_urls,
+        lookup_artifact = lookup_artifact_payload(parquet_artifact),
         schema_url = paste0("data/schema/", schema_filename(dataset, meta$variant)),
         notes = meta$notes
       )
