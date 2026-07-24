@@ -13,6 +13,8 @@ from tools.build_campaign_booklet_enriched_duckdb import (
     build_summary,
     collect_candidate_names,
     count_csv_rows,
+    create_lookup_parquet_from_csv,
+    create_parquet_from_csv,
     load_resume_state,
     resolve_scores,
 )
@@ -139,6 +141,30 @@ class CampaignBookletEnrichedAuditTests(unittest.TestCase):
         self.assertEqual(audit["invalid_scope_rows"], 1)
         self.assertEqual(audit["invalid_huboid_rows"], 1)
         self.assertEqual(audit["invalid_status_rows"], 1)
+
+    def test_flags_office_scope_mismatch(self) -> None:
+        audit = self.audit(
+            [
+                {
+                    "name": "wrong-scope",
+                    "office": "metro_head",
+                    "huboid": "123",
+                    "sg_id": "20220601",
+                    "sg_typecode": "4",
+                    "link_status": "resolved",
+                },
+                {
+                    "name": "correct-scope",
+                    "office": "education_superintendent",
+                    "huboid": "124",
+                    "sg_id": "20220601",
+                    "sg_typecode": "11",
+                    "link_status": "resolved",
+                },
+            ]
+        )
+
+        self.assertEqual(audit["office_scope_mismatch_rows"], 1)
 
     def test_flags_unreviewed_identity_conflict_and_conflicting_code(self) -> None:
         rows = [
@@ -325,6 +351,86 @@ class CampaignBookletEnrichedAuditTests(unittest.TestCase):
         self.assertIn("raw_csv", summary["artifacts"])
         self.assertEqual(len(summary["artifacts"]["raw_csv"]["sha256"]), 64)
         self.assertNotIn("parquet", summary["artifacts"])
+
+    def test_builds_row_addressable_lookup_parquet(self) -> None:
+        import duckdb
+
+        fieldnames = [
+            "code",
+            "name",
+            "huboid",
+            "office_id",
+            "text",
+            "filtered",
+        ]
+        csv_path = self.write_csv(
+            "lookup-source.csv",
+            [
+                {
+                    "code": "row-1",
+                    "name": "Alice",
+                    "huboid": "101",
+                    "office_id": 3,
+                    "text": "full text",
+                    "filtered": "filtered text",
+                },
+                {
+                    "code": "row-2",
+                    "name": "Bob",
+                    "huboid": "102",
+                    "office_id": 4,
+                    "text": "",
+                    "filtered": "",
+                },
+            ],
+            fieldnames=fieldnames,
+        )
+        full_path = self.root / "full.parquet"
+        lookup_path = self.root / "lookup.parquet"
+        type_map = {
+            "code": "character",
+            "name": "character",
+            "huboid": "character",
+            "office_id": "integer",
+            "text": "character",
+            "filtered": "character",
+        }
+        duckdb_type_map = {
+            name: "BIGINT" if type_name == "integer" else "VARCHAR"
+            for name, type_name in type_map.items()
+        }
+
+        full = create_parquet_from_csv(
+            duckdb,
+            output_csv=csv_path,
+            output_parquet=full_path,
+            fieldnames=fieldnames,
+            type_map=type_map,
+            duckdb_type_map=duckdb_type_map,
+        )
+        lookup = create_lookup_parquet_from_csv(
+            duckdb,
+            output_csv=csv_path,
+            output_lookup_parquet=lookup_path,
+            fieldnames=fieldnames,
+            duckdb_type_map=duckdb_type_map,
+        )
+        lookup_rows = duckdb.connect().execute(
+            "SELECT document_row_number, code, has_text, has_filtered "
+            "FROM read_parquet(?) ORDER BY document_row_number",
+            [str(lookup_path)],
+        ).fetchall()
+
+        self.assertTrue(full["parquet_columns_match"])
+        self.assertGreaterEqual(full["parquet_row_group_count"], 1)
+        self.assertTrue(lookup["lookup_columns_match"])
+        self.assertTrue(lookup["lookup_types_match"])
+        self.assertTrue(lookup["lookup_positions_valid"])
+        self.assertEqual(lookup["lookup_has_text_rows"], 1)
+        self.assertEqual(
+            lookup_rows,
+            [(0, "row-1", True, True), (1, "row-2", False, False)],
+        )
 
     def test_resume_rejects_mixed_linkage_provenance(self) -> None:
         fields = ["link_status", "matcher_version", "nec_snapshot_id"]

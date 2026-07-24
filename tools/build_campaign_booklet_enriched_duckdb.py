@@ -7,6 +7,7 @@ import hashlib
 import importlib
 import json
 import re
+import subprocess
 import sys
 import threading
 import time
@@ -33,6 +34,7 @@ DEFAULT_REQUEST_DELAY_SECONDS = 0.0
 MIN_RESOLUTION_GAP = 0.08
 FLOAT_COMPARISON_EPSILON = 1e-12
 AUDIT_EXAMPLE_LIMIT = 20
+PARQUET_ROW_GROUP_SIZE = 512
 VALID_LINK_STATUSES = {"resolved", "ambiguous", "not_found", "rejected"}
 DEBUG_FIELDNAMES = [
     "code", "candidate_name", "sg_id", "sg_typecode", "raw_region", "canonical_region",
@@ -219,6 +221,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--raw-csv", default=None)
     parser.add_argument("--output-csv", default="sk_election_campaign_booklet_enriched_v2022.csv")
     parser.add_argument("--output-parquet", default="sk_election_campaign_booklet_enriched_v2022.parquet")
+    parser.add_argument(
+        "--output-lookup-parquet",
+        default="sk_election_campaign_booklet_enriched_lookup_v2022.parquet",
+    )
     parser.add_argument("--debug-csv", default="campaign_booklet_linkage_debug.csv")
     parser.add_argument("--summary-json", default="campaign_booklet_build_summary.json")
     parser.add_argument("--matcher-version", default=DEFAULT_MATCHER_VERSION)
@@ -270,6 +276,22 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def git_revision(repo: Path) -> str | None:
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=repo,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    revision = result.stdout.strip()
+    return revision if re.fullmatch(r"[0-9a-fA-F]{40}", revision) else None
 
 
 def download_file(requests_module: Any, url: str, destination: Path) -> Path:
@@ -565,6 +587,7 @@ def audit_enriched_csv(
     unresolved_with_huboid = 0
     resolved_missing_scope = 0
     invalid_scope_rows = 0
+    office_scope_mismatch_rows = 0
     invalid_huboid_rows = 0
     target_audits: dict[tuple[str, str, str], TargetAudit] = {}
     code_counts: Counter[str] = Counter()
@@ -609,6 +632,10 @@ def audit_enriched_csv(
                     resolved_missing_scope += 1
                 elif not (len(sg_id) == 8 and sg_id.isdigit() and sg_typecode.isdigit()):
                     invalid_scope_rows += 1
+                else:
+                    expected_sg_typecode = infer_sg_typecode(row)
+                    if expected_sg_typecode and sg_typecode != expected_sg_typecode:
+                        office_scope_mismatch_rows += 1
             elif huboid:
                 unresolved_with_huboid += 1
 
@@ -693,6 +720,7 @@ def audit_enriched_csv(
         "unresolved_with_huboid": unresolved_with_huboid,
         "resolved_missing_scope": resolved_missing_scope,
         "invalid_scope_rows": invalid_scope_rows,
+        "office_scope_mismatch_rows": office_scope_mismatch_rows,
         "invalid_huboid_rows": invalid_huboid_rows,
         "missing_matcher_version_rows": missing_matcher_version_rows,
         "missing_nec_snapshot_id_rows": missing_nec_snapshot_id_rows,
@@ -1246,7 +1274,11 @@ def create_parquet_from_csv(
             "COPY ("
             f"SELECT {select_sql} FROM {csv_scan_sql}"
             f") TO {quote_sql_literal(str(output_parquet))} "
-            "(FORMAT PARQUET, COMPRESSION SNAPPY)"
+            "(FORMAT PARQUET, COMPRESSION SNAPPY, ROW_GROUP_SIZE 2048)"
+        )
+        rewrite_parquet_row_groups(
+            output_parquet,
+            row_group_size=PARQUET_ROW_GROUP_SIZE,
         )
         parquet_row_count = connection.execute(
             f"SELECT COUNT(*) FROM read_parquet({quote_sql_literal(str(output_parquet))})"
@@ -1254,6 +1286,10 @@ def create_parquet_from_csv(
         parquet_schema_rows = connection.execute(
             f"DESCRIBE SELECT * FROM read_parquet({quote_sql_literal(str(output_parquet))})"
         ).fetchall()
+        row_group_count = connection.execute(
+            "SELECT COUNT(DISTINCT row_group_id) "
+            f"FROM parquet_metadata({quote_sql_literal(str(output_parquet))})"
+        ).fetchone()[0]
     finally:
         connection.close()
     parquet_columns = [row[0] for row in parquet_schema_rows]
@@ -1264,6 +1300,132 @@ def create_parquet_from_csv(
         "parquet_row_count": parquet_row_count,
         "parquet_columns_match": parquet_columns == fieldnames,
         "parquet_types_match": parquet_types == expected_types,
+        "parquet_row_group_count": row_group_count,
+        "parquet_row_group_size": PARQUET_ROW_GROUP_SIZE,
+    }
+
+
+def rewrite_parquet_row_groups(
+    parquet_path: Path,
+    *,
+    row_group_size: int,
+) -> None:
+    try:
+        import pyarrow.parquet as pq
+    except ImportError as exc:
+        raise SystemExit(
+            "PyArrow is required to write row-addressable campaign booklet Parquet files."
+        ) from exc
+
+    temp_path = parquet_path.with_name(f".{parquet_path.name}.rowgroups.tmp")
+    if temp_path.exists():
+        temp_path.unlink()
+    try:
+        with parquet_path.open("rb") as source_handle:
+            source = pq.ParquetFile(source_handle)
+            with pq.ParquetWriter(
+                temp_path,
+                source.schema_arrow,
+                compression="snappy",
+                write_statistics=True,
+            ) as writer:
+                for batch in source.iter_batches(batch_size=row_group_size):
+                    writer.write_batch(batch, row_group_size=row_group_size)
+        temp_path.replace(parquet_path)
+    finally:
+        if temp_path.exists():
+            temp_path.unlink()
+
+
+def create_lookup_parquet_from_csv(
+    duckdb_module: Any,
+    *,
+    output_csv: Path,
+    output_lookup_parquet: Path,
+    fieldnames: list[str],
+    duckdb_type_map: dict[str, str],
+) -> dict[str, Any]:
+    csv_scan_sql = (
+        "read_csv("
+        f"{quote_sql_literal(str(output_csv))}, "
+        "header=true, "
+        "all_varchar=true, "
+        "strict_mode=false, "
+        "null_padding=true, "
+        "ignore_errors=false, "
+        "sample_size=-1, "
+        "parallel=false, "
+        "escape='\"'"
+        ")"
+    )
+    metadata_fields = [name for name in fieldnames if name not in {"text", "filtered"}]
+    select_parts = ["row_number() OVER () - 1 AS document_row_number"]
+    for name in metadata_fields:
+        quoted_name = quote_sql_identifier(name)
+        target_type = duckdb_type_map[name]
+        expression = (
+            f"TRY_CAST({quoted_name} AS BIGINT) AS {quoted_name}"
+            if target_type == "BIGINT"
+            else f"CAST({quoted_name} AS VARCHAR) AS {quoted_name}"
+        )
+        select_parts.append(expression)
+    select_parts.extend(
+        [
+            "COALESCE(LENGTH(TRIM(text)) > 0, FALSE) AS has_text",
+            "COALESCE(LENGTH(TRIM(filtered)) > 0, FALSE) AS has_filtered",
+        ]
+    )
+    select_sql = ", ".join(select_parts)
+
+    connection = duckdb_module.connect(database=":memory:")
+    try:
+        if output_lookup_parquet.exists():
+            output_lookup_parquet.unlink()
+        connection.execute(
+            "COPY ("
+            f"SELECT {select_sql} FROM {csv_scan_sql}"
+            f") TO {quote_sql_literal(str(output_lookup_parquet))} "
+            "(FORMAT PARQUET, COMPRESSION ZSTD)"
+        )
+        stats = connection.execute(
+            "SELECT COUNT(*), COUNT(DISTINCT document_row_number), "
+            "MIN(document_row_number), MAX(document_row_number), "
+            "COUNT(*) FILTER (WHERE has_text) "
+            f"FROM read_parquet({quote_sql_literal(str(output_lookup_parquet))})"
+        ).fetchone()
+        schema_rows = connection.execute(
+            f"DESCRIBE SELECT * FROM read_parquet({quote_sql_literal(str(output_lookup_parquet))})"
+        ).fetchall()
+    finally:
+        connection.close()
+
+    expected_columns = [
+        "document_row_number",
+        *metadata_fields,
+        "has_text",
+        "has_filtered",
+    ]
+    expected_types = {
+        "document_row_number": "BIGINT",
+        **{name: duckdb_type_map[name] for name in metadata_fields},
+        "has_text": "BOOLEAN",
+        "has_filtered": "BOOLEAN",
+    }
+    actual_columns = [row[0] for row in schema_rows]
+    actual_types = {row[0]: normalize_duckdb_type(row[1]) for row in schema_rows}
+    row_count, distinct_positions, minimum_position, maximum_position, text_rows = stats
+    positions_valid = (
+        row_count == distinct_positions
+        and minimum_position == 0
+        and maximum_position == row_count - 1
+    )
+    return {
+        "lookup_row_count": row_count,
+        "lookup_columns_match": actual_columns == expected_columns,
+        "lookup_types_match": actual_types == expected_types,
+        "lookup_positions_valid": positions_valid,
+        "lookup_has_text_rows": text_rows,
+        "lookup_column_count": len(actual_columns),
     }
 
 
@@ -1414,12 +1576,19 @@ def main() -> None:
 
     output_csv = resolve_output_path(output_dir, args.output_csv)
     output_parquet = resolve_output_path(output_dir, args.output_parquet)
+    output_lookup_parquet = resolve_output_path(output_dir, args.output_lookup_parquet)
     debug_csv = resolve_output_path(output_dir, args.debug_csv)
     summary_json = resolve_output_path(output_dir, args.summary_json)
     raw_csv = Path(args.raw_csv).resolve() if args.raw_csv else source_dir / "sk_election_campaign_booklet_v2022.raw.csv"
 
     if args.overwrite:
-        for artifact_path in (output_csv, output_parquet, debug_csv, summary_json):
+        for artifact_path in (
+            output_csv,
+            output_parquet,
+            output_lookup_parquet,
+            debug_csv,
+            summary_json,
+        ):
             if artifact_path.exists():
                 artifact_path.unlink()
 
@@ -1620,6 +1789,7 @@ def main() -> None:
         "unresolved_clears_huboid": linkage_audit["unresolved_with_huboid"] == 0,
         "resolved_requires_scope": linkage_audit["resolved_missing_scope"] == 0,
         "scope_format_valid": linkage_audit["invalid_scope_rows"] == 0,
+        "office_scope_consistent": linkage_audit["office_scope_mismatch_rows"] == 0,
         "huboid_format_valid": linkage_audit["invalid_huboid_rows"] == 0,
         "linkage_provenance_complete": (
             linkage_audit["missing_matcher_version_rows"] == 0
@@ -1641,6 +1811,10 @@ def main() -> None:
             **common_validation,
             "csv_parquet_schema_match": None,
             "parquet_row_count": None,
+            "parquet_row_group_count": None,
+            "lookup_schema_match": None,
+            "lookup_positions_valid": None,
+            "lookup_row_count": None,
             "parquet_skipped": True,
         }
     else:
@@ -1652,6 +1826,13 @@ def main() -> None:
             type_map=type_map,
             duckdb_type_map=duckdb_type_map,
         )
+        lookup_validation = create_lookup_parquet_from_csv(
+            duckdb_module,
+            output_csv=output_csv,
+            output_lookup_parquet=output_lookup_parquet,
+            fieldnames=fieldnames,
+            duckdb_type_map=duckdb_type_map,
+        )
         validation = {
             **common_validation,
             "row_count_preserved": (
@@ -1660,6 +1841,15 @@ def main() -> None:
             ),
             "csv_parquet_schema_match": parquet_validation["parquet_columns_match"] and parquet_validation["parquet_types_match"],
             "parquet_row_count": parquet_validation["parquet_row_count"],
+            "parquet_row_group_count": parquet_validation["parquet_row_group_count"],
+            "lookup_schema_match": (
+                lookup_validation["lookup_columns_match"]
+                and lookup_validation["lookup_types_match"]
+            ),
+            "lookup_positions_valid": lookup_validation["lookup_positions_valid"],
+            "lookup_row_count": lookup_validation["lookup_row_count"],
+            "lookup_has_text_rows": lookup_validation["lookup_has_text_rows"],
+            "lookup_row_count_match": lookup_validation["lookup_row_count"] == csv_row_count,
             "parquet_skipped": False,
         }
     if not validation["csv_header_match"]:
@@ -1668,6 +1858,12 @@ def main() -> None:
         raise SystemExit("CSV row count did not match the raw input row count.")
     if not args.skip_parquet and not validation["csv_parquet_schema_match"]:
         raise SystemExit("Parquet schema did not match the documented enriched schema.")
+    if not args.skip_parquet and not validation["lookup_schema_match"]:
+        raise SystemExit("Lookup Parquet schema did not match the expected metadata projection.")
+    if not args.skip_parquet and not validation["lookup_positions_valid"]:
+        raise SystemExit("Lookup Parquet document row positions were not contiguous and unique.")
+    if not args.skip_parquet and not validation["lookup_row_count_match"]:
+        raise SystemExit("Lookup Parquet row count did not match the enriched CSV.")
     if not validation["resolved_requires_huboid"]:
         raise SystemExit("Resolved rows without huboid were detected in the enriched artifact.")
     if not validation["debug_row_count_match"]:
@@ -1684,6 +1880,8 @@ def main() -> None:
         raise SystemExit("Resolved rows without sg_id or sg_typecode were detected in the enriched artifact.")
     if not validation["scope_format_valid"]:
         raise SystemExit("Malformed sg_id or sg_typecode values were detected in resolved rows.")
+    if not validation["office_scope_consistent"]:
+        raise SystemExit("Resolved rows with office/sg_typecode mismatches were detected.")
     if not validation["huboid_format_valid"]:
         raise SystemExit("Non-numeric huboid values were detected in the enriched artifact.")
     if not validation["linkage_provenance_complete"]:
@@ -1707,6 +1905,18 @@ def main() -> None:
         validation=validation,
         include_parquet=not args.skip_parquet,
     )
+    summary["source_revisions"] = {
+        "krpoltext": git_revision(krpoltext_repo),
+        "kr_elections_mcp": git_revision(mcp_repo),
+    }
+    if not args.skip_parquet:
+        summary["output_lookup_parquet"] = str(output_lookup_parquet)
+        summary["artifacts"]["lookup_parquet"] = {
+            "file": output_lookup_parquet.name,
+            "size_bytes": output_lookup_parquet.stat().st_size,
+            "sha256": sha256_file(output_lookup_parquet),
+            "source_artifact_sha256": summary["artifacts"]["parquet"]["sha256"],
+        }
     summary_json.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2), flush=True)
 

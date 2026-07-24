@@ -25,15 +25,23 @@
           enriched = list(
             csv = list(
               file = "sk_election_campaign_booklet_enriched_v2022.csv",
-              url = "https://osf.io/download/69e3eec5352dbdd881fd8d7b/",
-              sha256 = "08779d4c27a02635c7bf08a332170ac0a5bf1295e825e3b29061c62f95598586",
+              url = "https://osf.io/download/6a62910d6ba5fc9524faad7a/",
+              sha256 = "48831e2619105d313baa5f4c98e4e1591d8f414066a79333af0019ccce24dd6d",
               size_bytes = 760045361
             ),
             parquet = list(
               file = "sk_election_campaign_booklet_enriched_v2022.parquet",
-              url = "https://osf.io/download/69e3ee72a0e06b0928fd8ae2/",
-              sha256 = "d8901cd2cebef30116f8865847727bb10855478ee556bc0dcfb5a04e838ad8f4",
-              size_bytes = 406231949
+              url = "https://osf.io/download/6a6290aa990177bd263deb4d/",
+              sha256 = "db55adb7dcb0ea85cb014c9e25f05feff22d597b0da252f99eff095c6a2c3977",
+              size_bytes = 404269277,
+              lookup = list(
+                file = "sk_election_campaign_booklet_enriched_lookup_v2022.parquet",
+                url = "https://osf.io/download/6a628ff2f37a081c97a322f7/",
+                sha256 = "3c783400e71edca26843101929843d90b2b569b5ebd3c675dda9943b4f7c22a6",
+                size_bytes = 3275371,
+                n_rows = 49678L,
+                n_cols = 38L
+              )
             )
           )
         )

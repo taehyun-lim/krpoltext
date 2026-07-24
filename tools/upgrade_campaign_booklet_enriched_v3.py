@@ -21,8 +21,11 @@ try:
         build_summary,
         coerce_for_schema,
         count_csv_rows,
+        create_lookup_parquet_from_csv,
         create_parquet_from_csv,
+        git_revision,
         load_schema,
+        sha256_file,
     )
 except ModuleNotFoundError:
     from build_campaign_booklet_enriched_duckdb import (
@@ -34,8 +37,11 @@ except ModuleNotFoundError:
         build_summary,
         coerce_for_schema,
         count_csv_rows,
+        create_lookup_parquet_from_csv,
         create_parquet_from_csv,
+        git_revision,
         load_schema,
+        sha256_file,
     )
 
 
@@ -58,6 +64,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", default="enriched")
     parser.add_argument("--output-csv", default="sk_election_campaign_booklet_enriched_v2022.csv")
     parser.add_argument("--output-parquet", default="sk_election_campaign_booklet_enriched_v2022.parquet")
+    parser.add_argument(
+        "--output-lookup-parquet",
+        default="sk_election_campaign_booklet_enriched_lookup_v2022.parquet",
+    )
     parser.add_argument("--debug-csv", default="campaign_booklet_linkage_debug.csv")
     parser.add_argument("--summary-json", default="campaign_booklet_build_summary.json")
     parser.add_argument("--matcher-version", default=DEFAULT_MATCHER_VERSION)
@@ -88,6 +98,7 @@ def ensure_base_audit_is_safe(base_audit: dict[str, Any]) -> None:
         "unresolved_with_huboid": base_audit["unresolved_with_huboid"],
         "resolved_missing_scope": base_audit["resolved_missing_scope"],
         "invalid_scope_rows": base_audit["invalid_scope_rows"],
+        "office_scope_mismatch_rows": base_audit["office_scope_mismatch_rows"],
         "invalid_huboid_rows": base_audit["invalid_huboid_rows"],
         "unreviewed_identity_conflict_target_groups": base_audit[
             "unreviewed_identity_conflict_target_groups"
@@ -149,13 +160,29 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     output_csv = output_dir / args.output_csv
     output_parquet = output_dir / args.output_parquet
+    output_lookup_parquet = output_dir / args.output_lookup_parquet
     debug_csv = output_dir / args.debug_csv
     summary_json = output_dir / args.summary_json
 
-    if not args.overwrite and any(path.exists() for path in (output_csv, output_parquet, debug_csv, summary_json)):
+    if not args.overwrite and any(
+        path.exists()
+        for path in (
+            output_csv,
+            output_parquet,
+            output_lookup_parquet,
+            debug_csv,
+            summary_json,
+        )
+    ):
         raise SystemExit("Output artifacts already exist; pass --overwrite to replace them.")
     if args.overwrite:
-        for path in (output_csv, output_parquet, debug_csv, summary_json):
+        for path in (
+            output_csv,
+            output_parquet,
+            output_lookup_parquet,
+            debug_csv,
+            summary_json,
+        ):
             if path.exists():
                 path.unlink()
 
@@ -248,6 +275,7 @@ def main() -> None:
         "unresolved_clears_huboid": output_audit["unresolved_with_huboid"] == 0,
         "resolved_requires_scope": output_audit["resolved_missing_scope"] == 0,
         "scope_format_valid": output_audit["invalid_scope_rows"] == 0,
+        "office_scope_consistent": output_audit["office_scope_mismatch_rows"] == 0,
         "huboid_format_valid": output_audit["invalid_huboid_rows"] == 0,
         "linkage_provenance_complete": (
             output_audit["missing_matcher_version_rows"] == 0
@@ -272,22 +300,46 @@ def main() -> None:
         type_map=type_map,
         duckdb_type_map=duckdb_type_map,
     )
+    lookup_validation = create_lookup_parquet_from_csv(
+        duckdb_module,
+        output_csv=output_csv,
+        output_lookup_parquet=output_lookup_parquet,
+        fieldnames=fieldnames,
+        duckdb_type_map=duckdb_type_map,
+    )
     validation.update(
         {
             "csv_parquet_schema_match": (
                 parquet_validation["parquet_columns_match"] and parquet_validation["parquet_types_match"]
             ),
             "parquet_row_count": parquet_validation["parquet_row_count"],
+            "parquet_row_group_count": parquet_validation["parquet_row_group_count"],
             "csv_parquet_row_count_match": (
                 parquet_validation["csv_row_count"]
                 == parquet_validation["parquet_row_count"]
                 == output_audit["row_count"]
+            ),
+            "lookup_schema_match": (
+                lookup_validation["lookup_columns_match"]
+                and lookup_validation["lookup_types_match"]
+            ),
+            "lookup_positions_valid": lookup_validation["lookup_positions_valid"],
+            "lookup_row_count": lookup_validation["lookup_row_count"],
+            "lookup_has_text_rows": lookup_validation["lookup_has_text_rows"],
+            "lookup_row_count_match": (
+                lookup_validation["lookup_row_count"] == output_audit["row_count"]
             ),
             "parquet_skipped": False,
         }
     )
     if not validation["csv_parquet_schema_match"] or not validation["csv_parquet_row_count_match"]:
         raise SystemExit("v3 Parquet validation failed.")
+    if (
+        not validation["lookup_schema_match"]
+        or not validation["lookup_positions_valid"]
+        or not validation["lookup_row_count_match"]
+    ):
+        raise SystemExit("v3 lookup Parquet validation failed.")
 
     summary = build_summary(
         output_csv=output_csv,
@@ -302,7 +354,23 @@ def main() -> None:
         include_parquet=True,
     )
     summary["build_mode"] = "audited_v2_linkage_upgrade"
+    summary["output_lookup_parquet"] = str(output_lookup_parquet)
+    summary["artifacts"]["lookup_parquet"] = {
+        "file": output_lookup_parquet.name,
+        "size_bytes": output_lookup_parquet.stat().st_size,
+        "sha256": sha256_file(output_lookup_parquet),
+        "source_artifact_sha256": summary["artifacts"]["parquet"]["sha256"],
+    }
     summary["base_linkage_csv"] = str(base_csv)
+    summary["base_linkage_artifact"] = {
+        "file": base_csv.name,
+        "size_bytes": base_csv.stat().st_size,
+        "sha256": sha256_file(base_csv),
+    }
+    summary["source_revisions"] = {
+        "krpoltext": git_revision(repo),
+        "kr_elections_mcp": git_revision(mcp_repo),
+    }
     summary_json.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2), flush=True)
 

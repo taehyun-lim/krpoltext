@@ -58,6 +58,7 @@ jobs:
             "docs/data/index.json",
             "docs/data/metadata.json",
             "docs/data/schema/campaign_booklet.json",
+            "docs/data/schema/campaign_booklet_enriched.json",
             "docs/data/schema/party_statements.json"
           )
 
