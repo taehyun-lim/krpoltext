@@ -4,7 +4,11 @@
 \alias{schema}
 \title{Retrieve dataset schema}
 \usage{
-schema(dataset = c("campaign_booklet", "party_statements"), variant = NULL)
+schema(
+  dataset = c("campaign_booklet", "party_statements"),
+  variant = NULL,
+  data_version = NULL
+)
 }
 \arguments{
 \item{dataset}{Character; which dataset to describe. One of
@@ -13,6 +17,9 @@ schema(dataset = c("campaign_booklet", "party_statements"), variant = NULL)
 \item{variant}{Character or \code{NULL}; optional dataset variant. For
 \code{campaign_booklet}, defaults to \code{"original"} and may also be set to
 \code{"enriched"}. Other datasets do not define variants.}
+
+\item{data_version}{Character or \code{NULL}; the data artifact version to
+describe. Defaults to the latest available version.}
 }
 \value{
 A named list describing the dataset schema.
@@ -26,4 +33,5 @@ dataset-specific extras such as office mappings.
 schema("campaign_booklet")
 schema("campaign_booklet", variant = "enriched")
 schema("party_statements")
+schema("party_statements", data_version = "v2022")
 }

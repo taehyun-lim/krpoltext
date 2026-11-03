@@ -280,56 +280,181 @@
       description = paste(
         "Official statements from party spokespersons and minutes from",
         "daily leadership meetings of South Korea's two major parties",
-        "(Conservative and Progressive), covering 2003 to 2022.",
-        "83,201 total entries (35,115 conservative + 48,086 progressive).",
-        "Parsed using the khaiii Korean morphological analyzer."
+        "(Conservative and Progressive), covering 2003-09-28 to 2026-08-27.",
+        "121,271 total entries (51,141 conservative + 70,130 progressive):",
+        "the 83,201 published v2022 rows, preserved unchanged, extended with",
+        "38,070 statements collected from the parties' official boards.",
+        "'filtered' carries the legacy khaiii parse for v2022 rows only."
       ),
       short_description = paste(
         "Official statements from party spokespersons and leadership meetings",
-        "of South Korea's two major parties (2003-2022)."
+        "of South Korea's two major parties (2003-2026)."
       ),
-      time_coverage = "2003-2022",
-      data_version = "v2022",
-      n_candidates_or_entries = 83201L,
+      time_coverage = "2003-2026",
+      data_version = "v2026",
+      n_candidates_or_entries = 121271L,
       source_url = "https://osf.io/rct9y/",
       paper_doi = "10.1038/s41597-025-05220-4",
       license = "CC BY-NC-ND 4.0",
       citation = paper_citation,
       osf_citation = osf_citation,
-      identifier_columns = "id",
+      identifier_columns = c("id", "board_record_id", "legacy_id"),
       text_columns = c("text", "filtered"),
       columns = list(
-        .column_spec("no", "integer", "Sequential entry number within each party"),
+        .column_spec("no", "integer", "Published v2022 sequential entry number within each party; NA for rows absent from v2022"),
         .column_spec("year", "integer", "Year the statement was posted"),
         .column_spec("ymd", "character", "Full date (YYYY-MM-DD)"),
         .column_spec("title", "character", "Title of the statement"),
         .column_spec("text", "character", "Full text of the statement"),
-        .column_spec("filtered", "character", "Parsed text after morphological analysis; Korean-only"),
+        .column_spec("filtered", "character", "Legacy khaiii morphological parse (Korean-only); empty for rows absent from v2022"),
         .column_spec("partisan", "character", "Party affiliation: Progressive / Conservative"),
         .column_spec("conservative", "integer", "Binary indicator: 1 = Conservative Party, 0 = Progressive Party"),
-        .column_spec("id", "character", "Unique document identifier (party prefix + entry number)", identifier = TRUE)
+        .column_spec(
+          "id",
+          "character",
+          "Global primary key. Published v2022 ids are preserved; new rows use their board_record_id",
+          identifier = TRUE
+        ),
+        .column_spec(
+          "board_record_id",
+          "character",
+          "Stable official-board key '<namespace>_<source_id>'; empty when board provenance is unavailable",
+          identifier = TRUE
+        ),
+        .column_spec("legacy_id", "character", "Published v2022 id for rows that belong to the v2022 release", identifier = TRUE),
+        .column_spec("legacy_no", "integer", "Published v2022 no for rows that belong to the v2022 release"),
+        .column_spec("id_scheme", "character", "Scheme of the primary id: krpoltext_v2022 or board_source_v1"),
+        .column_spec(
+          "legacy_match_status",
+          "character",
+          "dual_id_matched, public_only_unmapped, or board_source_only_no_safe_legacy_match"
+        ),
+        .column_spec("crosswalk_method", "character", "Audited rule that matched a v2022 row to an official board row"),
+        .column_spec("media", "character", "Collector source label (cons_party / prog_party)"),
+        .column_spec("party", "character", "Party name as shown on the official site at collection time"),
+        .column_spec("category", "character", "Post category as shown on the official site"),
+        .column_spec("source_id", "character", "Post number on the official board"),
+        .column_spec("url", "character", "Official post URL"),
+        .column_spec("source_content_hash", "character", "Hash recorded by the official-site collector before merging"),
+        .column_spec("content_hash", "character", "SHA-256 of normalized ymd, title, and text"),
+        .column_spec("collected_at", "character", "Collection timestamp"),
+        .column_spec("board_id", "character", "Official board identifier"),
+        .column_spec("source_board", "character", "Official board name"),
+        .column_spec("doc_type", "character", "Document type derived from the board and category"),
+        .column_spec("attachment_urls", "character", "Attachment URLs"),
+        .column_spec("attachment_names", "character", "Attachment file names"),
+        .column_spec("attachment_hashes", "character", "Attachment SHA-256 hashes"),
+        .column_spec("image_urls", "character", "Embedded image URLs"),
+        .column_spec("embedded_image_count", "integer", "Number of embedded images"),
+        .column_spec("text_source", "character", "Where 'text' came from: html, attachment, or image_only_html"),
+        .column_spec("attachment_extraction_status", "character", "Attachment text extraction status"),
+        .column_spec("attachment_extraction_error", "character", "Attachment text extraction error"),
+        .column_spec("detail_status", "character", "Detail-page collection status"),
+        .column_spec("collection_error", "character", "Detail-page collection error"),
+        .column_spec("site_ymd", "character", "Date as displayed on the official site"),
+        .column_spec("date_is_placeholder", "character", "Whether the site date is a migration placeholder ('true'/'false')"),
+        .column_spec("date_resolution_status", "character", "How placeholder dates were resolved"),
+        .column_spec("asset_status", "character", "Attachment and image download status"),
+        .column_spec("asset_error", "character", "Attachment and image download error"),
+        .column_spec(
+          "filtered_status",
+          "character",
+          "legacy_khaiii_available, legacy_khaiii_missing, or not_processed"
+        ),
+        .column_spec("filtered_analyzer", "character", "Analyzer that produced 'filtered' (khaiii_legacy)")
       ),
       notes = list(
-        missing_values = "Some fields may contain NA or empty strings.",
+        missing_values = paste(
+          "Collection and provenance columns are empty for v2022-only rows.",
+          "'no' and 'legacy_no' are NA for rows absent from v2022."
+        ),
         party_names = paste(
           "Both parties have undergone frequent name changes. The 'partisan'",
           "column uses stable ideological labels rather than party names."
         ),
         text_processing = paste(
           "All text is UTF-8 encoded Korean. 'text' contains the full",
-          "original text; 'filtered' contains the morphologically parsed version."
+          "original text; 'filtered' contains the legacy khaiii parse for",
+          "v2022 rows and is empty for the 38,070 new rows (see 'filtered_status')."
+        ),
+        identifiers = paste(
+          "'id' is unique across all rows. The 83,201 v2022 rows keep their",
+          "published 'id'; new rows use 'board_record_id' as 'id'. 2,444 v2022",
+          "rows were safely matched to an official post and carry both identifiers."
+        ),
+        provenance = paste(
+          "The v2022 rows are preserved byte-for-byte; title, text, and",
+          "filtered values are never replaced by re-collected content."
         )
       ),
-      extras = list()
+      extras = list(),
+      versions = list(
+        v2022 = list(
+          description = paste(
+            "Official statements from party spokespersons and minutes from",
+            "daily leadership meetings of South Korea's two major parties",
+            "(Conservative and Progressive), covering 2003 to 2022.",
+            "83,201 total entries (35,115 conservative + 48,086 progressive).",
+            "Parsed using the khaiii Korean morphological analyzer."
+          ),
+          short_description = paste(
+            "Official statements from party spokespersons and leadership meetings",
+            "of South Korea's two major parties (2003-2022)."
+          ),
+          time_coverage = "2003-2022",
+          n_candidates_or_entries = 83201L,
+          identifier_columns = "id",
+          columns = list(
+            .column_spec("no", "integer", "Sequential entry number within each party"),
+            .column_spec("year", "integer", "Year the statement was posted"),
+            .column_spec("ymd", "character", "Full date (YYYY-MM-DD)"),
+            .column_spec("title", "character", "Title of the statement"),
+            .column_spec("text", "character", "Full text of the statement"),
+            .column_spec("filtered", "character", "Parsed text after morphological analysis; Korean-only"),
+            .column_spec("partisan", "character", "Party affiliation: Progressive / Conservative"),
+            .column_spec("conservative", "integer", "Binary indicator: 1 = Conservative Party, 0 = Progressive Party"),
+            .column_spec("id", "character", "Unique document identifier (party prefix + entry number)", identifier = TRUE)
+          ),
+          notes = list(
+            missing_values = "Some fields may contain NA or empty strings.",
+            party_names = paste(
+              "Both parties have undergone frequent name changes. The 'partisan'",
+              "column uses stable ideological labels rather than party names."
+            ),
+            text_processing = paste(
+              "All text is UTF-8 encoded Korean. 'text' contains the full",
+              "original text; 'filtered' contains the morphologically parsed version."
+            )
+          )
+        )
+      )
     )
   )
 }
 
+#' Apply a catalog entry's per-version overrides
+#' @noRd
+.versioned_catalog_entry <- function(dataset, catalog_entry, data_version = NULL) {
+  data_version <- .resolve_data_version(dataset, data_version)
+  override <- catalog_entry$versions[[data_version]]
+  catalog_entry$versions <- NULL
+
+  if (!is.null(override)) {
+    catalog_entry[names(override)] <- override
+  }
+  catalog_entry$data_version <- data_version
+  catalog_entry
+}
+
 #' Resolve dataset catalog entry
 #' @noRd
-.dataset_spec <- function(dataset, variant = NULL) {
+.dataset_spec <- function(dataset, variant = NULL, data_version = NULL) {
   dataset <- match.arg(dataset, choices = names(.dataset_catalog()))
-  catalog_entry <- .dataset_catalog()[[dataset]]
+  catalog_entry <- .versioned_catalog_entry(
+    dataset,
+    .dataset_catalog()[[dataset]],
+    data_version = data_version
+  )
 
   if (is.null(catalog_entry$variants)) {
     if (!is.null(variant)) {
@@ -355,8 +480,13 @@
 
 #' Column names for a dataset
 #' @noRd
-.dataset_columns <- function(dataset, variant = NULL) {
-  vapply(.dataset_spec(dataset, variant = variant)$columns, `[[`, character(1), "name")
+.dataset_columns <- function(dataset, variant = NULL, data_version = NULL) {
+  vapply(
+    .dataset_spec(dataset, variant = variant, data_version = data_version)$columns,
+    `[[`,
+    character(1),
+    "name"
+  )
 }
 
 #' Formats the package can understand for a dataset version or variant

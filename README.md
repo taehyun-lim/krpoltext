@@ -23,7 +23,7 @@ political text corpora described in:
 | Corpus | Period | Candidates / Entries | Description |
 |--------|--------|---------------------|-------------|
 | **Election Campaign Booklets** | 2000–2022 | 49,678 candidates | Manifesto booklets from candidates in presidential, National Assembly, and local elections, available in `original` and `enriched` variants |
-| **Party Statements** | 2003–2022 | 83,201 statements | Official statements and leadership meeting minutes from the two major parties |
+| **Party Statements** | 2003–2026 | 121,271 statements | Official statements and leadership meeting minutes from the two major parties |
 
 Data is hosted on the [Open Science
 Framework](https://osf.io/rct9y/) (DOI:
@@ -128,8 +128,11 @@ cb_enriched <- load_campaign_booklet(format = "csv", variant = "enriched")
 download_data()
 
 # Provide a local file path instead
-ps <- load_party_statements(path = "~/Downloads/sk_party_statements_v2022.csv")
-ps <- load_party_statements(path = "~/Downloads/sk_party_statements_v2022.parquet")
+ps <- load_party_statements(path = "~/Downloads/sk_party_statements_v2026.csv")
+ps <- load_party_statements(path = "~/Downloads/sk_party_statements_v2026.parquet")
+
+# The original 2003-2022 release (9 columns) remains available
+ps_v2022 <- load_party_statements(data_version = "v2022")
 ```
 
 Data is cached as compressed RDS in

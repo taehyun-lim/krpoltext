@@ -8,6 +8,8 @@
 #' @param variant Character or `NULL`; optional dataset variant. For
 #'   `campaign_booklet`, defaults to `"original"` and may also be set to
 #'   `"enriched"`. Other datasets do not define variants.
+#' @param data_version Character or `NULL`; the data artifact version to
+#'   describe. Defaults to the latest available version.
 #'
 #' @return A named list with dataset metadata.
 #' @export
@@ -16,16 +18,19 @@
 #' metadata("campaign_booklet")
 #' metadata("campaign_booklet", variant = "enriched")
 #' metadata("party_statements")
-metadata <- function(dataset = c("campaign_booklet", "party_statements"), variant = NULL) {
+#' metadata("party_statements", data_version = "v2022")
+metadata <- function(dataset = c("campaign_booklet", "party_statements"),
+                     variant = NULL,
+                     data_version = NULL) {
   dataset <- match.arg(dataset)
-  spec <- .dataset_spec(dataset, variant = variant)
+  spec <- .dataset_spec(dataset, variant = variant, data_version = data_version)
   variant <- spec$variant
 
   list(
     name = spec$name,
     description = spec$description,
     time_coverage = spec$time_coverage,
-    columns = .dataset_columns(dataset, variant = variant),
+    columns = .dataset_columns(dataset, variant = variant, data_version = spec$data_version),
     n_candidates_or_entries = spec$n_candidates_or_entries,
     data_version = spec$data_version,
     package_version = .package_version_string(),
@@ -66,6 +71,8 @@ metadata <- function(dataset = c("campaign_booklet", "party_statements"), varian
 #' @param variant Character or `NULL`; optional dataset variant. For
 #'   `campaign_booklet`, defaults to `"original"` and may also be set to
 #'   `"enriched"`. Other datasets do not define variants.
+#' @param data_version Character or `NULL`; the data artifact version to
+#'   describe. Defaults to the latest available version.
 #'
 #' @return A named list describing the dataset schema.
 #' @export
@@ -74,9 +81,12 @@ metadata <- function(dataset = c("campaign_booklet", "party_statements"), varian
 #' schema("campaign_booklet")
 #' schema("campaign_booklet", variant = "enriched")
 #' schema("party_statements")
-schema <- function(dataset = c("campaign_booklet", "party_statements"), variant = NULL) {
+#' schema("party_statements", data_version = "v2022")
+schema <- function(dataset = c("campaign_booklet", "party_statements"),
+                   variant = NULL,
+                   data_version = NULL) {
   dataset <- match.arg(dataset)
-  spec <- .dataset_spec(dataset, variant = variant)
+  spec <- .dataset_spec(dataset, variant = variant, data_version = data_version)
   data_version <- spec$data_version
   variant <- spec$variant
   artifact_root <- .artifact_registry()[[dataset]]$artifacts[[data_version]]

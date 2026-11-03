@@ -97,14 +97,21 @@ linkage-derived NEC alignment fields such as `huboid`, `sg_id`,
 
 ---
 
-## 2. Party Statements (`sk_party_statements_v2022.csv`)
+## 2. Party Statements (`sk_party_statements_v2026.csv`)
 
 Official statements from party spokespersons and minutes from daily
 leadership meetings of South Korea's **two major political parties**
-(2003–2022): the center-left Progressive Party (현 더불어민주당) and the
-center-right Conservative Party (현 국민의힘). Total: **83,201 statements**
-(35,115 conservative + 48,086 progressive; see paper Table 9 for yearly
-breakdown).
+(2003-09-28 to 2026-08-27): the center-left Progressive Party
+(현 더불어민주당) and the center-right Conservative Party (현 국민의힘).
+Total: **121,271 statements** (51,141 conservative + 70,130 progressive).
+
+`v2026` is the package default. It keeps all 83,201 rows of the published
+`v2022` release unchanged (35,115 conservative + 48,086 progressive; see
+paper Table 9 for yearly breakdown) and adds 38,070 statements collected
+from the parties' official boards. Load the original release with
+`load_party_statements(data_version = "v2022")`.
+
+### Core columns (all versions)
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -116,16 +123,47 @@ breakdown).
 | `filtered` | character | Parsed text after morphological analysis; Korean-only |
 | `partisan` | character | Party affiliation: Progressive / Conservative |
 | `conservative` | integer | Binary indicator: 1 = Conservative Party, 0 = Progressive Party |
-| `id` | character | **Unique document identifier** (party prefix + entry number) |
+| `id` | character | **Unique document identifier**. `v2022` rows keep their published id (party prefix + entry number); new `v2026` rows use their `board_record_id` |
+
+In `v2026`, `no` is `NA` and `filtered` is empty for the 38,070 rows that
+are not part of `v2022`.
+
+### Additional `v2026` columns
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `board_record_id` | character | Stable official-board key `<namespace>_<source_id>`; empty when board provenance is unavailable |
+| `legacy_id`, `legacy_no` | character, integer | Published `v2022` `id` / `no` for rows that belong to `v2022` |
+| `id_scheme` | character | Scheme of `id`: `krpoltext_v2022` or `board_source_v1` |
+| `legacy_match_status` | character | `dual_id_matched`, `public_only_unmapped`, or `board_source_only_no_safe_legacy_match` |
+| `crosswalk_method` | character | Audited rule that matched a `v2022` row to an official board post |
+| `media`, `party`, `category`, `source_id`, `url` | character | Official-site source, party name, category, post number, and URL |
+| `board_id`, `source_board`, `doc_type` | character | Official board identifier, board name, and document type |
+| `source_content_hash`, `content_hash` | character | Collector hash, and SHA-256 of normalized `ymd`, `title`, and `text` |
+| `collected_at` | character | Collection timestamp |
+| `attachment_urls`, `attachment_names`, `attachment_hashes`, `image_urls` | character | Attachment and embedded-image provenance |
+| `embedded_image_count` | integer | Number of embedded images |
+| `text_source` | character | Where `text` came from: `html`, `attachment`, or `image_only_html` |
+| `attachment_extraction_status`, `attachment_extraction_error` | character | Attachment text extraction outcome |
+| `detail_status`, `collection_error` | character | Detail-page collection outcome |
+| `site_ymd`, `date_is_placeholder`, `date_resolution_status` | character | Site-displayed date and placeholder-date handling |
+| `asset_status`, `asset_error` | character | Attachment and image download outcome |
+| `filtered_status` | character | `legacy_khaiii_available`, `legacy_khaiii_missing`, or `not_processed` |
+| `filtered_analyzer` | character | Analyzer that produced `filtered` (`khaiii_legacy`) |
 
 ### Notes
 
-- **Missing values**: Some fields may contain `NA` or empty strings.
+- **Missing values**: Some fields may contain `NA` or empty strings. In
+  `v2026`, collection and provenance columns are empty for `v2022`-only rows.
 - **Party name changes**: Both parties have undergone frequent name changes
   (see paper Table 3). The `partisan` column uses stable ideological labels
   rather than party names.
 - **`filtered`**: Morphologically parsed using khaiii; retains only Korean
-  content words.
+  content words. Available only for `v2022` rows; check `filtered_status`
+  before using it with `v2026`.
+- **Identifiers**: `id` is unique across all `v2026` rows. 2,444 `v2022`
+  rows were safely matched to an official post and carry both `id` and
+  `board_record_id`.
 
 ---
 
