@@ -30,9 +30,23 @@ test_that("metadata returns dataset-level package-facing information", {
   expect_equal(m_cb_enriched$managed_formats, c("csv", "parquet"))
 
   m_ps <- metadata("party_statements")
+  expect_identical(m_ps$data_version, "v2026")
   expect_true("year" %in% m_ps$columns)
-  expect_equal(m_ps$n_candidates_or_entries, 83201L)
-  expect_true("id" %in% m_ps$identifier_columns)
+  expect_length(m_ps$columns, 43L)
+  expect_true(all(c("board_record_id", "legacy_id", "filtered_status") %in% m_ps$columns))
+  expect_equal(m_ps$n_candidates_or_entries, 121271L)
+  expect_true(all(c("id", "board_record_id", "legacy_id") %in% m_ps$identifier_columns))
+
+  m_ps_v2022 <- metadata("party_statements", data_version = "v2022")
+  expect_identical(m_ps_v2022$data_version, "v2022")
+  expect_equal(
+    m_ps_v2022$columns,
+    c("no", "year", "ymd", "title", "text", "filtered", "partisan", "conservative", "id")
+  )
+  expect_equal(m_ps_v2022$n_candidates_or_entries, 83201L)
+  expect_identical(m_ps_v2022$identifier_columns, "id")
+  expect_true(all(c("csv", "parquet") %in% m_ps_v2022$managed_formats))
+  expect_error(metadata("party_statements", data_version = "v1999"), "Unknown data_version")
 })
 
 test_that("schema returns column definitions aligned with metadata", {
@@ -93,6 +107,15 @@ test_that("schema returns column definitions aligned with metadata", {
   expect_true(all(c("csv", "parquet") %in% names(s_ps$artifacts)))
   expect_true(isTRUE(s_ps$artifacts$csv$managed))
   expect_true(isTRUE(s_ps$artifacts$parquet$managed))
+  expect_identical(s_ps$artifacts$parquet$file, "sk_party_statements_v2026.parquet")
+
+  s_ps_v2022 <- schema("party_statements", data_version = "v2022")
+  expect_identical(s_ps_v2022$data_version, "v2022")
+  expect_identical(s_ps_v2022$artifacts$csv$file, "sk_party_statements_v2022.csv")
+  expect_equal(
+    vapply(s_ps_v2022$columns, `[[`, character(1), "name"),
+    metadata("party_statements", data_version = "v2022")$columns
+  )
 })
 
 test_that("metadata and schema reject invalid dataset names", {

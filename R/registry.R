@@ -48,8 +48,22 @@
       )
     ),
     party_statements = list(
-      latest_version = "v2022",
+      latest_version = "v2026",
       artifacts = list(
+        v2026 = list(
+          csv = list(
+            file = "sk_party_statements_v2026.csv",
+            url = "https://osf.io/download/6aea6c5c912f248023d57277/",
+            sha256 = "8b6948022dd988d7a93c10c9b54347e92920f8793b6155f90732a08dfdcf9a29",
+            size_bytes = 990195663
+          ),
+          parquet = list(
+            file = "sk_party_statements_v2026.parquet",
+            url = "https://osf.io/download/6aea6b3fb9e5b130dbca33c4/",
+            sha256 = "c195f39710f2df29b79685fcc52a12f27c79d46a6555617179f5dec56c63c685",
+            size_bytes = 244925153
+          )
+        ),
         v2022 = list(
           csv = list(
             file = "sk_party_statements_v2022.csv",

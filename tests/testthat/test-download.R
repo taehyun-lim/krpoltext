@@ -21,5 +21,5 @@ test_that("download prompt names the CSV artifact format", {
   prompt <- krpoltext:::.download_prompt("party_statements", spec)
 
   expect_match(prompt, "CSV artifact", fixed = TRUE)
-  expect_match(prompt, "(741 MB)", fixed = TRUE)
+  expect_match(prompt, "(990 MB)", fixed = TRUE)
 })

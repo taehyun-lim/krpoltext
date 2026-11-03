@@ -30,7 +30,8 @@ source CSV is re-read. Defaults to \code{FALSE}.}
 Defaults to the latest available version.}
 }
 \value{
-A \link[data.table:data.table]{data.table::data.table} with the following columns:\tabular{ll}{
+A \link[data.table:data.table]{data.table::data.table}. The core columns, shared by all
+versions, are:\tabular{ll}{
    Column \tab Description \cr
    \code{no} \tab Row number / identifier \cr
    \code{year} \tab Year of the statement \cr
@@ -44,13 +45,21 @@ A \link[data.table:data.table]{data.table::data.table} with the following column
 }
 
 
+\code{v2026} adds identifier, official-board provenance, and processing-status
+columns such as \code{board_record_id}, \code{legacy_id}, \code{url}, \code{board_id}, and
+\code{filtered_status}; see \code{schema("party_statements")} for the full list.
+
 See \code{data_dictionary.md} for the complete column reference, and
 the Data Descriptor (Table 9) for yearly entry counts by party.
 }
 \description{
-Loads the party statements dataset (2003--2022) as a \code{data.table}. The
-dataset contains 83,201 official statements from party spokespersons and
-leadership meeting minutes from South Korea's two major political parties.
+Loads the party statements dataset as a \code{data.table}. The default \code{v2026}
+artifact contains 121,271 official statements from party spokespersons and
+leadership meeting minutes from South Korea's two major political parties
+(2003-09-28 to 2026-08-27): the 83,201 published \code{v2022} rows, preserved
+unchanged, plus 38,070 statements collected from the parties' official
+boards. New rows have no \code{filtered} text (see \code{filtered_status}). Use
+\code{data_version = "v2022"} for the original 9-column release.
 }
 \details{
 For full methodology and variable descriptions, see the Data Descriptor:

@@ -209,6 +209,10 @@ cache_path <- function(dataset,
   ext <- switch(spec$format, parquet = ".parquet", ".csv")
   tmp_path <- tempfile(fileext = ext)
 
+  # Artifacts are hundreds of MB; R's default 60-second timeout aborts them.
+  old_options <- options(timeout = max(3600, getOption("timeout")))
+  on.exit(options(old_options), add = TRUE)
+
   tryCatch(
     utils::download.file(
       url = spec$url,
@@ -350,7 +354,7 @@ read_with_cache <- function(dataset,
       return(dt)
     }
 
-    if (!is.null(spec$url)) {
+    if (!is.null(spec$url) && nzchar(spec$url)) {
       if (!.is_interactive_session()) {
         if (!identical(candidate, utils::tail(candidate_formats, 1L))) {
           notes <- c(
@@ -459,7 +463,11 @@ clear_cache <- function(dataset = "all") {
   for (ds in dataset) {
     pattern <- paste0("^", ds, "__.*\\.rds$")
     cache_files <- list.files(cache_root, pattern = pattern, full.names = TRUE)
-    legacy_cp <- .legacy_cache_path(ds, create_dir = FALSE)
+    legacy_cp <- vapply(
+      names(.artifact_registry()[[ds]]$artifacts),
+      function(version) .legacy_cache_path(ds, data_version = version, create_dir = FALSE),
+      character(1)
+    )
     cache_files <- unique(c(cache_files, legacy_cp))
 
     for (cp in cache_files) {

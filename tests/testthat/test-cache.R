@@ -22,7 +22,7 @@ test_that("format-aware cache file is created when cache = TRUE", {
     refresh = TRUE
   )
 
-  cached_file <- krpoltext:::cache_path("party_statements", format = "csv", data_version = "v2022")
+  cached_file <- krpoltext:::cache_path("party_statements", format = "csv", data_version = "v2026")
   expect_true(file.exists(cached_file))
   expect_gt(file.size(cached_file), 0L)
 })

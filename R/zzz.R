@@ -2,8 +2,8 @@
 #'
 #' Provides easy access to two large-scale Korean political text corpora:
 #' the South Korean Election Campaign Booklet Corpus (49,678 candidates,
-#' 2000-2022) and the South Korean Party Statements Corpus (83,201
-#' statements, 2003-2022).
+#' 2000-2022) and the South Korean Party Statements Corpus (121,271
+#' statements, 2003-2026).
 #'
 #' @section Data Descriptor:
 #' Lim, T.H. (2025). South Korean Election Campaign Booklet and Party

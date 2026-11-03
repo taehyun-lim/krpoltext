@@ -1,3 +1,28 @@
+# krpoltext (development version)
+
+## Breaking changes
+
+- `load_party_statements()` now loads the `v2026` party statements artifact by
+  default: 121,271 statements (2003-09-28 to 2026-08-27, 43 columns). All
+  83,201 `v2022` rows are preserved unchanged and 38,070 statements collected
+  from the parties' official boards are added. The new rows have no `filtered`
+  text; see `filtered_status`. Use `data_version = "v2022"` for the original
+  9-column release.
+
+## New features
+
+- `metadata()` and `schema()` gain a `data_version` argument for describing
+  older data versions.
+- The static JSON API lists every data version; older versions get versioned
+  schema files such as `data/schema/party_statements_v2022.json`.
+
+## Bug fixes
+
+- `clear_cache()` now removes legacy CSV caches for every data version, not
+  only the latest.
+- Managed downloads raise R's download timeout to at least one hour, so large
+  OSF artifacts are no longer cut off after the default 60 seconds.
+
 # krpoltext 0.2.0
 
 ## Highlights

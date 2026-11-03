@@ -151,7 +151,7 @@ test_that("parquet requests can fall back to CSV artifacts", {
   dir.create(test_cache, recursive = TRUE, showWarnings = FALSE)
   saveRDS(
     fallback_dt,
-    krpoltext:::cache_path("party_statements", format = "csv", data_version = "v2022")
+    krpoltext:::cache_path("party_statements", format = "csv", data_version = "v2026")
   )
 
   testthat::local_mocked_bindings(
@@ -189,7 +189,7 @@ test_that("non-interactive parquet requests can use cached CSV artifacts", {
   dir.create(test_cache, recursive = TRUE, showWarnings = FALSE)
   saveRDS(
     fallback_dt,
-    krpoltext:::cache_path("party_statements", format = "csv", data_version = "v2022")
+    krpoltext:::cache_path("party_statements", format = "csv", data_version = "v2026")
   )
 
   testthat::local_mocked_bindings(

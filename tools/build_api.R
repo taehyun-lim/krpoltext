@@ -39,12 +39,26 @@ pkg_fun <- function(name) {
   get(name, envir = pkg_env, inherits = FALSE)
 }
 
-schema_filename <- function(dataset, variant = NULL) {
+schema_filename <- function(dataset, variant = NULL, data_version = NULL) {
   if (identical(dataset, "campaign_booklet") && identical(variant, "enriched")) {
     return("campaign_booklet_enriched.json")
   }
 
+  # Older data versions get a versioned schema file; the latest keeps the
+  # unversioned name so existing schema URLs stay stable.
+  if (!is.null(data_version) && !identical(data_version, dataset_latest_version(dataset))) {
+    return(paste0(dataset, "_", data_version, ".json"))
+  }
+
   paste0(dataset, ".json")
+}
+
+dataset_latest_version <- function(dataset) {
+  pkg_fun(".artifact_registry")()[[dataset]]$latest_version
+}
+
+dataset_versions <- function(dataset) {
+  names(pkg_fun(".artifact_registry")()[[dataset]]$artifacts)
 }
 
 dataset_variants <- function(dataset) {
@@ -85,51 +99,60 @@ datasets <- names(registry)
 
 resource_rows <- list()
 for (dataset in datasets) {
-  for (variant_name in dataset_variants(dataset)) {
-    meta <- pkg_fun("metadata")(dataset, variant = variant_name)
-    formats <- pkg_fun(".supported_formats")(
-      dataset,
-      data_version = meta$data_version,
-      variant = meta$variant
-    )
-
-    for (format_name in formats) {
-      artifact <- pkg_fun(".artifact_spec")(
+  versions <- dataset_versions(dataset)
+  for (data_version in versions) {
+    for (variant_name in dataset_variants(dataset)) {
+      meta <- pkg_fun("metadata")(dataset, variant = variant_name, data_version = data_version)
+      is_latest <- identical(data_version, dataset_latest_version(dataset))
+      formats <- pkg_fun(".supported_formats")(
         dataset,
-        format = format_name,
         data_version = meta$data_version,
         variant = meta$variant
       )
 
-      resource <- list(
-        name = dataset,
-        file = artifact$file,
-        version = meta$data_version,
-        format = format_name,
-        encoding = "UTF-8",
-        size_bytes = artifact$size_bytes,
-        sha256 = artifact$sha256,
-        download_url = artifact$url,
-        managed = !is.null(artifact$url) && nzchar(artifact$url),
-        n_rows = meta$n_candidates_or_entries,
-        n_cols = length(meta$columns),
-        description = meta$description,
-        time_coverage = meta$time_coverage,
-        schema_url = paste0("data/schema/", schema_filename(dataset, meta$variant)),
-        license = meta$license
-      )
+      for (format_name in formats) {
+        artifact <- pkg_fun(".artifact_spec")(
+          dataset,
+          format = format_name,
+          data_version = meta$data_version,
+          variant = meta$variant
+        )
 
-      if (!is.null(meta$variant)) {
-        resource$variant <- meta$variant
-        resource$default_for_package <- identical(meta$variant, meta$default_variant)
-        resource$recommended_for <- meta$recommended_use
-      }
-      lookup_artifact <- lookup_artifact_payload(artifact)
-      if (!is.null(lookup_artifact)) {
-        resource$lookup_artifact <- lookup_artifact
-      }
+        resource <- list(
+          name = dataset,
+          file = artifact$file,
+          version = meta$data_version,
+          format = format_name,
+          encoding = "UTF-8",
+          size_bytes = artifact$size_bytes,
+          sha256 = artifact$sha256,
+          download_url = artifact$url,
+          managed = !is.null(artifact$url) && nzchar(artifact$url),
+          n_rows = meta$n_candidates_or_entries,
+          n_cols = length(meta$columns),
+          description = meta$description,
+          time_coverage = meta$time_coverage,
+          schema_url = paste0(
+            "data/schema/",
+            schema_filename(dataset, meta$variant, data_version = meta$data_version)
+          ),
+          license = meta$license
+        )
 
-      resource_rows[[length(resource_rows) + 1L]] <- resource
+        if (!is.null(meta$variant)) {
+          resource$variant <- meta$variant
+          resource$default_for_package <- is_latest && identical(meta$variant, meta$default_variant)
+          resource$recommended_for <- meta$recommended_use
+        } else if (length(versions) > 1L) {
+          resource$default_for_package <- is_latest
+        }
+        lookup_artifact <- lookup_artifact_payload(artifact)
+        if (!is.null(lookup_artifact)) {
+          resource$lookup_artifact <- lookup_artifact
+        }
+
+        resource_rows[[length(resource_rows) + 1L]] <- resource
+      }
     }
   }
 }
@@ -292,16 +315,18 @@ for (dataset in datasets) {
   variants <- pkg_fun(".available_variants")(dataset)
 
   if (length(variants) == 0L) {
-    schema_out <- pkg_fun("schema")(dataset)
-    dest <- file.path(out_dir, "schema", schema_filename(dataset))
-    jsonlite::write_json(
-      schema_out,
-      dest,
-      pretty = TRUE,
-      auto_unbox = TRUE,
-      null = "null"
-    )
-    message("Wrote ", dest)
+    for (data_version in dataset_versions(dataset)) {
+      schema_out <- pkg_fun("schema")(dataset, data_version = data_version)
+      dest <- file.path(out_dir, "schema", schema_filename(dataset, data_version = data_version))
+      jsonlite::write_json(
+        schema_out,
+        dest,
+        pretty = TRUE,
+        auto_unbox = TRUE,
+        null = "null"
+      )
+      message("Wrote ", dest)
+    }
     next
   }
 
