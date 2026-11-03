@@ -21,7 +21,7 @@ DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.18704318-1682D4?logo=z
 | 코퍼스 | 기간 | 후보자 / 문서 수 | 설명 |
 |----|----|----|----|
 | **선거공보 코퍼스** | 2000–2022 | 49,678 candidates | 대통령선거, 국회의원선거, 지방선거 후보자의 선거공보 텍스트로, `original`과 `enriched` 두 variant로 제공 |
-| **정당 성명 코퍼스** | 2003–2022 | 83,201 statements | 양대 정당의 공식 성명과 지도부 회의 발언문 |
+| **정당 성명 코퍼스** | 2003–2026 | 121,271 statements | 양대 정당의 공식 성명과 지도부 회의 발언문 |
 
 데이터는 [Open Science Framework](https://osf.io/rct9y/)에 호스팅되어
 있으며 (DOI:
@@ -131,8 +131,11 @@ cb_enriched <- load_campaign_booklet(format = "csv", variant = "enriched")
 download_data()
 
 # 로컬 파일 경로를 직접 지정할 수도 있음
-ps <- load_party_statements(path = "~/Downloads/sk_party_statements_v2022.csv")
-ps <- load_party_statements(path = "~/Downloads/sk_party_statements_v2022.parquet")
+ps <- load_party_statements(path = "~/Downloads/sk_party_statements_v2026.csv")
+ps <- load_party_statements(path = "~/Downloads/sk_party_statements_v2026.parquet")
+
+# 2003-2022 원본 릴리스(9개 열)도 계속 사용할 수 있음
+ps_v2022 <- load_party_statements(data_version = "v2022")
 ```
 
 데이터는 `tools::R_user_dir("krpoltext", "cache")`에 압축 RDS 형태로

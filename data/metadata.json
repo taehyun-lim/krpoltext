@@ -74,28 +74,30 @@
   },
   "party_statements": {
     "name": "South Korean Party Statements",
-    "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003 to 2022. 83,201 total entries (35,115 conservative + 48,086 progressive). Parsed using the khaiii Korean morphological analyzer.",
-    "time_coverage": "2003-2022",
-    "n_entries": 83201,
-    "n_columns": 9,
-    "version": "v2022",
+    "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003-09-28 to 2026-08-27. 121,271 total entries (51,141 conservative + 70,130 progressive): the 83,201 published v2022 rows, preserved unchanged, extended with 38,070 statements collected from the parties' official boards. 'filtered' carries the legacy khaiii parse for v2022 rows only.",
+    "time_coverage": "2003-2026",
+    "n_entries": 121271,
+    "n_columns": 43,
+    "version": "v2026",
     "package_version": "0.2.0",
     "supported_formats": ["csv", "parquet"],
     "managed_formats": ["csv", "parquet"],
     "source_url": "https://osf.io/rct9y/",
-    "download_url": "https://osf.io/download/8u2ah/",
+    "download_url": "https://osf.io/download/6aea6c5c912f248023d57277/",
     "download_urls": {
-      "csv": "https://osf.io/download/8u2ah/",
-      "parquet": "https://osf.io/download/8cjxu/"
+      "csv": "https://osf.io/download/6aea6c5c912f248023d57277/",
+      "parquet": "https://osf.io/download/6aea6b3fb9e5b130dbca33c4/"
     },
     "paper_doi": "10.1038/s41597-025-05220-4",
     "license": "CC BY-NC-ND 4.0",
     "citation": "Lim, T.H. (2025). South Korean Election Campaign Booklet and Party Statements Corpora. Scientific Data, 12, 1030. https://doi.org/10.1038/s41597-025-05220-4",
     "osf_citation": "Lim, T.H. (2024). South Korean Election Campaign Booklet Corpus and Party Statements Corpus. OSF. https://doi.org/10.17605/OSF.IO/RCT9Y",
     "notes": {
-      "missing_values": "Some fields may contain NA or empty strings.",
+      "missing_values": "Collection and provenance columns are empty for v2022-only rows. 'no' and 'legacy_no' are NA for rows absent from v2022.",
       "party_names": "Both parties have undergone frequent name changes. The 'partisan' column uses stable ideological labels rather than party names.",
-      "text_processing": "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version."
+      "text_processing": "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the legacy khaiii parse for v2022 rows and is empty for the 38,070 new rows (see 'filtered_status').",
+      "identifiers": "'id' is unique across all rows. The 83,201 v2022 rows keep their published 'id'; new rows use 'board_record_id' as 'id'. 2,444 v2022 rows were safely matched to an official post and carry both identifiers.",
+      "provenance": "The v2022 rows are preserved byte-for-byte; title, text, and filtered values are never replaced by re-collected content."
     }
   }
 }

@@ -7,7 +7,11 @@ storage formats.
 ## Usage
 
 ``` r
-metadata(dataset = c("campaign_booklet", "party_statements"), variant = NULL)
+metadata(
+  dataset = c("campaign_booklet", "party_statements"),
+  variant = NULL,
+  data_version = NULL
+)
 ```
 
 ## Arguments
@@ -22,6 +26,11 @@ metadata(dataset = c("campaign_booklet", "party_statements"), variant = NULL)
   Character or `NULL`; optional dataset variant. For `campaign_booklet`,
   defaults to `"original"` and may also be set to `"enriched"`. Other
   datasets do not define variants.
+
+- data_version:
+
+  Character or `NULL`; the data artifact version to describe. Defaults
+  to the latest available version.
 
 ## Value
 
@@ -205,6 +214,108 @@ metadata("campaign_booklet", variant = "enriched")
 #> 
 #> 
 metadata("party_statements")
+#> $name
+#> [1] "South Korean Party Statements"
+#> 
+#> $description
+#> [1] "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003-09-28 to 2026-08-27. 121,271 total entries (51,141 conservative + 70,130 progressive): the 83,201 published v2022 rows, preserved unchanged, extended with 38,070 statements collected from the parties' official boards. 'filtered' carries the legacy khaiii parse for v2022 rows only."
+#> 
+#> $time_coverage
+#> [1] "2003-2026"
+#> 
+#> $columns
+#>  [1] "no"                           "year"                        
+#>  [3] "ymd"                          "title"                       
+#>  [5] "text"                         "filtered"                    
+#>  [7] "partisan"                     "conservative"                
+#>  [9] "id"                           "board_record_id"             
+#> [11] "legacy_id"                    "legacy_no"                   
+#> [13] "id_scheme"                    "legacy_match_status"         
+#> [15] "crosswalk_method"             "media"                       
+#> [17] "party"                        "category"                    
+#> [19] "source_id"                    "url"                         
+#> [21] "source_content_hash"          "content_hash"                
+#> [23] "collected_at"                 "board_id"                    
+#> [25] "source_board"                 "doc_type"                    
+#> [27] "attachment_urls"              "attachment_names"            
+#> [29] "attachment_hashes"            "image_urls"                  
+#> [31] "embedded_image_count"         "text_source"                 
+#> [33] "attachment_extraction_status" "attachment_extraction_error" 
+#> [35] "detail_status"                "collection_error"            
+#> [37] "site_ymd"                     "date_is_placeholder"         
+#> [39] "date_resolution_status"       "asset_status"                
+#> [41] "asset_error"                  "filtered_status"             
+#> [43] "filtered_analyzer"           
+#> 
+#> $n_candidates_or_entries
+#> [1] 121271
+#> 
+#> $data_version
+#> [1] "v2026"
+#> 
+#> $package_version
+#> [1] "0.2.0"
+#> 
+#> $variant
+#> NULL
+#> 
+#> $default_variant
+#> NULL
+#> 
+#> $available_variants
+#> character(0)
+#> 
+#> $variant_description
+#> NULL
+#> 
+#> $recommended_use
+#> NULL
+#> 
+#> $identifier_columns
+#> [1] "id"              "board_record_id" "legacy_id"      
+#> 
+#> $text_columns
+#> [1] "text"     "filtered"
+#> 
+#> $supported_formats
+#> [1] "csv"     "parquet"
+#> 
+#> $managed_formats
+#> [1] "csv"     "parquet"
+#> 
+#> $source_url
+#> [1] "https://osf.io/rct9y/"
+#> 
+#> $paper_doi
+#> [1] "10.1038/s41597-025-05220-4"
+#> 
+#> $license
+#> [1] "CC BY-NC-ND 4.0"
+#> 
+#> $citation
+#> [1] "Lim, T.H. (2025). South Korean Election Campaign Booklet and Party Statements Corpora. Scientific Data, 12, 1030. https://doi.org/10.1038/s41597-025-05220-4"
+#> 
+#> $osf_citation
+#> [1] "Lim, T.H. (2024). South Korean Election Campaign Booklet Corpus and Party Statements Corpus. OSF. https://doi.org/10.17605/OSF.IO/RCT9Y"
+#> 
+#> $notes
+#> $notes$missing_values
+#> [1] "Collection and provenance columns are empty for v2022-only rows. 'no' and 'legacy_no' are NA for rows absent from v2022."
+#> 
+#> $notes$party_names
+#> [1] "Both parties have undergone frequent name changes. The 'partisan' column uses stable ideological labels rather than party names."
+#> 
+#> $notes$text_processing
+#> [1] "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the legacy khaiii parse for v2022 rows and is empty for the 38,070 new rows (see 'filtered_status')."
+#> 
+#> $notes$identifiers
+#> [1] "'id' is unique across all rows. The 83,201 v2022 rows keep their published 'id'; new rows use 'board_record_id' as 'id'. 2,444 v2022 rows were safely matched to an official post and carry both identifiers."
+#> 
+#> $notes$provenance
+#> [1] "The v2022 rows are preserved byte-for-byte; title, text, and filtered values are never replaced by re-collected content."
+#> 
+#> 
+metadata("party_statements", data_version = "v2022")
 #> $name
 #> [1] "South Korean Party Statements"
 #> 

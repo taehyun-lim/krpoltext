@@ -1,9 +1,13 @@
 # Load the South Korean Party Statements corpus
 
-Loads the party statements dataset (2003–2022) as a `data.table`. The
-dataset contains 83,201 official statements from party spokespersons and
-leadership meeting minutes from South Korea's two major political
-parties.
+Loads the party statements dataset as a `data.table`. The default
+`v2026` artifact contains 121,271 official statements from party
+spokespersons and leadership meeting minutes from South Korea's two
+major political parties (2003-09-28 to 2026-08-27): the 83,201 published
+`v2022` rows, preserved unchanged, plus 38,070 statements collected from
+the parties' official boards. New rows have no `filtered` text (see
+`filtered_status`). Use `data_version = "v2022"` for the original
+9-column release.
 
 ## Usage
 
@@ -48,8 +52,8 @@ load_party_statements(
 ## Value
 
 A
-[data.table::data.table](https://rdrr.io/pkg/data.table/man/data.table.html)
-with the following columns:
+[data.table::data.table](https://rdrr.io/pkg/data.table/man/data.table.html).
+The core columns, shared by all versions, are:
 
 |                |                                      |
 |----------------|--------------------------------------|
@@ -63,6 +67,11 @@ with the following columns:
 | `partisan`     | Party affiliation label              |
 | `conservative` | Conservative party indicator         |
 | `id`           | Unique document identifier           |
+
+`v2026` adds identifier, official-board provenance, and
+processing-status columns such as `board_record_id`, `legacy_id`, `url`,
+`board_id`, and `filtered_status`; see `schema("party_statements")` for
+the full list.
 
 See `data_dictionary.md` for the complete column reference, and the Data
 Descriptor (Table 9) for yearly entry counts by party.

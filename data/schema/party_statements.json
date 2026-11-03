@@ -1,34 +1,34 @@
 {
   "dataset": "party_statements",
   "name": "South Korean Party Statements",
-  "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003 to 2022. 83,201 total entries (35,115 conservative + 48,086 progressive). Parsed using the khaiii Korean morphological analyzer.",
-  "time_coverage": "2003-2022",
-  "data_version": "v2022",
+  "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003-09-28 to 2026-08-27. 121,271 total entries (51,141 conservative + 70,130 progressive): the 83,201 published v2022 rows, preserved unchanged, extended with 38,070 statements collected from the parties' official boards. 'filtered' carries the legacy khaiii parse for v2022 rows only.",
+  "time_coverage": "2003-2026",
+  "data_version": "v2026",
   "package_version": "0.2.0",
   "variant": null,
   "default_variant": null,
   "available_variants": [],
   "variant_description": null,
   "recommended_use": null,
-  "identifier_columns": "id",
+  "identifier_columns": ["id", "board_record_id", "legacy_id"],
   "text_columns": ["text", "filtered"],
   "supported_formats": ["csv", "parquet"],
   "managed_formats": ["csv", "parquet"],
   "artifacts": {
     "csv": {
       "format": "csv",
-      "file": "sk_party_statements_v2022.csv",
-      "download_url": "https://osf.io/download/8u2ah/",
-      "sha256": "60874e7c44d851c9cfc0892d70f6ef9ff9fb3993a5324963297ca4eabd4868e4",
-      "size_bytes": 740785920,
+      "file": "sk_party_statements_v2026.csv",
+      "download_url": "https://osf.io/download/6aea6c5c912f248023d57277/",
+      "sha256": "8b6948022dd988d7a93c10c9b54347e92920f8793b6155f90732a08dfdcf9a29",
+      "size_bytes": 990195663,
       "managed": true
     },
     "parquet": {
       "format": "parquet",
-      "file": "sk_party_statements_v2022.parquet",
-      "download_url": "https://osf.io/download/8cjxu/",
-      "sha256": "cee8a49adbe90f96ee4e2b45b6d84c433e5eb9ebb4849cfc979f6a19c57378ea",
-      "size_bytes": 393216464,
+      "file": "sk_party_statements_v2026.parquet",
+      "download_url": "https://osf.io/download/6aea6b3fb9e5b130dbca33c4/",
+      "sha256": "c195f39710f2df29b79685fcc52a12f27c79d46a6555617179f5dec56c63c685",
+      "size_bytes": 244925153,
       "managed": true
     }
   },
@@ -36,7 +36,7 @@
     {
       "name": "no",
       "type": "integer",
-      "description": "Sequential entry number within each party"
+      "description": "Published v2022 sequential entry number within each party; NA for rows absent from v2022"
     },
     {
       "name": "year",
@@ -61,7 +61,7 @@
     {
       "name": "filtered",
       "type": "character",
-      "description": "Parsed text after morphological analysis; Korean-only"
+      "description": "Legacy khaiii morphological parse (Korean-only); empty for rows absent from v2022"
     },
     {
       "name": "partisan",
@@ -76,14 +76,188 @@
     {
       "name": "id",
       "type": "character",
-      "description": "Unique document identifier (party prefix + entry number)",
+      "description": "Global primary key. Published v2022 ids are preserved; new rows use their board_record_id",
       "identifier": true
+    },
+    {
+      "name": "board_record_id",
+      "type": "character",
+      "description": "Stable official-board key '<namespace>_<source_id>'; empty when board provenance is unavailable",
+      "identifier": true
+    },
+    {
+      "name": "legacy_id",
+      "type": "character",
+      "description": "Published v2022 id for rows that belong to the v2022 release",
+      "identifier": true
+    },
+    {
+      "name": "legacy_no",
+      "type": "integer",
+      "description": "Published v2022 no for rows that belong to the v2022 release"
+    },
+    {
+      "name": "id_scheme",
+      "type": "character",
+      "description": "Scheme of the primary id: krpoltext_v2022 or board_source_v1"
+    },
+    {
+      "name": "legacy_match_status",
+      "type": "character",
+      "description": "dual_id_matched, public_only_unmapped, or board_source_only_no_safe_legacy_match"
+    },
+    {
+      "name": "crosswalk_method",
+      "type": "character",
+      "description": "Audited rule that matched a v2022 row to an official board row"
+    },
+    {
+      "name": "media",
+      "type": "character",
+      "description": "Collector source label (cons_party / prog_party)"
+    },
+    {
+      "name": "party",
+      "type": "character",
+      "description": "Party name as shown on the official site at collection time"
+    },
+    {
+      "name": "category",
+      "type": "character",
+      "description": "Post category as shown on the official site"
+    },
+    {
+      "name": "source_id",
+      "type": "character",
+      "description": "Post number on the official board"
+    },
+    {
+      "name": "url",
+      "type": "character",
+      "description": "Official post URL"
+    },
+    {
+      "name": "source_content_hash",
+      "type": "character",
+      "description": "Hash recorded by the official-site collector before merging"
+    },
+    {
+      "name": "content_hash",
+      "type": "character",
+      "description": "SHA-256 of normalized ymd, title, and text"
+    },
+    {
+      "name": "collected_at",
+      "type": "character",
+      "description": "Collection timestamp"
+    },
+    {
+      "name": "board_id",
+      "type": "character",
+      "description": "Official board identifier"
+    },
+    {
+      "name": "source_board",
+      "type": "character",
+      "description": "Official board name"
+    },
+    {
+      "name": "doc_type",
+      "type": "character",
+      "description": "Document type derived from the board and category"
+    },
+    {
+      "name": "attachment_urls",
+      "type": "character",
+      "description": "Attachment URLs"
+    },
+    {
+      "name": "attachment_names",
+      "type": "character",
+      "description": "Attachment file names"
+    },
+    {
+      "name": "attachment_hashes",
+      "type": "character",
+      "description": "Attachment SHA-256 hashes"
+    },
+    {
+      "name": "image_urls",
+      "type": "character",
+      "description": "Embedded image URLs"
+    },
+    {
+      "name": "embedded_image_count",
+      "type": "integer",
+      "description": "Number of embedded images"
+    },
+    {
+      "name": "text_source",
+      "type": "character",
+      "description": "Where 'text' came from: html, attachment, or image_only_html"
+    },
+    {
+      "name": "attachment_extraction_status",
+      "type": "character",
+      "description": "Attachment text extraction status"
+    },
+    {
+      "name": "attachment_extraction_error",
+      "type": "character",
+      "description": "Attachment text extraction error"
+    },
+    {
+      "name": "detail_status",
+      "type": "character",
+      "description": "Detail-page collection status"
+    },
+    {
+      "name": "collection_error",
+      "type": "character",
+      "description": "Detail-page collection error"
+    },
+    {
+      "name": "site_ymd",
+      "type": "character",
+      "description": "Date as displayed on the official site"
+    },
+    {
+      "name": "date_is_placeholder",
+      "type": "character",
+      "description": "Whether the site date is a migration placeholder ('true'/'false')"
+    },
+    {
+      "name": "date_resolution_status",
+      "type": "character",
+      "description": "How placeholder dates were resolved"
+    },
+    {
+      "name": "asset_status",
+      "type": "character",
+      "description": "Attachment and image download status"
+    },
+    {
+      "name": "asset_error",
+      "type": "character",
+      "description": "Attachment and image download error"
+    },
+    {
+      "name": "filtered_status",
+      "type": "character",
+      "description": "legacy_khaiii_available, legacy_khaiii_missing, or not_processed"
+    },
+    {
+      "name": "filtered_analyzer",
+      "type": "character",
+      "description": "Analyzer that produced 'filtered' (khaiii_legacy)"
     }
   ],
   "notes": {
-    "missing_values": "Some fields may contain NA or empty strings.",
+    "missing_values": "Collection and provenance columns are empty for v2022-only rows. 'no' and 'legacy_no' are NA for rows absent from v2022.",
     "party_names": "Both parties have undergone frequent name changes. The 'partisan' column uses stable ideological labels rather than party names.",
-    "text_processing": "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the morphologically parsed version."
+    "text_processing": "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the legacy khaiii parse for v2022 rows and is empty for the 38,070 new rows (see 'filtered_status').",
+    "identifiers": "'id' is unique across all rows. The 83,201 v2022 rows keep their published 'id'; new rows use 'board_record_id' as 'id'. 2,444 v2022 rows were safely matched to an official post and carry both identifiers.",
+    "provenance": "The v2022 rows are preserved byte-for-byte; title, text, and filtered values are never replaced by re-collected content."
   },
   "extras": []
 }

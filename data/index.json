@@ -1,7 +1,7 @@
 {
   "api_version": "1.0",
   "base_url": "https://taehyun-lim.github.io/krpoltext",
-  "generated_at": "2026-07-24T22:13:02Z",
+  "generated_at": "2026-11-03T23:53:36Z",
   "package": {
     "name": "krpoltext",
     "version": "0.2.0",
@@ -103,6 +103,42 @@
     },
     {
       "name": "party_statements",
+      "file": "sk_party_statements_v2026.csv",
+      "version": "v2026",
+      "format": "csv",
+      "encoding": "UTF-8",
+      "size_bytes": 990195663,
+      "sha256": "8b6948022dd988d7a93c10c9b54347e92920f8793b6155f90732a08dfdcf9a29",
+      "download_url": "https://osf.io/download/6aea6c5c912f248023d57277/",
+      "managed": true,
+      "n_rows": 121271,
+      "n_cols": 43,
+      "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003-09-28 to 2026-08-27. 121,271 total entries (51,141 conservative + 70,130 progressive): the 83,201 published v2022 rows, preserved unchanged, extended with 38,070 statements collected from the parties' official boards. 'filtered' carries the legacy khaiii parse for v2022 rows only.",
+      "time_coverage": "2003-2026",
+      "schema_url": "data/schema/party_statements.json",
+      "license": "CC BY-NC-ND 4.0",
+      "default_for_package": true
+    },
+    {
+      "name": "party_statements",
+      "file": "sk_party_statements_v2026.parquet",
+      "version": "v2026",
+      "format": "parquet",
+      "encoding": "UTF-8",
+      "size_bytes": 244925153,
+      "sha256": "c195f39710f2df29b79685fcc52a12f27c79d46a6555617179f5dec56c63c685",
+      "download_url": "https://osf.io/download/6aea6b3fb9e5b130dbca33c4/",
+      "managed": true,
+      "n_rows": 121271,
+      "n_cols": 43,
+      "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003-09-28 to 2026-08-27. 121,271 total entries (51,141 conservative + 70,130 progressive): the 83,201 published v2022 rows, preserved unchanged, extended with 38,070 statements collected from the parties' official boards. 'filtered' carries the legacy khaiii parse for v2022 rows only.",
+      "time_coverage": "2003-2026",
+      "schema_url": "data/schema/party_statements.json",
+      "license": "CC BY-NC-ND 4.0",
+      "default_for_package": true
+    },
+    {
+      "name": "party_statements",
       "file": "sk_party_statements_v2022.csv",
       "version": "v2022",
       "format": "csv",
@@ -115,8 +151,9 @@
       "n_cols": 9,
       "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003 to 2022. 83,201 total entries (35,115 conservative + 48,086 progressive). Parsed using the khaiii Korean morphological analyzer.",
       "time_coverage": "2003-2022",
-      "schema_url": "data/schema/party_statements.json",
-      "license": "CC BY-NC-ND 4.0"
+      "schema_url": "data/schema/party_statements_v2022.json",
+      "license": "CC BY-NC-ND 4.0",
+      "default_for_package": false
     },
     {
       "name": "party_statements",
@@ -132,8 +169,9 @@
       "n_cols": 9,
       "description": "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003 to 2022. 83,201 total entries (35,115 conservative + 48,086 progressive). Parsed using the khaiii Korean morphological analyzer.",
       "time_coverage": "2003-2022",
-      "schema_url": "data/schema/party_statements.json",
-      "license": "CC BY-NC-ND 4.0"
+      "schema_url": "data/schema/party_statements_v2022.json",
+      "license": "CC BY-NC-ND 4.0",
+      "default_for_package": false
     }
   ]
 }

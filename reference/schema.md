@@ -7,7 +7,11 @@ and dataset-specific extras such as office mappings.
 ## Usage
 
 ``` r
-schema(dataset = c("campaign_booklet", "party_statements"), variant = NULL)
+schema(
+  dataset = c("campaign_booklet", "party_statements"),
+  variant = NULL,
+  data_version = NULL
+)
 ```
 
 ## Arguments
@@ -22,6 +26,11 @@ schema(dataset = c("campaign_booklet", "party_statements"), variant = NULL)
   Character or `NULL`; optional dataset variant. For `campaign_booklet`,
   defaults to `"original"` and may also be set to `"enriched"`. Other
   datasets do not define variants.
+
+- data_version:
+
+  Character or `NULL`; the data artifact version to describe. Defaults
+  to the latest available version.
 
 ## Value
 
@@ -1264,6 +1273,598 @@ schema("campaign_booklet", variant = "enriched")
 #> 
 #> 
 schema("party_statements")
+#> $dataset
+#> [1] "party_statements"
+#> 
+#> $name
+#> [1] "South Korean Party Statements"
+#> 
+#> $description
+#> [1] "Official statements from party spokespersons and minutes from daily leadership meetings of South Korea's two major parties (Conservative and Progressive), covering 2003-09-28 to 2026-08-27. 121,271 total entries (51,141 conservative + 70,130 progressive): the 83,201 published v2022 rows, preserved unchanged, extended with 38,070 statements collected from the parties' official boards. 'filtered' carries the legacy khaiii parse for v2022 rows only."
+#> 
+#> $time_coverage
+#> [1] "2003-2026"
+#> 
+#> $data_version
+#> [1] "v2026"
+#> 
+#> $package_version
+#> [1] "0.2.0"
+#> 
+#> $variant
+#> NULL
+#> 
+#> $default_variant
+#> NULL
+#> 
+#> $available_variants
+#> character(0)
+#> 
+#> $variant_description
+#> NULL
+#> 
+#> $recommended_use
+#> NULL
+#> 
+#> $identifier_columns
+#> [1] "id"              "board_record_id" "legacy_id"      
+#> 
+#> $text_columns
+#> [1] "text"     "filtered"
+#> 
+#> $supported_formats
+#> [1] "csv"     "parquet"
+#> 
+#> $managed_formats
+#> [1] "csv"     "parquet"
+#> 
+#> $artifacts
+#> $artifacts$csv
+#> $artifacts$csv$format
+#> [1] "csv"
+#> 
+#> $artifacts$csv$file
+#> [1] "sk_party_statements_v2026.csv"
+#> 
+#> $artifacts$csv$download_url
+#> [1] "https://osf.io/download/6aea6c5c912f248023d57277/"
+#> 
+#> $artifacts$csv$sha256
+#> [1] "8b6948022dd988d7a93c10c9b54347e92920f8793b6155f90732a08dfdcf9a29"
+#> 
+#> $artifacts$csv$size_bytes
+#> [1] 990195663
+#> 
+#> $artifacts$csv$managed
+#> [1] TRUE
+#> 
+#> 
+#> $artifacts$parquet
+#> $artifacts$parquet$format
+#> [1] "parquet"
+#> 
+#> $artifacts$parquet$file
+#> [1] "sk_party_statements_v2026.parquet"
+#> 
+#> $artifacts$parquet$download_url
+#> [1] "https://osf.io/download/6aea6b3fb9e5b130dbca33c4/"
+#> 
+#> $artifacts$parquet$sha256
+#> [1] "c195f39710f2df29b79685fcc52a12f27c79d46a6555617179f5dec56c63c685"
+#> 
+#> $artifacts$parquet$size_bytes
+#> [1] 244925153
+#> 
+#> $artifacts$parquet$managed
+#> [1] TRUE
+#> 
+#> 
+#> 
+#> $columns
+#> $columns[[1]]
+#> $columns[[1]]$name
+#> [1] "no"
+#> 
+#> $columns[[1]]$type
+#> [1] "integer"
+#> 
+#> $columns[[1]]$description
+#> [1] "Published v2022 sequential entry number within each party; NA for rows absent from v2022"
+#> 
+#> 
+#> $columns[[2]]
+#> $columns[[2]]$name
+#> [1] "year"
+#> 
+#> $columns[[2]]$type
+#> [1] "integer"
+#> 
+#> $columns[[2]]$description
+#> [1] "Year the statement was posted"
+#> 
+#> 
+#> $columns[[3]]
+#> $columns[[3]]$name
+#> [1] "ymd"
+#> 
+#> $columns[[3]]$type
+#> [1] "character"
+#> 
+#> $columns[[3]]$description
+#> [1] "Full date (YYYY-MM-DD)"
+#> 
+#> 
+#> $columns[[4]]
+#> $columns[[4]]$name
+#> [1] "title"
+#> 
+#> $columns[[4]]$type
+#> [1] "character"
+#> 
+#> $columns[[4]]$description
+#> [1] "Title of the statement"
+#> 
+#> 
+#> $columns[[5]]
+#> $columns[[5]]$name
+#> [1] "text"
+#> 
+#> $columns[[5]]$type
+#> [1] "character"
+#> 
+#> $columns[[5]]$description
+#> [1] "Full text of the statement"
+#> 
+#> 
+#> $columns[[6]]
+#> $columns[[6]]$name
+#> [1] "filtered"
+#> 
+#> $columns[[6]]$type
+#> [1] "character"
+#> 
+#> $columns[[6]]$description
+#> [1] "Legacy khaiii morphological parse (Korean-only); empty for rows absent from v2022"
+#> 
+#> 
+#> $columns[[7]]
+#> $columns[[7]]$name
+#> [1] "partisan"
+#> 
+#> $columns[[7]]$type
+#> [1] "character"
+#> 
+#> $columns[[7]]$description
+#> [1] "Party affiliation: Progressive / Conservative"
+#> 
+#> 
+#> $columns[[8]]
+#> $columns[[8]]$name
+#> [1] "conservative"
+#> 
+#> $columns[[8]]$type
+#> [1] "integer"
+#> 
+#> $columns[[8]]$description
+#> [1] "Binary indicator: 1 = Conservative Party, 0 = Progressive Party"
+#> 
+#> 
+#> $columns[[9]]
+#> $columns[[9]]$name
+#> [1] "id"
+#> 
+#> $columns[[9]]$type
+#> [1] "character"
+#> 
+#> $columns[[9]]$description
+#> [1] "Global primary key. Published v2022 ids are preserved; new rows use their board_record_id"
+#> 
+#> $columns[[9]]$identifier
+#> [1] TRUE
+#> 
+#> 
+#> $columns[[10]]
+#> $columns[[10]]$name
+#> [1] "board_record_id"
+#> 
+#> $columns[[10]]$type
+#> [1] "character"
+#> 
+#> $columns[[10]]$description
+#> [1] "Stable official-board key '<namespace>_<source_id>'; empty when board provenance is unavailable"
+#> 
+#> $columns[[10]]$identifier
+#> [1] TRUE
+#> 
+#> 
+#> $columns[[11]]
+#> $columns[[11]]$name
+#> [1] "legacy_id"
+#> 
+#> $columns[[11]]$type
+#> [1] "character"
+#> 
+#> $columns[[11]]$description
+#> [1] "Published v2022 id for rows that belong to the v2022 release"
+#> 
+#> $columns[[11]]$identifier
+#> [1] TRUE
+#> 
+#> 
+#> $columns[[12]]
+#> $columns[[12]]$name
+#> [1] "legacy_no"
+#> 
+#> $columns[[12]]$type
+#> [1] "integer"
+#> 
+#> $columns[[12]]$description
+#> [1] "Published v2022 no for rows that belong to the v2022 release"
+#> 
+#> 
+#> $columns[[13]]
+#> $columns[[13]]$name
+#> [1] "id_scheme"
+#> 
+#> $columns[[13]]$type
+#> [1] "character"
+#> 
+#> $columns[[13]]$description
+#> [1] "Scheme of the primary id: krpoltext_v2022 or board_source_v1"
+#> 
+#> 
+#> $columns[[14]]
+#> $columns[[14]]$name
+#> [1] "legacy_match_status"
+#> 
+#> $columns[[14]]$type
+#> [1] "character"
+#> 
+#> $columns[[14]]$description
+#> [1] "dual_id_matched, public_only_unmapped, or board_source_only_no_safe_legacy_match"
+#> 
+#> 
+#> $columns[[15]]
+#> $columns[[15]]$name
+#> [1] "crosswalk_method"
+#> 
+#> $columns[[15]]$type
+#> [1] "character"
+#> 
+#> $columns[[15]]$description
+#> [1] "Audited rule that matched a v2022 row to an official board row"
+#> 
+#> 
+#> $columns[[16]]
+#> $columns[[16]]$name
+#> [1] "media"
+#> 
+#> $columns[[16]]$type
+#> [1] "character"
+#> 
+#> $columns[[16]]$description
+#> [1] "Collector source label (cons_party / prog_party)"
+#> 
+#> 
+#> $columns[[17]]
+#> $columns[[17]]$name
+#> [1] "party"
+#> 
+#> $columns[[17]]$type
+#> [1] "character"
+#> 
+#> $columns[[17]]$description
+#> [1] "Party name as shown on the official site at collection time"
+#> 
+#> 
+#> $columns[[18]]
+#> $columns[[18]]$name
+#> [1] "category"
+#> 
+#> $columns[[18]]$type
+#> [1] "character"
+#> 
+#> $columns[[18]]$description
+#> [1] "Post category as shown on the official site"
+#> 
+#> 
+#> $columns[[19]]
+#> $columns[[19]]$name
+#> [1] "source_id"
+#> 
+#> $columns[[19]]$type
+#> [1] "character"
+#> 
+#> $columns[[19]]$description
+#> [1] "Post number on the official board"
+#> 
+#> 
+#> $columns[[20]]
+#> $columns[[20]]$name
+#> [1] "url"
+#> 
+#> $columns[[20]]$type
+#> [1] "character"
+#> 
+#> $columns[[20]]$description
+#> [1] "Official post URL"
+#> 
+#> 
+#> $columns[[21]]
+#> $columns[[21]]$name
+#> [1] "source_content_hash"
+#> 
+#> $columns[[21]]$type
+#> [1] "character"
+#> 
+#> $columns[[21]]$description
+#> [1] "Hash recorded by the official-site collector before merging"
+#> 
+#> 
+#> $columns[[22]]
+#> $columns[[22]]$name
+#> [1] "content_hash"
+#> 
+#> $columns[[22]]$type
+#> [1] "character"
+#> 
+#> $columns[[22]]$description
+#> [1] "SHA-256 of normalized ymd, title, and text"
+#> 
+#> 
+#> $columns[[23]]
+#> $columns[[23]]$name
+#> [1] "collected_at"
+#> 
+#> $columns[[23]]$type
+#> [1] "character"
+#> 
+#> $columns[[23]]$description
+#> [1] "Collection timestamp"
+#> 
+#> 
+#> $columns[[24]]
+#> $columns[[24]]$name
+#> [1] "board_id"
+#> 
+#> $columns[[24]]$type
+#> [1] "character"
+#> 
+#> $columns[[24]]$description
+#> [1] "Official board identifier"
+#> 
+#> 
+#> $columns[[25]]
+#> $columns[[25]]$name
+#> [1] "source_board"
+#> 
+#> $columns[[25]]$type
+#> [1] "character"
+#> 
+#> $columns[[25]]$description
+#> [1] "Official board name"
+#> 
+#> 
+#> $columns[[26]]
+#> $columns[[26]]$name
+#> [1] "doc_type"
+#> 
+#> $columns[[26]]$type
+#> [1] "character"
+#> 
+#> $columns[[26]]$description
+#> [1] "Document type derived from the board and category"
+#> 
+#> 
+#> $columns[[27]]
+#> $columns[[27]]$name
+#> [1] "attachment_urls"
+#> 
+#> $columns[[27]]$type
+#> [1] "character"
+#> 
+#> $columns[[27]]$description
+#> [1] "Attachment URLs"
+#> 
+#> 
+#> $columns[[28]]
+#> $columns[[28]]$name
+#> [1] "attachment_names"
+#> 
+#> $columns[[28]]$type
+#> [1] "character"
+#> 
+#> $columns[[28]]$description
+#> [1] "Attachment file names"
+#> 
+#> 
+#> $columns[[29]]
+#> $columns[[29]]$name
+#> [1] "attachment_hashes"
+#> 
+#> $columns[[29]]$type
+#> [1] "character"
+#> 
+#> $columns[[29]]$description
+#> [1] "Attachment SHA-256 hashes"
+#> 
+#> 
+#> $columns[[30]]
+#> $columns[[30]]$name
+#> [1] "image_urls"
+#> 
+#> $columns[[30]]$type
+#> [1] "character"
+#> 
+#> $columns[[30]]$description
+#> [1] "Embedded image URLs"
+#> 
+#> 
+#> $columns[[31]]
+#> $columns[[31]]$name
+#> [1] "embedded_image_count"
+#> 
+#> $columns[[31]]$type
+#> [1] "integer"
+#> 
+#> $columns[[31]]$description
+#> [1] "Number of embedded images"
+#> 
+#> 
+#> $columns[[32]]
+#> $columns[[32]]$name
+#> [1] "text_source"
+#> 
+#> $columns[[32]]$type
+#> [1] "character"
+#> 
+#> $columns[[32]]$description
+#> [1] "Where 'text' came from: html, attachment, or image_only_html"
+#> 
+#> 
+#> $columns[[33]]
+#> $columns[[33]]$name
+#> [1] "attachment_extraction_status"
+#> 
+#> $columns[[33]]$type
+#> [1] "character"
+#> 
+#> $columns[[33]]$description
+#> [1] "Attachment text extraction status"
+#> 
+#> 
+#> $columns[[34]]
+#> $columns[[34]]$name
+#> [1] "attachment_extraction_error"
+#> 
+#> $columns[[34]]$type
+#> [1] "character"
+#> 
+#> $columns[[34]]$description
+#> [1] "Attachment text extraction error"
+#> 
+#> 
+#> $columns[[35]]
+#> $columns[[35]]$name
+#> [1] "detail_status"
+#> 
+#> $columns[[35]]$type
+#> [1] "character"
+#> 
+#> $columns[[35]]$description
+#> [1] "Detail-page collection status"
+#> 
+#> 
+#> $columns[[36]]
+#> $columns[[36]]$name
+#> [1] "collection_error"
+#> 
+#> $columns[[36]]$type
+#> [1] "character"
+#> 
+#> $columns[[36]]$description
+#> [1] "Detail-page collection error"
+#> 
+#> 
+#> $columns[[37]]
+#> $columns[[37]]$name
+#> [1] "site_ymd"
+#> 
+#> $columns[[37]]$type
+#> [1] "character"
+#> 
+#> $columns[[37]]$description
+#> [1] "Date as displayed on the official site"
+#> 
+#> 
+#> $columns[[38]]
+#> $columns[[38]]$name
+#> [1] "date_is_placeholder"
+#> 
+#> $columns[[38]]$type
+#> [1] "character"
+#> 
+#> $columns[[38]]$description
+#> [1] "Whether the site date is a migration placeholder ('true'/'false')"
+#> 
+#> 
+#> $columns[[39]]
+#> $columns[[39]]$name
+#> [1] "date_resolution_status"
+#> 
+#> $columns[[39]]$type
+#> [1] "character"
+#> 
+#> $columns[[39]]$description
+#> [1] "How placeholder dates were resolved"
+#> 
+#> 
+#> $columns[[40]]
+#> $columns[[40]]$name
+#> [1] "asset_status"
+#> 
+#> $columns[[40]]$type
+#> [1] "character"
+#> 
+#> $columns[[40]]$description
+#> [1] "Attachment and image download status"
+#> 
+#> 
+#> $columns[[41]]
+#> $columns[[41]]$name
+#> [1] "asset_error"
+#> 
+#> $columns[[41]]$type
+#> [1] "character"
+#> 
+#> $columns[[41]]$description
+#> [1] "Attachment and image download error"
+#> 
+#> 
+#> $columns[[42]]
+#> $columns[[42]]$name
+#> [1] "filtered_status"
+#> 
+#> $columns[[42]]$type
+#> [1] "character"
+#> 
+#> $columns[[42]]$description
+#> [1] "legacy_khaiii_available, legacy_khaiii_missing, or not_processed"
+#> 
+#> 
+#> $columns[[43]]
+#> $columns[[43]]$name
+#> [1] "filtered_analyzer"
+#> 
+#> $columns[[43]]$type
+#> [1] "character"
+#> 
+#> $columns[[43]]$description
+#> [1] "Analyzer that produced 'filtered' (khaiii_legacy)"
+#> 
+#> 
+#> 
+#> $notes
+#> $notes$missing_values
+#> [1] "Collection and provenance columns are empty for v2022-only rows. 'no' and 'legacy_no' are NA for rows absent from v2022."
+#> 
+#> $notes$party_names
+#> [1] "Both parties have undergone frequent name changes. The 'partisan' column uses stable ideological labels rather than party names."
+#> 
+#> $notes$text_processing
+#> [1] "All text is UTF-8 encoded Korean. 'text' contains the full original text; 'filtered' contains the legacy khaiii parse for v2022 rows and is empty for the 38,070 new rows (see 'filtered_status')."
+#> 
+#> $notes$identifiers
+#> [1] "'id' is unique across all rows. The 83,201 v2022 rows keep their published 'id'; new rows use 'board_record_id' as 'id'. 2,444 v2022 rows were safely matched to an official post and carry both identifiers."
+#> 
+#> $notes$provenance
+#> [1] "The v2022 rows are preserved byte-for-byte; title, text, and filtered values are never replaced by re-collected content."
+#> 
+#> 
+#> $extras
+#> list()
+#> 
+schema("party_statements", data_version = "v2022")
 #> $dataset
 #> [1] "party_statements"
 #> 

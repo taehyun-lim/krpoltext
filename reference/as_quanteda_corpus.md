@@ -53,7 +53,7 @@ if (requireNamespace("quanteda", quietly = TRUE)) {
   corp <- as_quanteda_corpus(dt, docid_field = "id")
   corp
 }
-#> Corpus consisting of 2 documents and 1 docvar.
+#> corpus of 2 documents (21 characters) and 1 docvar.
 #> doc-1 :
 #> "first text"
 #> 
